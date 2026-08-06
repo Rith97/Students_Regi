@@ -5,6 +5,8 @@ create table if not exists public.students (
   id text primary key,
   student_code text,
   student_name text,
+  student_surname text,
+  student_given_name text,
   gender text,
   dob text,
   class_name text,
@@ -15,7 +17,10 @@ create table if not exists public.students (
   pob_province text,
   contact text,
   father_name text,
+  father_occupation text,
   mother_name text,
+  mother_occupation text,
+  guardian_name text,
   current_village text,
   current_commune text,
   current_district text,
@@ -26,7 +31,12 @@ create table if not exists public.students (
 );
 
 alter table public.students
-  add column if not exists photo text;
+  add column if not exists photo text,
+  add column if not exists student_surname text,
+  add column if not exists student_given_name text,
+  add column if not exists father_occupation text,
+  add column if not exists mother_occupation text,
+  add column if not exists guardian_name text;
 
 create unique index if not exists students_student_code_unique
   on public.students (student_code)

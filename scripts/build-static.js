@@ -1,12 +1,16 @@
-const fs = require("fs");
-const path = require("path");
+import fs from "node:fs";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
 
-const root = process.cwd();
+const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const outDir = path.join(root, "dist");
 const entries = [
   ".nojekyll",
   "README.md",
   "index.html",
+  "manifest.webmanifest",
+  "service-worker.js",
+  "_headers",
   "google-sheet-backend.gs",
   "supabase-schema.sql",
   "assets"

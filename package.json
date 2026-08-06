@@ -1,14 +1,22 @@
 {
   "name": "students-registration-kh",
-  "version": "1.0.0",
+  "productName": "Students Registration",
+  "version": "1.6.0",
+  "description": "Khmer student registration web app with shared cloud storage",
   "type": "module",
   "private": true,
+  "main": "desktop/main.cjs",
   "scripts": {
     "dev": "vinext dev --hostname 127.0.0.1",
-    "build": "vite build && node scripts/prepare-sites-dist.cjs",
-    "start": "vinext start"
+    "build": "node scripts/build-static.js",
+    "web:build": "node scripts/build-static.js",
+    "start": "vinext start",
+    "desktop": "electron .",
+    "desktop:pack": "electron-builder --dir",
+    "desktop:build": "electron-builder --win nsis portable"
   },
   "dependencies": {
+    "qrcode": "^1.5.4",
     "react": "^19.2.4",
     "react-dom": "^19.2.4",
     "vinext": "^0.0.4"
@@ -16,8 +24,51 @@
   "devDependencies": {
     "@cloudflare/vite-plugin": "^1.25.0",
     "@vitejs/plugin-rsc": "^0.5.19",
+    "electron": "^43.2.0",
+    "electron-builder": "^26.15.3",
     "typescript": "^5.7.0",
     "vite": "^7.3.1",
     "wrangler": "^4.65.0"
+  },
+  "build": {
+    "appId": "kh.students.registration",
+    "productName": "Students Registration",
+    "asar": true,
+    "directories": {
+      "output": "release"
+    },
+    "files": [
+      "desktop/**/*",
+      "index.html",
+      "assets/**/*",
+      "README.md"
+    ],
+    "win": {
+      "icon": "assets/moeys-logo.png",
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        },
+        {
+          "target": "portable",
+          "arch": [
+            "x64"
+          ]
+        }
+      ]
+    },
+    "nsis": {
+      "artifactName": "Students-Registration-Setup-${version}-${arch}.${ext}",
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": "always",
+      "shortcutName": "Students Registration"
+    },
+    "portable": {
+      "artifactName": "Students-Registration-Portable-${version}-${arch}.${ext}"
+    }
   }
 }

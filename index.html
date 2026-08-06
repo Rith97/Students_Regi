@@ -5,12 +5,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ប្រព័ន្ធចុះឈ្មោះសិស្ស</title>
     <meta name="description" content="គ្រប់គ្រងបញ្ជីសិស្ស ស្វែងរក Import Print និងទាញយក CSV">
+    <meta name="theme-color" content="#0f766e">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="ចុះឈ្មោះសិស្ស">
+    <link rel="manifest" href="./manifest.webmanifest">
+    <link rel="icon" href="./assets/moeys-logo.png" type="image/png">
+    <link rel="apple-touch-icon" href="./assets/moeys-logo.png">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Kantumruy:wght@400;600;700&display=swap" rel="stylesheet">
-    <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
-    <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
-    <script defer src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+<script async type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+<script async nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+<script async src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
     <style>
         /* ========================
            DESIGN TOKENS
@@ -1742,6 +1750,21 @@
             width: 100%;
             justify-content: flex-start;
         }
+        .phone-camera-modal .modal-dialog { width: min(560px, 100%); }
+        .phone-camera-connect { display:grid; grid-template-columns:180px minmax(0,1fr); gap:18px; align-items:center; margin-top:16px; }
+        .phone-camera-qr { width:180px; height:180px; padding:8px; border:1px solid var(--border); border-radius:12px; background:#fff; object-fit:contain; }
+        .phone-camera-url { display:block; margin:8px 0; padding:10px; overflow-wrap:anywhere; border-radius:8px; background:var(--surface-3); color:var(--text); font-size:.78rem; user-select:all; }
+        .phone-camera-status { margin-top:10px; color:var(--muted); font-weight:700; }
+        .phone-camera-status.connected { color:var(--green); }
+        .app-settings-modal .modal-dialog { width:min(680px,100%); }
+        .teacher-settings-list { display:grid; gap:8px; max-height:290px; overflow:auto; margin-top:10px; padding-right:3px; }
+        .teacher-setting-row { display:grid; grid-template-columns:minmax(100px,150px) minmax(0,1fr); gap:10px; align-items:center; padding:9px 10px; border:1px solid var(--border); border-radius:9px; background:var(--surface-2); }
+        .teacher-setting-class { color:var(--text); font-weight:800; }
+        .settings-section-title { margin:18px 0 4px; color:var(--text); font-size:.95rem; }
+        .settings-help { margin:0; color:var(--muted); font-size:.8rem; line-height:1.5; }
+        @media (max-width:560px) {
+            .phone-camera-connect { grid-template-columns:1fr; justify-items:center; text-align:center; }
+        }
         .cam-modal .modal-dialog {
             width: min(520px, 100%);
         }
@@ -1856,6 +1879,10 @@
 
             <!-- Sync group -->
             <div class="action-group">
+                <button id="app-settings-btn" class="btn btn-ghost" type="button" title="Card and school settings">
+                    <ion-icon name="settings-outline" aria-hidden="true"></ion-icon>
+                    <span>Settings</span>
+                </button>
                 <button id="sheet-settings-btn" class="btn btn-ghost" type="button" title="Cloud Storage Settings">
                     <ion-icon name="grid-outline" aria-hidden="true"></ion-icon>
                     <span>Storage</span>
@@ -2015,6 +2042,9 @@
                                     <button id="open-camera-btn" type="button" class="btn btn-primary">
                                         <ion-icon name="camera"></ion-icon> ថតរូបផ្ទាល់
                                     </button>
+                                    <button id="phone-camera-btn" type="button" class="btn btn-ghost" hidden>
+                                        <ion-icon name="phone-portrait-outline"></ion-icon> ប្រើ Camera ទូរសព្ទ
+                                    </button>
                                     <button id="choose-photo-btn" type="button" class="btn btn-ghost">
                                         <ion-icon name="folder-open-outline"></ion-icon> ជ្រើសរើសរូបថត
                                     </button>
@@ -2036,14 +2066,19 @@
                         <div class="section-body">
                             <div class="field-grid">
                                 <div class="field field-full">
-                                    <label for="studentCode">លេខសម្គាល់សិស្ស</label>
+                                    <label for="studentCode">អត្តលេខសិស្ស (អាចកែបាន)</label>
                                     <input id="studentCode" name="studentCode" type="text"
-                                           placeholder="បង្កើតស្វ័យប្រវត្តិ" readonly>
+                                           placeholder="ឧ. STU-0001 ឬទុកទទេដើម្បីបង្កើតស្វ័យប្រវត្តិ">
                                 </div>
-                                <div class="field field-full">
-                                    <label for="studentName" class="required">ឈ្មោះសិស្ស</label>
-                                    <input id="studentName" name="studentName" type="text" required
-                                           placeholder="ឈ្មោះពេញ">
+                                <div class="field">
+                                    <label for="studentSurname" class="required">គោត្តនាម</label>
+                                    <input id="studentSurname" name="studentSurname" type="text" required
+                                           placeholder="ឧ. សុខ">
+                                </div>
+                                <div class="field">
+                                    <label for="studentGivenName" class="required">នាមខ្លួន</label>
+                                    <input id="studentGivenName" name="studentGivenName" type="text" required
+                                           placeholder="ឧ. ដារ៉ា">
                                 </div>
                                 <div class="field">
                                     <label class="required">ភេទ</label>
@@ -2068,8 +2103,20 @@
                                     <input id="fatherName" name="fatherName" type="text" placeholder="ឪពុក">
                                 </div>
                                 <div class="field">
+                                    <label for="fatherOccupation">មុខរបរឪពុក</label>
+                                    <input id="fatherOccupation" name="fatherOccupation" type="text" placeholder="ឧ. កសិករ">
+                                </div>
+                                <div class="field">
                                     <label for="motherName">ឈ្មោះម្តាយ</label>
                                     <input id="motherName" name="motherName" type="text" placeholder="ម្តាយ">
+                                </div>
+                                <div class="field">
+                                    <label for="motherOccupation">មុខរបរម្តាយ</label>
+                                    <input id="motherOccupation" name="motherOccupation" type="text" placeholder="ឧ. អាជីវករ">
+                                </div>
+                                <div class="field field-full">
+                                    <label for="guardianName">ឈ្មោះអាណាព្យាបាល</label>
+                                    <input id="guardianName" name="guardianName" type="text" placeholder="ឈ្មោះអ្នកទទួលខុសត្រូវសិស្ស">
                                 </div>
                             </div>
                         </div>
@@ -2263,7 +2310,10 @@
                             <th colspan="4" style="text-align:center; border-bottom:1px solid var(--border);">ទីកន្លែងកំណើត</th>
                             <th rowspan="2" style="min-width:110px; vertical-align:middle;">លេខទូរស័ព្ទ</th>
                             <th rowspan="2" style="min-width:100px; vertical-align:middle;">ឈ្មោះឪពុក</th>
+                            <th rowspan="2" style="min-width:100px; vertical-align:middle;">មុខរបរឪពុក</th>
                             <th rowspan="2" style="min-width:100px; vertical-align:middle;">ឈ្មោះម្តាយ</th>
+                            <th rowspan="2" style="min-width:100px; vertical-align:middle;">មុខរបរម្តាយ</th>
+                            <th rowspan="2" style="min-width:120px; vertical-align:middle;">ឈ្មោះអាណាព្យាបាល</th>
                             <th colspan="4" style="text-align:center; border-bottom:1px solid var(--border);">អាសយដ្ឋានបច្ចុប្បន្ន</th>
                             <th rowspan="2" style="width:140px; text-align:center; vertical-align:middle;">សកម្មភាព</th>
                         </tr>
@@ -2280,7 +2330,7 @@
                     </thead>
                     <tbody id="student-list">
                         <tr class="skeleton-row">
-                            <td colspan="19">
+                            <td colspan="22">
                                 <div class="skeleton skeleton-line" style="width:60%;height:16px"></div>
                             </td>
                         </tr>
@@ -2362,6 +2412,33 @@
     </div>
 </div>
 
+<!-- ======================== PHONE CAMERA MODAL ======================== -->
+<div id="phone-camera-modal" class="modal phone-camera-modal" role="dialog" aria-modal="true" aria-labelledby="phone-camera-title">
+    <div class="modal-dialog">
+        <div class="modal-body">
+            <div class="modal-icon modal-icon-primary" aria-hidden="true">
+                <ion-icon name="phone-portrait-outline"></ion-icon>
+            </div>
+            <h2 id="phone-camera-title" class="modal-title">ភ្ជាប់ Camera ទូរសព្ទ</h2>
+            <p class="modal-desc">ទូរសព្ទ និងកុំព្យូទ័រត្រូវភ្ជាប់ Wi‑Fi ដូចគ្នា។ Scan QR រួចថត និងផ្ញើរូបមក form នេះ។</p>
+            <div id="phone-camera-connect" class="phone-camera-connect">
+                <img id="phone-camera-qr" class="phone-camera-qr" alt="QR សម្រាប់ភ្ជាប់ទូរសព្ទ">
+                <div>
+                    <strong>Scan QR ឬបើក URL នេះលើទូរសព្ទ</strong>
+                    <code id="phone-camera-url" class="phone-camera-url">កំពុងរៀបចំ…</code>
+                    <p id="phone-camera-status" class="phone-camera-status" role="status" aria-live="polite">រង់ចាំការភ្ជាប់…</p>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button id="copy-phone-camera-url-btn" class="btn btn-ghost" type="button">
+                <ion-icon name="copy-outline"></ion-icon> Copy URL
+            </button>
+            <button id="close-phone-camera-btn" class="btn btn-primary" type="button">បិទ</button>
+        </div>
+    </div>
+</div>
+
 <!-- ======================== DELETE MODAL ======================== -->
 <div id="delete-modal" class="modal" role="dialog" aria-modal="true" aria-labelledby="delete-title">
     <div class="modal-dialog">
@@ -2408,6 +2485,46 @@
     </div>
 </div>
 
+<!-- ======================== APP SETTINGS MODAL ======================== -->
+<div id="app-settings-modal" class="modal app-settings-modal" role="dialog" aria-modal="true" aria-labelledby="app-settings-title">
+    <div class="modal-dialog">
+        <div class="modal-body">
+            <div class="modal-icon modal-icon-primary" aria-hidden="true">
+                <ion-icon name="settings-outline"></ion-icon>
+            </div>
+            <h2 id="app-settings-title" class="modal-title">ការកំណត់កាតសិស្ស</h2>
+            <p class="modal-desc">កំណត់ព័ត៌មានដែលបង្ហាញនៅលើកាត និងចាត់តាំងគ្រូបន្ទុកតាមថ្នាក់។</p>
+            <div class="field" style="margin-top:16px">
+                <label for="card-issue-date-input">កាលបរិច្ឆេទចេញកាត</label>
+                <input id="card-issue-date-input" type="date">
+            </div>
+            <div class="field">
+                <label for="principal-name-input">ឈ្មោះនាយកសាលា</label>
+                <input id="principal-name-input" type="text" placeholder="ឧ. លោក/លោកស្រី ...">
+            </div>
+            <div class="field-grid">
+                <div class="field">
+                    <label for="student-code-prefix-input">ប្រភេទ/Prefix អត្តលេខ</label>
+                    <input id="student-code-prefix-input" type="text" maxlength="12" placeholder="ឧ. STU">
+                </div>
+                <div class="field">
+                    <label for="student-code-digits-input">ចំនួនខ្ទង់លេខ</label>
+                    <input id="student-code-digits-input" type="number" min="2" max="8" step="1" placeholder="4">
+                </div>
+            </div>
+            <h3 class="settings-section-title">គ្រូបន្ទុកតាមថ្នាក់</h3>
+            <p class="settings-help">ថ្នាក់ត្រូវបានយកពីបញ្ជីសិស្សបច្ចុប្បន្ន។ Settings នេះនឹង sync ទៅ Google Sheet ប្រសិនបើបានភ្ជាប់។</p>
+            <div id="teacher-settings-list" class="teacher-settings-list"></div>
+        </div>
+        <div class="modal-footer">
+            <button id="cancel-app-settings-btn" class="btn btn-ghost" type="button">បោះបង់</button>
+            <button id="save-app-settings-btn" class="btn btn-primary" type="button">
+                <ion-icon name="save-outline"></ion-icon> រក្សាទុក Settings
+            </button>
+        </div>
+    </div>
+</div>
+
 <!-- ======================== CLOUD STORAGE MODAL ======================== -->
 <div id="sheet-modal" class="modal" role="dialog" aria-modal="true" aria-labelledby="sheet-title">
     <div class="modal-dialog">
@@ -2444,6 +2561,11 @@
                     <input id="sheet-url-input" type="url"
                            placeholder="https://script.google.com/macros/s/.../exec">
                 </div>
+                <div class="field">
+                    <label for="sheet-access-key-input">Shared access key (optional)</label>
+                    <input id="sheet-access-key-input" type="password" autocomplete="off"
+                           placeholder="ត្រូវដូច STUDENT_APP_ACCESS_KEY ក្នុង Apps Script">
+                </div>
             </div>
         </div>
         <div class="modal-footer">
@@ -2472,6 +2594,10 @@
         <h3 id="mobile-actions-title" class="sheet-title">ម៉ឺនុយសកម្មភាព</h3>
     </div>
     <div class="sheet-body">
+        <button id="m-app-settings-btn" class="sheet-menu-item" type="button">
+            <ion-icon name="settings-outline" aria-hidden="true"></ion-icon>
+            <span>Settings</span>
+        </button>
         <button id="m-sheet-settings-btn" class="sheet-menu-item" type="button">
             <ion-icon name="grid-outline" aria-hidden="true"></ion-icon>
             <span>Storage</span>
@@ -2537,23 +2663,35 @@
 <script type="module">
     const LOCAL_STUDENTS_KEY = "studentRegistrationOfflineStudents";
     const LOCAL_HISTORY_KEY  = "studentRegistrationOfflineHistory";
+    const APP_SETTINGS_STORAGE_KEY = "studentRegistrationAppSettings";
     const SUPABASE_PROVIDER = "supabase";
     const GOOGLE_SHEET_PROVIDER = "google-sheet";
     const CLOUD_PROVIDER_STORAGE_KEY = "studentRegistrationCloudProvider";
-    const DEFAULT_SUPABASE_URL = "https://ckfysmueguiyunjdffqn.supabase.co";
-    const DEFAULT_SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNrZnlzbXVlZ3VpeXVuamRmZnFuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk0NTI0MTIsImV4cCI6MjA5NTAyODQxMn0.Ud7El5jqk6GyTqIe24wk4AwQscIFeLiU2PgjWID7gBE";
+    const DEFAULT_SUPABASE_URL = "";
+    const DEFAULT_SUPABASE_ANON_KEY = "";
     const SUPABASE_URL_STORAGE_KEY = "studentRegistrationSupabaseUrl";
     const SUPABASE_ANON_KEY_STORAGE_KEY = "studentRegistrationSupabaseAnonKey";
     const DEFAULT_GOOGLE_SCRIPT_URL = "";
     const GOOGLE_SCRIPT_STORAGE_KEY  = "studentRegistrationGoogleScriptUrl";
+    const GOOGLE_SHEET_ACCESS_KEY_STORAGE_KEY = "studentRegistrationGoogleSheetAccessKey";
+    const GOOGLE_DATA_REVISION_STORAGE_KEY = "studentRegistrationGoogleDataRevision";
+    const GOOGLE_SETTINGS_REVISION_STORAGE_KEY = "studentRegistrationGoogleSettingsRevision";
     const BACKUP_TIME_STORAGE_KEY    = "studentRegistrationLastBackupAt";
-    const STUDENT_CODE_PREFIX        = "STU";
+    const DEFAULT_STUDENT_CODE_PREFIX = "STU";
     const SUPABASE_READ_PAGE_SIZE    = 1000;
+    const SHARED_DATA_REFRESH_MS     = 20000;
+    let sharedDataRefreshTimer = null;
+    let sharedDataRefreshInFlight = false;
+    let lastGoogleDataRevision = localStorage.getItem(GOOGLE_DATA_REVISION_STORAGE_KEY) || "";
+    let lastGoogleSettingsRevision = localStorage.getItem(GOOGLE_SETTINGS_REVISION_STORAGE_KEY) || "";
+    let appSettings = loadAppSettingsFromLocal();
 
     const SUPABASE_FIELD_MAP = {
         id: "id",
         studentCode: "student_code",
         studentName: "student_name",
+        studentSurname: "student_surname",
+        studentGivenName: "student_given_name",
         gender: "gender",
         dob: "dob",
         className: "class_name",
@@ -2564,7 +2702,10 @@
         pobProvince: "pob_province",
         contact: "contact",
         fatherName: "father_name",
+        fatherOccupation: "father_occupation",
         motherName: "mother_name",
+        motherOccupation: "mother_occupation",
+        guardianName: "guardian_name",
         currentVillage: "current_village",
         currentCommune: "current_commune",
         currentDistrict: "current_district",
@@ -2573,13 +2714,16 @@
         createdAt: "created_at",
         updatedAt: "updated_at"
     };
-    const SUPABASE_OPTIONAL_COLUMNS = new Set(["photo"]);
+    const SUPABASE_OPTIONAL_COLUMNS = new Set([
+        "photo", "student_surname", "student_given_name", "father_occupation", "mother_occupation", "guardian_name"
+    ]);
 
     // ===================== LOCAL STORAGE DB HANDLERS =====================
     function loadFromLocalStorage() {
         try {
             const data = localStorage.getItem(LOCAL_STUDENTS_KEY);
-            return data ? JSON.parse(data) : [];
+            const parsed = data ? JSON.parse(data) : [];
+            return Array.isArray(parsed) ? parsed.map(normalizeStudentIdentity) : [];
         } catch (e) {
             console.error("Error loading students from localStorage:", e);
             return [];
@@ -2797,6 +2941,15 @@
         pageSizeSelect: document.getElementById("page-size-select"),
         fromSchool: document.getElementById("fromSchool"),
         historyLog: document.getElementById("history-log"),
+        appSettingsBtn: document.getElementById("app-settings-btn"),
+        appSettingsModal: document.getElementById("app-settings-modal"),
+        cardIssueDateInput: document.getElementById("card-issue-date-input"),
+        principalNameInput: document.getElementById("principal-name-input"),
+        studentCodePrefixInput: document.getElementById("student-code-prefix-input"),
+        studentCodeDigitsInput: document.getElementById("student-code-digits-input"),
+        teacherSettingsList: document.getElementById("teacher-settings-list"),
+        saveAppSettingsBtn: document.getElementById("save-app-settings-btn"),
+        cancelAppSettingsBtn: document.getElementById("cancel-app-settings-btn"),
         sheetSettingsBtn: document.getElementById("sheet-settings-btn"),
         sheetModal: document.getElementById("sheet-modal"),
         storageProviderSelect: document.getElementById("storage-provider-select"),
@@ -2805,6 +2958,7 @@
         supabaseUrlInput: document.getElementById("supabase-url-input"),
         supabaseKeyInput: document.getElementById("supabase-key-input"),
         sheetUrlInput: document.getElementById("sheet-url-input"),
+        sheetAccessKeyInput: document.getElementById("sheet-access-key-input"),
         clearSheetUrlBtn: document.getElementById("clear-sheet-url-btn"),
         testStorageBtn: document.getElementById("test-storage-btn"),
         cancelSheetUrlBtn: document.getElementById("cancel-sheet-url-btn"),
@@ -2840,13 +2994,20 @@
         studentPhotoData: document.getElementById("studentPhotoData"),
         photoUploadInput: document.getElementById("photoUploadInput"),
         openCameraBtn: document.getElementById("open-camera-btn"),
+        phoneCameraBtn: document.getElementById("phone-camera-btn"),
         choosePhotoBtn: document.getElementById("choose-photo-btn"),
         cameraModal: document.getElementById("camera-modal"),
         camVideo: document.getElementById("camVideo"),
         camProcessingOverlay: document.getElementById("camProcessingOverlay"),
         cancelCamBtn: document.getElementById("cancel-cam-btn"),
         switchCamBtn: document.getElementById("switch-cam-btn"),
-        captureCamBtn: document.getElementById("capture-cam-btn")
+        captureCamBtn: document.getElementById("capture-cam-btn"),
+        phoneCameraModal: document.getElementById("phone-camera-modal"),
+        phoneCameraQr: document.getElementById("phone-camera-qr"),
+        phoneCameraUrl: document.getElementById("phone-camera-url"),
+        phoneCameraStatus: document.getElementById("phone-camera-status"),
+        copyPhoneCameraUrlBtn: document.getElementById("copy-phone-camera-url-btn"),
+        closePhoneCameraBtn: document.getElementById("close-phone-camera-btn")
     };
 
     const pobGroup = {
@@ -2878,64 +3039,54 @@
     const disabledSupabaseColumns = new Set();
 
     const fieldIds = [
-        "studentCode","studentName","dob","fatherName","motherName",
+        "studentCode","studentSurname","studentGivenName","dob","fatherName","fatherOccupation","motherName","motherOccupation","guardianName",
         "pobProvince","pobDistrict","pobCommune","pobVillage",
         "currentProvince","currentDistrict","currentCommune","currentVillage",
         "fromSchool","className","contact"
     ];
 
     const STUDENT_TEMPLATE_TOP_HEADERS = [
-        "អត្តលេខ", "គោត្តនាម-នាម", "ភេទ", "ថ្ងៃកំណើត", "ថ្នាក់", "សាលា",
-        "ទីកន្លែងកំណើត", "", "", "", "លេខទូរស័ព្ទ", "ឈ្មោះឪពុក", "ឈ្មោះម្តាយ",
+        "អត្តលេខ", "គោត្តនាម", "នាមខ្លួន", "ភេទ", "ថ្ងៃកំណើត", "ថ្នាក់", "សាលា",
+        "ទីកន្លែងកំណើត", "", "", "", "លេខទូរស័ព្ទ", "ឈ្មោះឪពុក", "មុខរបរឪពុក", "ឈ្មោះម្តាយ", "មុខរបរម្តាយ", "ឈ្មោះអាណាព្យាបាល",
         "អាសយដ្ឋានបច្ចុប្បន្ន", "", "", ""
     ];
     const STUDENT_TEMPLATE_SUB_HEADERS = [
-        "", "", "", "", "", "", "ភូមិ", "ឃុំ/សង្កាត់", "ស្រុក/ខណ្ឌ", "ខេត្ត/ក្រុង",
-        "", "", "", "ភូមិ", "ឃុំ/សង្កាត់", "ស្រុក/ខណ្ឌ", "ខេត្ត/ក្រុង"
+        "", "", "", "", "", "", "", "ភូមិ", "ឃុំ/សង្កាត់", "ស្រុក/ខណ្ឌ", "ខេត្ត/ក្រុង",
+        "", "", "", "", "", "", "ភូមិ", "ឃុំ/សង្កាត់", "ស្រុក/ខណ្ឌ", "ខេត្ត/ក្រុង"
     ];
     const STUDENT_CSV_HEADERS = [
-        "អត្តលេខ", "គោត្តនាម-នាម", "ភេទ", "ថ្ងៃកំណើត", "ថ្នាក់", "សាលា",
+        "អត្តលេខ", "គោត្តនាម", "នាមខ្លួន", "ភេទ", "ថ្ងៃកំណើត", "ថ្នាក់", "សាលា",
         "ទីកន្លែងកំណើត - ភូមិ", "ទីកន្លែងកំណើត - ឃុំ/សង្កាត់",
         "ទីកន្លែងកំណើត - ស្រុក/ខណ្ឌ", "ទីកន្លែងកំណើត - ខេត្ត/ក្រុង",
-        "លេខទូរស័ព្ទ", "ឈ្មោះឪពុក", "ឈ្មោះម្តាយ",
+        "លេខទូរស័ព្ទ", "ឈ្មោះឪពុក", "មុខរបរឪពុក", "ឈ្មោះម្តាយ", "មុខរបរម្តាយ", "ឈ្មោះអាណាព្យាបាល",
         "អាសយដ្ឋានបច្ចុប្បន្ន - ភូមិ", "អាសយដ្ឋានបច្ចុប្បន្ន - ឃុំ/សង្កាត់",
         "អាសយដ្ឋានបច្ចុប្បន្ន - ស្រុក/ខណ្ឌ", "អាសយដ្ឋានបច្ចុប្បន្ន - ខេត្ត/ក្រុង"
     ];
     const STUDENT_IMPORT_FIELDS = [
-        "studentCode", "studentName", "gender", "dob", "className", "fromSchool",
+        "studentCode", "studentSurname", "studentGivenName", "gender", "dob", "className", "fromSchool",
         "pobVillage", "pobCommune", "pobDistrict", "pobProvince",
-        "contact", "fatherName", "motherName",
+        "contact", "fatherName", "fatherOccupation", "motherName", "motherOccupation", "guardianName",
         "currentVillage", "currentCommune", "currentDistrict", "currentProvince"
     ];
     const STUDENT_DATA_FIELDS = [
         "studentName", "gender", "dob", "className", "fromSchool",
         "pobVillage", "pobCommune", "pobDistrict", "pobProvince",
-        "contact", "fatherName", "motherName",
+        "contact", "fatherName", "fatherOccupation", "motherName", "motherOccupation", "guardianName",
         "currentVillage", "currentCommune", "currentDistrict", "currentProvince", "photo"
     ];
     const STUDENT_TEMPLATE_EXAMPLE = [
-        "", "(ឧ.) ហ៊ុន ណារ", "ប្រុស", "15/05/2010", "7A", "សាលាបឋមសិក្សាព្រៃខ្លា",
+        "", "ហ៊ុន", "ណារ", "ប្រុស", "15/05/2010", "7A", "សាលាបឋមសិក្សាព្រៃខ្លា",
         "ព្រៃមេលងខាងជើង", "ព្រៃខ្លា", "ស្រុកកោះអណ្តែត", "ខេត្តតាកែវ",
-        "012345678", "ហ៊ុន សក្កដា", "គង់ សុភី",
+        "012345678", "ហ៊ុន សក្កដា", "កសិករ", "គង់ សុភី", "អាជីវករ", "ហ៊ុន សក្កដា",
         "ព្រៃមេលងខាងជើង", "ព្រៃខ្លា", "ស្រុកកោះអណ្តែត", "ខេត្តតាកែវ"
     ];
-    const STUDENT_TEMPLATE_MERGES = [
-        { s: { r: 3, c: 0 }, e: { r: 4, c: 0 } },
-        { s: { r: 3, c: 1 }, e: { r: 4, c: 1 } },
-        { s: { r: 3, c: 2 }, e: { r: 4, c: 2 } },
-        { s: { r: 3, c: 3 }, e: { r: 4, c: 3 } },
-        { s: { r: 3, c: 4 }, e: { r: 4, c: 4 } },
-        { s: { r: 3, c: 5 }, e: { r: 4, c: 5 } },
-        { s: { r: 3, c: 6 }, e: { r: 3, c: 9 } },
-        { s: { r: 3, c: 10 }, e: { r: 4, c: 10 } },
-        { s: { r: 3, c: 11 }, e: { r: 4, c: 11 } },
-        { s: { r: 3, c: 12 }, e: { r: 4, c: 12 } },
-        { s: { r: 3, c: 13 }, e: { r: 3, c: 16 } }
-    ];
+    const STUDENT_TEMPLATE_MERGES = [0,1,2,3,4,5,6,11,12,13,14,15,16]
+        .map(c => ({ s:{r:3,c}, e:{r:4,c} }))
+        .concat([{s:{r:3,c:7},e:{r:3,c:10}}, {s:{r:3,c:17},e:{r:3,c:20}}]);
     const STUDENT_TEMPLATE_COLS = [
-        {wch:15}, {wch:22}, {wch:10}, {wch:15}, {wch:10}, {wch:22},
-        {wch:16}, {wch:16}, {wch:16}, {wch:16}, {wch:15}, {wch:18},
-        {wch:18}, {wch:16}, {wch:16}, {wch:16}, {wch:16}
+        {wch:15}, {wch:16}, {wch:16}, {wch:10}, {wch:15}, {wch:10}, {wch:22},
+        {wch:16}, {wch:16}, {wch:16}, {wch:16}, {wch:15}, {wch:18}, {wch:16},
+        {wch:18}, {wch:16}, {wch:20}, {wch:16}, {wch:16}, {wch:16}, {wch:16}
     ];
 
     // ===================== UTILITY =====================
@@ -2987,15 +3138,31 @@
     function studentVisibleId(s={}) { return s.studentCode || s.studentId || ""; }
     function studentDisplayId(s={}, fb="") { return s.studentCode || s.studentId || fb || s.id || ""; }
 
+    function normalizeStudentIdentity(student={}) {
+        const legacyName = String(student.studentName || "").trim();
+        const legacyParts = legacyName.split(/\s+/).filter(Boolean);
+        const fallbackSurname = legacyParts.shift() || "";
+        const fallbackGivenName = legacyParts.join(" ");
+        const hasSplitName = String(student.studentSurname || "").trim() || String(student.studentGivenName || "").trim();
+        const studentSurname = String(student.studentSurname || "").trim() || (!hasSplitName ? fallbackSurname : "");
+        const studentGivenName = String(student.studentGivenName || "").trim() || (!hasSplitName ? fallbackGivenName : "");
+        const studentName = [studentSurname, studentGivenName].filter(Boolean).join(" ") || legacyName;
+        return { ...student, studentSurname, studentGivenName, studentName };
+    }
+
+    function studentFullName(student={}) {
+        return normalizeStudentIdentity(student).studentName;
+    }
+
     function addressText(s, prefix) {
         return [s[`${prefix}Village`],s[`${prefix}Commune`],s[`${prefix}District`],s[`${prefix}Province`]].filter(Boolean).join(", ");
     }
 
     function studentExportValues(s) {
         return [
-            studentVisibleId(s), s.studentName, s.gender, formatDate(s.dob), s.className, s.fromSchool,
+            studentVisibleId(s), s.studentSurname, s.studentGivenName, s.gender, formatDate(s.dob), s.className, s.fromSchool,
             s.pobVillage, s.pobCommune, s.pobDistrict, s.pobProvince,
-            s.contact, s.fatherName, s.motherName,
+            s.contact, s.fatherName, s.fatherOccupation, s.motherName, s.motherOccupation, s.guardianName,
             s.currentVillage, s.currentCommune, s.currentDistrict, s.currentProvince
         ];
     }
@@ -3066,6 +3233,153 @@
         }, 3500);
     }
 
+    // ===================== APP SETTINGS =====================
+    function defaultAppSettings() {
+        return {
+            issueDate: new Date().toISOString().slice(0, 10),
+            principalName: "",
+            studentCodePrefix: DEFAULT_STUDENT_CODE_PREFIX,
+            studentCodeDigits: 4,
+            classTeachers: {}
+        };
+    }
+
+    function normalizeAppSettings(value={}) {
+        const defaults = defaultAppSettings();
+        const teachers = value.classTeachers && typeof value.classTeachers === "object" ? value.classTeachers : {};
+        const classTeachers = {};
+        Object.entries(teachers).forEach(([className, teacherName]) => {
+            const cls = String(className || "").trim();
+            const teacher = String(teacherName || "").trim();
+            if (cls && teacher) classTeachers[cls] = teacher;
+        });
+        return {
+            issueDate: /^\d{4}-\d{2}-\d{2}$/.test(String(value.issueDate || "")) ? String(value.issueDate) : defaults.issueDate,
+            principalName: String(value.principalName || "").trim(),
+            studentCodePrefix: String(value.studentCodePrefix || defaults.studentCodePrefix).trim().replace(/\s+/g, "-").replace(/-+/g, "-").slice(0, 12) || defaults.studentCodePrefix,
+            studentCodeDigits: Math.min(8, Math.max(2, Number.parseInt(value.studentCodeDigits, 10) || defaults.studentCodeDigits)),
+            classTeachers
+        };
+    }
+
+    function loadAppSettingsFromLocal() {
+        try {
+            return normalizeAppSettings(JSON.parse(localStorage.getItem(APP_SETTINGS_STORAGE_KEY) || "{}"));
+        } catch {
+            return defaultAppSettings();
+        }
+    }
+
+    function storeAppSettings() {
+        localStorage.setItem(APP_SETTINGS_STORAGE_KEY, JSON.stringify(appSettings));
+    }
+
+    function updateStudentCodeHint() {
+        const input = document.getElementById("studentCode");
+        if (!input) return;
+        const sample = `${appSettings.studentCodePrefix}-${String(1).padStart(appSettings.studentCodeDigits, "0")}`;
+        input.placeholder = `ឧ. ${sample} ឬទុកទទេដើម្បីបង្កើតស្វ័យប្រវត្តិ`;
+    }
+
+    function applySharedAppSettings(settings) {
+        if (!settings || typeof settings !== "object") return;
+        appSettings = normalizeAppSettings({ ...appSettings, ...settings });
+        storeAppSettings();
+        updateStudentCodeHint();
+    }
+
+    function settingsClassNames() {
+        const names = new Set(Object.keys(appSettings.classTeachers || {}));
+        allStudents.forEach(student => {
+            const className = String(student.className || "").trim();
+            if (className) names.add(className);
+        });
+        return [...names].sort((a,b)=>a.localeCompare(b,"km-KH"));
+    }
+
+    function renderTeacherSettings() {
+        els.teacherSettingsList.replaceChildren();
+        const classes = settingsClassNames();
+        if (!classes.length) {
+            const empty = document.createElement("p");
+            empty.className = "settings-help";
+            empty.textContent = "មិនទាន់មានថ្នាក់។ សូមបញ្ចូលសិស្ស និងថ្នាក់ជាមុន។";
+            els.teacherSettingsList.append(empty);
+            return;
+        }
+        classes.forEach(className => {
+            const row = document.createElement("label");
+            row.className = "teacher-setting-row";
+            const label = document.createElement("span");
+            label.className = "teacher-setting-class";
+            label.textContent = `ថ្នាក់ ${className}`;
+            const input = document.createElement("input");
+            input.type = "text";
+            input.dataset.className = className;
+            input.placeholder = "ឈ្មោះគ្រូបន្ទុក";
+            input.value = appSettings.classTeachers[className] || "";
+            row.append(label, input);
+            els.teacherSettingsList.append(row);
+        });
+    }
+
+    function openAppSettings() {
+        els.cardIssueDateInput.value = appSettings.issueDate;
+        els.principalNameInput.value = appSettings.principalName;
+        els.studentCodePrefixInput.value = appSettings.studentCodePrefix;
+        els.studentCodeDigitsInput.value = appSettings.studentCodeDigits;
+        renderTeacherSettings();
+        els.appSettingsModal.classList.add("is-open");
+    }
+
+    function closeAppSettings() {
+        els.appSettingsModal.classList.remove("is-open");
+    }
+
+    async function syncAppSettingsToGoogleSheet() {
+        if (getCloudProvider() !== GOOGLE_SHEET_PROVIDER || !hasGoogleScriptUrl()) return false;
+        const body = { action:"settings", settings:appSettings, accessKey:getGoogleSheetAccessKey(), sentAt:new Date().toISOString() };
+        await fetch(getGoogleScriptUrl(), {
+            method:"POST",
+            mode:"no-cors",
+            cache:"no-cache",
+            headers:{"Content-Type":"text/plain;charset=utf-8"},
+            body:JSON.stringify(body),
+            redirect:"follow"
+        });
+        return true;
+    }
+
+    async function saveAppSettings() {
+        const classTeachers = {};
+        els.teacherSettingsList.querySelectorAll("input[data-class-name]").forEach(input => {
+            const className = String(input.dataset.className || "").trim();
+            const teacherName = input.value.trim();
+            if (className && teacherName) classTeachers[className] = teacherName;
+        });
+        appSettings = normalizeAppSettings({
+            issueDate: els.cardIssueDateInput.value,
+            principalName: els.principalNameInput.value,
+            studentCodePrefix: els.studentCodePrefixInput.value,
+            studentCodeDigits: els.studentCodeDigitsInput.value,
+            classTeachers
+        });
+        storeAppSettings();
+        updateStudentCodeHint();
+        els.saveAppSettingsBtn.disabled = true;
+        try {
+            await syncAppSettingsToGoogleSheet();
+            closeAppSettings();
+            showToast("បានរក្សាទុក Settings កាតសិស្ស");
+        } catch (error) {
+            console.error("Settings sync error:", error);
+            closeAppSettings();
+            showToast("បានរក្សាទុកក្នុងកុំព្យូទ័រ ប៉ុន្តែ sync ទៅ Google Sheet មិនបាន", "warning");
+        } finally {
+            els.saveAppSettingsBtn.disabled = false;
+        }
+    }
+
     // ===================== STATUS =====================
     function setStatus(text, state = "") {
         els.status.className = `status-pill ${state}`.trim();
@@ -3078,6 +3392,7 @@
     function getSupabaseAnonKey() { return String(localStorage.getItem(SUPABASE_ANON_KEY_STORAGE_KEY) || DEFAULT_SUPABASE_ANON_KEY).trim(); }
     function hasSupabaseConfig() { return Boolean(getSupabaseUrl() && getSupabaseAnonKey()); }
     function getGoogleScriptUrl() { return localStorage.getItem(GOOGLE_SCRIPT_STORAGE_KEY) || DEFAULT_GOOGLE_SCRIPT_URL; }
+    function getGoogleSheetAccessKey() { return String(localStorage.getItem(GOOGLE_SHEET_ACCESS_KEY_STORAGE_KEY) || "").trim(); }
     function hasGoogleScriptUrl() { return Boolean(getGoogleScriptUrl()); }
 
     function getCloudProvider() {
@@ -3095,6 +3410,32 @@
 
     function hasCloudStorageConfig() {
         return getCloudProvider() === SUPABASE_PROVIDER ? hasSupabaseConfig() : hasGoogleScriptUrl();
+    }
+
+    async function refreshSharedDataInBackground() {
+        if (sharedDataRefreshInFlight || document.visibilityState === "hidden") return;
+        if (getCloudProvider() !== GOOGLE_SHEET_PROVIDER || !hasGoogleScriptUrl()) return;
+        sharedDataRefreshInFlight = true;
+        try {
+            const status = await readGoogleSheetJsonp({ action:"status" });
+            const supportsRevision = status?.ok !== false && ("revision" in status || "settingsRevision" in status);
+            const dataChanged = String(status?.revision ?? "") !== lastGoogleDataRevision;
+            const settingsChanged = String(status?.settingsRevision ?? "") !== lastGoogleSettingsRevision;
+            if (!supportsRevision || dataChanged || settingsChanged) {
+                await loadStudentsFromGoogleSheet({ silent:true, keepLocalWhenCloudEmpty:true, background:true });
+            }
+        } catch (error) {
+            console.debug("Shared data status check skipped:", error);
+        } finally {
+            sharedDataRefreshInFlight = false;
+        }
+    }
+
+    function restartSharedDataRefresh() {
+        if (sharedDataRefreshTimer) clearInterval(sharedDataRefreshTimer);
+        sharedDataRefreshTimer = null;
+        if (getCloudProvider() !== GOOGLE_SHEET_PROVIDER || !hasGoogleScriptUrl()) return;
+        sharedDataRefreshTimer = setInterval(refreshSharedDataInBackground, SHARED_DATA_REFRESH_MS);
     }
 
     function readableCloudError(err) {
@@ -3128,6 +3469,7 @@
             const params = new URLSearchParams(window.location.search);
             const provider = params.get("storage") || params.get("provider");
             const sheetUrl = params.get("sheet") || params.get("sheetUrl");
+            const sheetAccessKey = params.get("sheetKey") || params.get("accessKey");
             const supabaseUrl = params.get("supabaseUrl") || params.get("sbUrl");
             const supabaseKey = params.get("supabaseKey") || params.get("sbKey");
             let changed = false;
@@ -3141,6 +3483,11 @@
                 localStorage.setItem(GOOGLE_SCRIPT_STORAGE_KEY, sheetUrl);
                 localStorage.setItem(CLOUD_PROVIDER_STORAGE_KEY, GOOGLE_SHEET_PROVIDER);
                 params.delete("sheet"); params.delete("sheetUrl");
+                changed = true;
+            }
+            if (sheetAccessKey) {
+                localStorage.setItem(GOOGLE_SHEET_ACCESS_KEY_STORAGE_KEY, sheetAccessKey);
+                params.delete("sheetKey"); params.delete("accessKey");
                 changed = true;
             }
             if (supabaseUrl && /^https:\/\/.+/i.test(supabaseUrl)) {
@@ -3189,6 +3536,7 @@
         els.supabaseUrlInput.value = getSupabaseUrl();
         els.supabaseKeyInput.value = getSupabaseAnonKey();
         els.sheetUrlInput.value = getGoogleScriptUrl();
+        els.sheetAccessKeyInput.value = getGoogleSheetAccessKey();
         updateStorageFieldsVisibility();
         els.sheetModal.classList.add("is-open");
         setTimeout(() => {
@@ -3204,10 +3552,16 @@
             localStorage.removeItem(SUPABASE_ANON_KEY_STORAGE_KEY);
         } else {
             localStorage.removeItem(GOOGLE_SCRIPT_STORAGE_KEY);
+            localStorage.removeItem(GOOGLE_SHEET_ACCESS_KEY_STORAGE_KEY);
+            localStorage.removeItem(GOOGLE_DATA_REVISION_STORAGE_KEY);
+            localStorage.removeItem(GOOGLE_SETTINGS_REVISION_STORAGE_KEY);
+            lastGoogleDataRevision = "";
+            lastGoogleSettingsRevision = "";
         }
         localStorage.removeItem(CLOUD_PROVIDER_STORAGE_KEY);
         setCloudControlsLoading(false);
         setStatus("ឡូកាល់ (Offline)", "connected");
+        restartSharedDataRefresh();
     }
 
     function saveSheetUrl() {
@@ -3229,6 +3583,7 @@
             closeSheetModal();
             setCloudControlsLoading(false);
             showToast("បានរក្សាទុក Supabase Storage");
+            restartSharedDataRefresh();
             loadStudentsFromCloudStorage({ silent:false, keepLocalWhenCloudEmpty:true });
             return;
         }
@@ -3239,9 +3594,17 @@
             return;
         }
         localStorage.setItem(GOOGLE_SCRIPT_STORAGE_KEY, v);
+        localStorage.removeItem(GOOGLE_DATA_REVISION_STORAGE_KEY);
+        localStorage.removeItem(GOOGLE_SETTINGS_REVISION_STORAGE_KEY);
+        lastGoogleDataRevision = "";
+        lastGoogleSettingsRevision = "";
+        const accessKey = els.sheetAccessKeyInput.value.trim();
+        if (accessKey) localStorage.setItem(GOOGLE_SHEET_ACCESS_KEY_STORAGE_KEY, accessKey);
+        else localStorage.removeItem(GOOGLE_SHEET_ACCESS_KEY_STORAGE_KEY);
         closeSheetModal();
         setCloudControlsLoading(false);
         showToast("បានរក្សាទុក Google Sheet URL");
+        restartSharedDataRefresh();
         loadStudentsFromCloudStorage({ silent:false, keepLocalWhenCloudEmpty:true });
     }
 
@@ -3269,7 +3632,7 @@
         return { ok:false, message:text || `Supabase error ${response.status}` };
     }
 
-    function testGoogleSheetDraftConnection(url) {
+    function testGoogleSheetDraftConnection(url, accessKey="") {
         return new Promise((resolve) => {
             const callback = `studentStorageTest_${Date.now()}_${Math.random().toString(36).slice(2)}`;
             const script = document.createElement("script");
@@ -3289,6 +3652,7 @@
                 const u = new URL(url);
                 u.searchParams.set("action", "list");
                 u.searchParams.set("callback", callback);
+                if (accessKey) u.searchParams.set("key", accessKey);
                 script.src = u.toString();
                 script.onerror = () => cleanup({ ok:false, message:"មិនអាចភ្ជាប់ Google Sheet URL" });
                 document.head.append(script);
@@ -3305,7 +3669,7 @@
         try {
             const result = provider === SUPABASE_PROVIDER
                 ? await testSupabaseDraftConnection(normalizeSupabaseUrl(els.supabaseUrlInput.value), els.supabaseKeyInput.value.trim())
-                : await testGoogleSheetDraftConnection(els.sheetUrlInput.value.trim());
+                : await testGoogleSheetDraftConnection(els.sheetUrlInput.value.trim(), els.sheetAccessKeyInput.value.trim());
             showToast(result.message, result.ok ? "success" : "warning");
             setStatus(result.ok ? (provider === SUPABASE_PROVIDER ? "Supabase" : "Google Sheet") : "Storage មិនទាន់រួច", result.ok ? "connected" : "error");
         } catch(e) {
@@ -3395,24 +3759,22 @@
 
     async function upsertSupabaseRows(rows=[]) {
         for (const chunk of splitSupabaseRows(rows)) {
-            try {
-                await supabaseFetch("students?on_conflict=id", {
-                    method:"POST",
-                    headers:{ "Prefer":"resolution=merge-duplicates,return=minimal" },
-                    body:JSON.stringify(chunk.map(removeDisabledSupabaseColumns))
-                });
-            } catch(e) {
-                const missingColumn = missingSupabaseColumnFromError(e);
-                if (!missingColumn) throw e;
-                disabledSupabaseColumns.add(missingColumn);
-                if (missingColumn === "photo") {
-                    cloudSyncWarning = "Supabase table ខ្វះ column photo ដូច្នេះ Backup បានតែទិន្នន័យ; រូបថតមិនទាន់ sync";
+            while (true) {
+                try {
+                    await supabaseFetch("students?on_conflict=id", {
+                        method:"POST",
+                        headers:{ "Prefer":"resolution=merge-duplicates,return=minimal" },
+                        body:JSON.stringify(chunk.map(removeDisabledSupabaseColumns))
+                    });
+                    break;
+                } catch(e) {
+                    const missingColumn = missingSupabaseColumnFromError(e);
+                    if (!missingColumn || disabledSupabaseColumns.has(missingColumn)) throw e;
+                    disabledSupabaseColumns.add(missingColumn);
+                    cloudSyncWarning = missingColumn === "photo"
+                        ? "Supabase table ខ្វះ column photo ដូច្នេះរូបថតមិនទាន់ sync"
+                        : "Supabase schema មិនទាន់មាន fields ថ្មីទាំងអស់។ សូមដំណើរការ supabase-schema.sql";
                 }
-                await supabaseFetch("students?on_conflict=id", {
-                    method:"POST",
-                    headers:{ "Prefer":"resolution=merge-duplicates,return=minimal" },
-                    body:JSON.stringify(chunk.map(removeDisabledSupabaseColumns))
-                });
             }
         }
     }
@@ -3470,7 +3832,7 @@
     async function syncGoogleSheet(action, student={}, studentId="", students=null) {
         const url = getGoogleScriptUrl();
         if (!url) return false;
-        const body = { action, studentId, student: {...student, studentId}, sentAt: new Date().toISOString() };
+        const body = { action, studentId, student: {...student, studentId}, accessKey:getGoogleSheetAccessKey(), sentAt: new Date().toISOString() };
         if (Array.isArray(students)) {
             body.students = students.map(i => ({ studentId: studentDisplayId(i, i.id), student: {...i, studentId: studentDisplayId(i,i.id)} }));
         }
@@ -3529,6 +3891,8 @@
                 const u = new URL(url);
                 u.searchParams.set("action", "list");
                 u.searchParams.set("callback", callback);
+                const accessKey = getGoogleSheetAccessKey();
+                if (accessKey) u.searchParams.set("key", accessKey);
                 Object.entries(params).forEach(([k,v]) => u.searchParams.set(k, v));
                 script.src = u.toString();
                 script.onerror = () => {
@@ -3543,11 +3907,31 @@
         });
     }
 
+    function rememberGoogleSheetRevisions(payload={}) {
+        if (Object.prototype.hasOwnProperty.call(payload, "revision")) {
+            lastGoogleDataRevision = String(payload.revision ?? "");
+            localStorage.setItem(GOOGLE_DATA_REVISION_STORAGE_KEY, lastGoogleDataRevision);
+        }
+        if (Object.prototype.hasOwnProperty.call(payload, "settingsRevision")) {
+            lastGoogleSettingsRevision = String(payload.settingsRevision ?? "");
+            localStorage.setItem(GOOGLE_SETTINGS_REVISION_STORAGE_KEY, lastGoogleSettingsRevision);
+        }
+    }
+
+    function studentCollectionSignature(students=[]) {
+        return students.map(student => [
+            student.id || "",
+            student.studentCode || "",
+            student.updatedAt || "",
+            String(student.photo || "").length
+        ].join(":")).sort().join("|");
+    }
+
     function normalizeCloudStudent(item={}, idx=0) {
         const raw = item.student && typeof item.student === "object" ? { ...item.student } : { ...item };
         const studentCode = raw.studentCode || raw.studentId || item.studentId || "";
         const id = raw.recordId || raw.id || studentCode || `cloud-${idx}-${Math.random().toString(36).slice(2)}`;
-        const student = {
+        const student = normalizeStudentIdentity({
             ...raw,
             id,
             studentCode,
@@ -3556,7 +3940,7 @@
             contact: String(raw.contact || "").trim(),
             createdAt: raw.createdAt || raw.created_at || raw.sentAt || new Date().toISOString(),
             updatedAt: raw.updatedAt || raw.updated_at || raw.sentAt || new Date().toISOString()
-        };
+        });
         return { ...student, ...normStudentFields(student) };
     }
 
@@ -3594,40 +3978,47 @@
         }
     }
 
-    async function loadStudentsFromGoogleSheet({ silent=false, keepLocalWhenCloudEmpty=true }={}) {
+    async function loadStudentsFromGoogleSheet({ silent=false, keepLocalWhenCloudEmpty=true, background=false }={}) {
         if (!hasGoogleScriptUrl()) {
             setStatus("ឡូកាល់ (Offline)", "connected");
             setCloudControlsLoading(false);
             if (!silent) showToast("សូមភ្ជាប់ Google Sheet URL ជាមុន","warning");
             return false;
         }
-        setCloudControlsLoading(true);
-        setStatus("កំពុង Load ពី Sheet...", "");
+        if (!background) {
+            setCloudControlsLoading(true);
+            setStatus("កំពុង Load ពី Sheet...", "");
+        }
         try {
             const payload = await readGoogleSheetJsonp();
             if (payload.ok === false) throw new Error(payload.error || "Google Sheet error");
+            applySharedAppSettings(payload.settings);
             const cloudRows = Array.isArray(payload.students) ? payload.students : [];
             const cloudStudents = cloudRows.map(normalizeCloudStudent).filter(s => s.studentName);
+            rememberGoogleSheetRevisions(payload);
             if (!cloudStudents.length && keepLocalWhenCloudEmpty && allStudents.length) {
-                setStatus("Sheet ទទេ - រក្សាទុក Local", "connected");
+                if (!background) setStatus("Sheet ទទេ - រក្សាទុក Local", "connected");
                 if (!silent) showToast("Google Sheet ទទេ។ ទិន្នន័យក្នុង browser ត្រូវបានរក្សាទុក","warning");
                 return false;
             }
+            if (background && studentCollectionSignature(cloudStudents) === studentCollectionSignature(allStudents)) {
+                return true;
+            }
             allStudents = cloudStudents;
             saveToLocalStorage(allStudents);
-            localStorage.setItem(BACKUP_TIME_STORAGE_KEY, payload.updatedAt || new Date().toISOString());
+            localStorage.setItem(BACKUP_TIME_STORAGE_KEY, new Date().toISOString());
             await refreshStudents({ reset:true, source:"memory" });
-            setStatus("Google Sheet", "connected");
+            if (!background) setStatus("Google Sheet", "connected");
             if (!silent) showToast(`Load ពី Google Sheet ${allStudents.length} នាក់`);
             return true;
         } catch(e) {
             console.error("Google Sheet load error:", e);
             lastCloudError = readableCloudError(e);
-            setStatus("Sheet មិនបានភ្ជាប់", "error");
+            if (!background) setStatus("Sheet មិនបានភ្ជាប់", "error");
             if (!silent) showToast(`Load ពី Google Sheet មិនបាន${lastCloudError ? ": " + lastCloudError.slice(0, 90) : ""}`,"error");
             return false;
         } finally {
-            setCloudControlsLoading(false);
+            if (!background) setCloudControlsLoading(false);
         }
     }
 
@@ -3723,9 +4114,10 @@
 
     // ===================== DUPLICATE CHECK =====================
     function normStudentFields(s) {
+        const identity = normalizeStudentIdentity(s);
         return {
             studentCodeNormalized: normText(s.studentCode),
-            studentNameNormalized: normText(s.studentName),
+            studentNameNormalized: normText(identity.studentName),
             dobNormalized: normDate(s.dob),
             contactNormalized: normPhone(s.contact)
         };
@@ -3733,7 +4125,7 @@
 
     function findDuplicate(student, ignoreId="", source=allStudents) {
         const codeKey = normText(student.studentCode);
-        const nameKey = normText(student.studentName);
+        const nameKey = normText(studentFullName(student));
         const classKey = normText(student.className);
         const dobKey = normDate(student.dob);
         const phoneKey = normPhone(student.contact);
@@ -3741,8 +4133,8 @@
             if (e.id && e.id === ignoreId) continue;
             if (codeKey && normText(e.studentCode||e.studentId) === codeKey) return { type:"studentCode", student:e };
             if (phoneKey && normPhone(e.contact) === phoneKey) return { type:"phone", student:e };
-            if (nameKey && dobKey && normText(e.studentName)===nameKey && normDate(e.dob)===dobKey) return { type:"student", student:e };
-            if (nameKey && classKey && normText(e.studentName)===nameKey && normText(e.className)===classKey) return { type:"student", student:e };
+            if (nameKey && dobKey && normText(studentFullName(e))===nameKey && normDate(e.dob)===dobKey) return { type:"student", student:e };
+            if (nameKey && classKey && normText(studentFullName(e))===nameKey && normText(e.className)===classKey) return { type:"student", student:e };
         }
         return null;
     }
@@ -3754,29 +4146,101 @@
     function duplicateMsg(dup) {
         if (!dup) return "";
         if (dup.type === "studentCode") return `លេខសម្គាល់នេះមានរួចហើយ: ${studentDisplayId(dup.student)}`;
-        if (dup.type === "phone") return `លេខទូរស័ព្ទនេះមានរួចហើយ: ${dup.student.studentName||""}`;
-        return `សិស្សនេះមានរួចហើយ: ${dup.student.studentName||""}`;
+        if (dup.type === "phone") return `លេខទូរស័ព្ទនេះមានរួចហើយ: ${studentFullName(dup.student)}`;
+        return `សិស្សនេះមានរួចហើយ: ${studentFullName(dup.student)}`;
     }
 
     // ===================== STUDENT CODE GENERATION =====================
     async function generateStudentCode() {
+        const prefix = appSettings.studentCodePrefix || DEFAULT_STUDENT_CODE_PREFIX;
+        const digits = appSettings.studentCodeDigits || 4;
         let maxNum = 0;
         allStudents.forEach(s => {
             const code = s.studentCode || "";
+            if (!code.startsWith(`${prefix}-`)) return;
             const m = code.match(/(\d+)$/);
             if (m) maxNum = Math.max(maxNum, parseInt(m[1], 10));
         });
         let num = maxNum + 1;
-        let code = `${STUDENT_CODE_PREFIX}-${String(num).padStart(4,"0")}`;
+        let code = `${prefix}-${String(num).padStart(digits,"0")}`;
         const usedCodes = new Set(allStudents.map(s => s.studentCode).filter(Boolean));
         while (usedCodes.has(code)) {
             num++;
-            code = `${STUDENT_CODE_PREFIX}-${String(num).padStart(4,"0")}`;
+            code = `${prefix}-${String(num).padStart(digits,"0")}`;
         }
         return code;
     }
 
     // ===================== PHOTO & WEBCAM =====================
+    let phoneCameraSessionConnected = false;
+    let phoneCameraPhotoCount = 0;
+
+    function updatePhoneCameraButton() {
+        if (!els.phoneCameraBtn || !phoneCameraSessionConnected) return;
+        els.phoneCameraBtn.innerHTML = `<ion-icon name="phone-portrait-outline"></ion-icon> ទូរសព្ទបានភ្ជាប់ · រូប ${phoneCameraPhotoCount}`;
+        els.phoneCameraBtn.title = "Session នៅតែភ្ជាប់។ ទូរសព្ទអាចថតសិស្សបន្ទាប់ដោយមិនបាច់ Scan QR ម្តងទៀត";
+    }
+
+    async function openPhoneCameraModal() {
+        if (!window.desktopCamera) {
+            showToast("Phone Camera អាចប្រើបានតែក្នុង Desktop App", "warning");
+            return;
+        }
+        els.phoneCameraModal?.classList.add("is-open");
+        els.phoneCameraQr?.removeAttribute("src");
+        els.phoneCameraQr?.classList.add("is-hidden");
+        els.phoneCameraUrl.textContent = "កំពុងរៀបចំ…";
+        els.phoneCameraStatus.textContent = "កំពុងស្វែងរក Wi‑Fi ក្នុងកុំព្យូទ័រ…";
+        els.phoneCameraStatus.className = "phone-camera-status";
+        try {
+            const info = await window.desktopCamera.getConnectionInfo();
+            if (!info?.available) {
+                els.phoneCameraUrl.textContent = "រកមិនឃើញ LAN / Wi‑Fi address";
+                els.phoneCameraStatus.textContent = "សូមភ្ជាប់កុំព្យូទ័រ និងទូរសព្ទទៅ Wi‑Fi ដូចគ្នា រួចបើក app ម្តងទៀត។";
+                return;
+            }
+            els.phoneCameraUrl.textContent = info.url;
+            els.phoneCameraQr.src = info.qrDataUrl;
+            els.phoneCameraQr.classList.remove("is-hidden");
+            els.phoneCameraStatus.textContent = phoneCameraSessionConnected
+                ? `Session បានភ្ជាប់ · ទទួលរូប ${phoneCameraPhotoCount} · មិនបាច់ Scan ម្តងទៀត`
+                : "Scan QR ម្តង ហើយរក្សា page នៅលើទូរសព្ទឱ្យបើកសម្រាប់សិស្សទាំងអស់";
+            if (phoneCameraSessionConnected) els.phoneCameraStatus.className = "phone-camera-status connected";
+        } catch (error) {
+            console.error("Phone camera connection error:", error);
+            els.phoneCameraUrl.textContent = "ភ្ជាប់មិនបាន";
+            els.phoneCameraStatus.textContent = "Phone Camera server មិនទាន់រួចរាល់។ សូមបិទ app ហើយបើកម្ដងទៀត។";
+        }
+    }
+
+    function closePhoneCameraModal() {
+        els.phoneCameraModal?.classList.remove("is-open");
+    }
+
+    async function copyPhoneCameraUrl() {
+        if (!window.desktopCamera) return;
+        const copied = await window.desktopCamera.copyConnectionUrl();
+        showToast(copied ? "បាន Copy URL សម្រាប់ទូរសព្ទ" : "មិនមាន URL សម្រាប់ Copy", copied ? "success" : "warning");
+    }
+
+    async function handlePhoneCameraPhoto(payload) {
+        if (!payload?.dataUrl) return;
+        try {
+            phoneCameraSessionConnected = true;
+            phoneCameraPhotoCount += 1;
+            updatePhoneCameraButton();
+            els.phoneCameraStatus.textContent = "បានទទួលរូបថត។ កំពុងរៀបចំ…";
+            els.phoneCameraStatus.className = "phone-camera-status connected";
+            closePhoneCameraModal();
+            const blob = await fetch(payload.dataUrl).then(response => response.blob());
+            await processPhoto(blob);
+            showToast("ទទួលរូបពីទូរសព្ទរួច។ Session នៅភ្ជាប់សម្រាប់សិស្សបន្ទាប់");
+        } catch (error) {
+            console.error("Phone photo processing error:", error);
+            showToast("បានទទួលរូប ប៉ុន្តែរៀបចំរូបថតមិនបាន", "error");
+        }
+    }
+
     let camStream = null;
     let camFacingMode = "user";
     let activeCameraDeviceId = null;
@@ -3925,7 +4389,7 @@
         overlay?.classList.toggle("is-hidden", !isProcessing);
         const label = overlay?.querySelector(".processing-text");
         if (label) label.textContent = text;
-        [els.captureCamBtn, els.switchCamBtn, els.openCameraBtn, els.choosePhotoBtn].forEach(btn => {
+        [els.captureCamBtn, els.switchCamBtn, els.openCameraBtn, els.phoneCameraBtn, els.choosePhotoBtn].forEach(btn => {
             if (btn) btn.disabled = isProcessing;
         });
     }
@@ -4203,13 +4667,20 @@
     // ===================== FORM =====================
     function collectPayload() {
         if (els.sameAddress.checked) syncCurrentFromBirth();
+        const studentSurname = getValue("studentSurname");
+        const studentGivenName = getValue("studentGivenName");
         return {
             studentCode: getValue("studentCode"),
-            studentName: getValue("studentName"),
+            studentSurname,
+            studentGivenName,
+            studentName: [studentSurname, studentGivenName].filter(Boolean).join(" "),
             gender: document.querySelector('input[name="gender"]:checked')?.value || "ប្រុស",
             dob: normDate(getValue("dob")),
             fatherName: getValue("fatherName"),
+            fatherOccupation: getValue("fatherOccupation"),
             motherName: getValue("motherName"),
+            motherOccupation: getValue("motherOccupation"),
+            guardianName: getValue("guardianName"),
             pobProvince: pobGroup.province.value,
             pobDistrict: pobGroup.district.value,
             pobCommune: pobGroup.commune.value,
@@ -4288,7 +4759,8 @@
     }
 
     function loadStudentIntoForm(id) {
-        const s = allStudents.find(i => i.id === id);
+        const found = allStudents.find(i => i.id === id);
+        const s = found ? normalizeStudentIdentity(found) : null;
         if (!s) { showToast("រកមិនឃើញទិន្នន័យសិស្ស","error"); return; }
         fieldIds.forEach(fid => setValue(fid, s[fid]||""));
 
@@ -4377,7 +4849,7 @@
                 await syncCloudStorageWithToast("upsert", {...payload, recordId: editingId}, payload.studentCode||editingId);
                 showToast("បានកែសម្រួលព័ត៌មានសិស្ស");
             } else {
-                payload.studentCode = await generateStudentCode();
+                if (!payload.studentCode) payload.studentCode = await generateStudentCode();
                 const newId = `stu-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
                 const newStudent = {
                     id: newId,
@@ -4407,7 +4879,7 @@
         const s = allStudents.find(i => i.id === id);
         if (!s) return;
         studentToDeleteId = id;
-        els.deleteStudentName.textContent = s.studentName || "សិស្សនេះ";
+        els.deleteStudentName.textContent = studentFullName(s) || "សិស្សនេះ";
         els.deleteModal.classList.add("is-open");
     }
 
@@ -4449,6 +4921,11 @@
     }
 
     async function handleDeleteAllStudents() {
+        if (getCloudProvider() === GOOGLE_SHEET_PROVIDER && hasGoogleScriptUrl()) {
+            closeDeleteAllModal();
+            showToast("Shared Google Sheet mode មិនអនុញ្ញាតលុបទាំងអស់ពីឧបករណ៍មួយទេ", "warning");
+            return;
+        }
         const count = allStudents.length;
         if (!count) {
             closeDeleteAllModal();
@@ -4482,7 +4959,7 @@
         els.maleStudents.textContent = allStudents.filter(s => s.gender==="ប្រុស").length;
         els.femaleStudents.textContent = allStudents.filter(s => s.gender==="ស្រី").length;
         els.lastSync.textContent = formatTime();
-        els.deleteAllBtn.disabled = totalStudentsCount === 0;
+        els.deleteAllBtn.disabled = totalStudentsCount === 0 || (getCloudProvider() === GOOGLE_SHEET_PROVIDER && hasGoogleScriptUrl());
         setCloudControlsLoading(false);
     }
 
@@ -4506,7 +4983,7 @@
     }
 
     function studentSearchText(s) {
-        return [studentDisplayId(s),s.studentName,s.gender,s.dob,s.fatherName,s.motherName,s.fromSchool,s.className,s.contact,addressText(s,"pob"),addressText(s,"current")].filter(Boolean).join(" ").toLowerCase();
+        return [studentDisplayId(s),studentFullName(s),s.gender,s.dob,s.fatherName,s.fatherOccupation,s.motherName,s.motherOccupation,s.guardianName,s.fromSchool,s.className,s.contact,addressText(s,"pob"),addressText(s,"current")].filter(Boolean).join(" ").toLowerCase();
     }
 
     function applyFilters() {
@@ -4594,6 +5071,9 @@
                 <td><div class="skeleton skeleton-line" style="width:70px"></div></td>
                 <td><div class="skeleton skeleton-line" style="width:70px"></div></td>
                 <td><div class="skeleton skeleton-line" style="width:70px"></div></td>
+                <td><div class="skeleton skeleton-line" style="width:70px"></div></td>
+                <td><div class="skeleton skeleton-line" style="width:70px"></div></td>
+                <td><div class="skeleton skeleton-line" style="width:70px"></div></td>
                 <td><div class="skeleton skeleton-line" style="width:50px"></div></td>
                 <td><div class="skeleton skeleton-line" style="width:50px"></div></td>
                 <td><div class="skeleton skeleton-line" style="width:50px"></div></td>
@@ -4610,7 +5090,7 @@
 
         if (visibleStudents.length === 0) {
             els.studentList.innerHTML = `
-                <tr><td colspan="19">
+                <tr><td colspan="22">
                     <div class="empty">
                         <ion-icon name="person-outline"></ion-icon>
                         <p>មិនមានទិន្នន័យ</p>
@@ -4632,10 +5112,10 @@
                         <td style="font-family: monospace; font-size:.82rem;">${esc(studentVisibleId(s)||"–")}</td>
                         <td>
                             <div class="table-student-name" style="display: flex; align-items: center; gap: 8px;">
-                                ${photoSrc ? `<img src="${esc(photoSrc)}" class="student-photo-thumbnail" alt="photo">` : ''}
+                                    ${photoSrc ? `<img src="${esc(photoSrc)}" class="student-photo-thumbnail" alt="photo" loading="lazy" decoding="async">` : ''}
                                 <div style="display: flex; flex-direction: column; align-items: flex-start; gap: 4px;">
-                                    <button class="student-name-button edit-btn" type="button" data-id="${esc(s.id)}" title="កែព័ត៌មាន ${esc(s.studentName)}">
-                                        <span class="student-name">${esc(s.studentName)}</span>
+                                    <button class="student-name-button edit-btn" type="button" data-id="${esc(s.id)}" title="កែព័ត៌មាន ${esc(studentFullName(s))}">
+                                        <span class="student-name">${esc(studentFullName(s))}</span>
                                     </button>
                                     ${dataStatusBadge(status)}
                                 </div>
@@ -4651,7 +5131,10 @@
                         <td>${esc(s.pobProvince||"–")}</td>
                         <td>${esc(s.contact||"–")}</td>
                         <td>${esc(s.fatherName||"–")}</td>
+                        <td>${esc(s.fatherOccupation||"–")}</td>
                         <td>${esc(s.motherName||"–")}</td>
+                        <td>${esc(s.motherOccupation||"–")}</td>
+                        <td>${esc(s.guardianName||"–")}</td>
                         <td>${esc(s.currentVillage||"–")}</td>
                         <td>${esc(s.currentCommune||"–")}</td>
                         <td>${esc(s.currentDistrict||"–")}</td>
@@ -4676,7 +5159,7 @@
             }).join("");
             return `
                 <tr class="class-group-row">
-                    <td colspan="19">ថ្នាក់ ${esc(cls)}<span class="class-count">${students.length} នាក់</span></td>
+                    <td colspan="22">ថ្នាក់ ${esc(cls)}<span class="class-count">${students.length} នាក់</span></td>
                 </tr>${rows}`;
         }).join("");
 
@@ -4693,11 +5176,11 @@
                 return `
                     <article class="student-card ${esc(status.rowClass)}" title="${esc(status.title)}">
                         <div class="mobile-student-row">
-                            <button class="student-name-button mobile-student-main edit-btn" type="button" data-id="${esc(s.id)}" aria-label="កែព័ត៌មាន ${esc(s.studentName)}">
+                            <button class="student-name-button mobile-student-main edit-btn" type="button" data-id="${esc(s.id)}" aria-label="កែព័ត៌មាន ${esc(studentFullName(s))}">
                                 <span class="mobile-student-title" style="display: flex; align-items: center;">
-                                    ${photoSrc ? `<img src="${esc(photoSrc)}" class="student-photo-thumbnail" style="margin-right: 8px; width: 26px; height: 26px;" alt="photo">` : ''}
+                                    ${photoSrc ? `<img src="${esc(photoSrc)}" class="student-photo-thumbnail" style="margin-right: 8px; width: 26px; height: 26px;" alt="photo" loading="lazy" decoding="async">` : ''}
                                     <span class="student-index">${cardNum}.</span>
-                                    <span class="student-name">${esc(s.studentName)}</span>
+                                    <span class="student-name">${esc(studentFullName(s))}</span>
                                 </span>
                                 <span class="student-meta">${esc(studentVisibleId(s)||"–")} · ${esc(formatDate(s.dob)||"–")}</span>
                                 <span class="mobile-student-mini">${esc(miniInfo)}</span>
@@ -4750,7 +5233,7 @@
         } catch(e) {
             console.error("Load page error:", e);
             setStatus("មានបញ្ហា","error");
-            els.studentList.innerHTML = `<tr><td colspan="19"><div class="empty"><p>ផ្ទុកទិន្នន័យមិនបាន</p></div></td></tr>`;
+            els.studentList.innerHTML = `<tr><td colspan="22"><div class="empty"><p>ផ្ទុកទិន្នន័យមិនបាន</p></div></td></tr>`;
         } finally {
             setPageLoading(false);
         }
@@ -4868,10 +5351,10 @@
         if (!s) { showToast("រកមិនឃើញទិន្នន័យសិស្ស","warning"); return; }
         const photoSrc = safePhotoSrc(s.photo);
         const rows = [
-            ["លេខសម្គាល់",studentVisibleId(s)],["ឈ្មោះ",s.studentName],["ភេទ",s.gender],
+            ["លេខសម្គាល់",studentVisibleId(s)],["គោត្តនាម",s.studentSurname],["នាមខ្លួន",s.studentGivenName],["ឈ្មោះពេញ",studentFullName(s)],["ភេទ",s.gender],
             ["ថ្ងៃខែឆ្នាំកំណើត",formatDate(s.dob)],["ថ្នាក់",s.className],["សាលា",s.fromSchool],
             ["ទីកន្លែងកំណើត",addressText(s,"pob")],["លេខទូរស័ព្ទ",s.contact],
-            ["ឈ្មោះឪពុក",s.fatherName],["ឈ្មោះម្តាយ",s.motherName],
+            ["ឈ្មោះឪពុក",s.fatherName],["មុខរបរឪពុក",s.fatherOccupation],["ឈ្មោះម្តាយ",s.motherName],["មុខរបរម្តាយ",s.motherOccupation],["ឈ្មោះអាណាព្យាបាល",s.guardianName],
             ["អាសយដ្ឋានបច្ចុប្បន្ន",addressText(s,"current")]
         ].map(([l,v]) => `<tr><th>${esc(l)}</th><td>${esc(v||"–")}</td></tr>`).join("");
         printWindow("ពាក្យចុះឈ្មោះ",`
@@ -4888,7 +5371,7 @@
     function printStudentList(withPhotos = false) {
         const rows = hasActiveFilters() ? visibleStudents : allStudents;
         if (!rows.length) { showToast("មិនមានទិន្នន័យសម្រាប់បោះពុម្ព","warning"); return; }
-        const columnCount = withPhotos ? 19 : 18;
+        const columnCount = withPhotos ? 22 : 21;
         let idx = 0;
         const body = groupedByClass(rows).map(([cls,students]) => {
             const studentRows = students.map(s => {
@@ -4901,7 +5384,7 @@
                     <td class="num-col">${idx}</td>
                     ${photoCell}
                     <td style="font-family: monospace; font-size: 10.5px; text-align: center;">${esc(studentVisibleId(s)||"")}</td>
-                    <td style="font-weight: 600;">${esc(s.studentName||"")}</td>
+                    <td style="font-weight: 600;">${esc(studentFullName(s))}</td>
                     <td class="center-col">${esc(s.gender||"")}</td>
                     <td class="center-col" style="font-size: 10.5px;">${esc(formatDate(s.dob)||"")}</td>
                     <td class="center-col">${esc(s.className||"")}</td>
@@ -4912,7 +5395,10 @@
                     <td>${esc(s.pobProvince||"")}</td>
                     <td style="font-size: 10.5px; text-align: center;">${esc(s.contact||"")}</td>
                     <td>${esc(s.fatherName||"")}</td>
+                    <td>${esc(s.fatherOccupation||"")}</td>
                     <td>${esc(s.motherName||"")}</td>
+                    <td>${esc(s.motherOccupation||"")}</td>
+                    <td>${esc(s.guardianName||"")}</td>
                     <td>${esc(s.currentVillage||"")}</td>
                     <td>${esc(s.currentCommune||"")}</td>
                     <td>${esc(s.currentDistrict||"")}</td>
@@ -4963,7 +5449,10 @@
                         <th colspan="4">ទីកន្លែងកំណើត</th>
                         <th rowspan="2" style="min-width: 95px;">លេខទូរស័ព្ទ</th>
                         <th rowspan="2" style="min-width: 100px;">ឈ្មោះឪពុក</th>
+                        <th rowspan="2" style="min-width: 90px;">មុខរបរឪពុក</th>
                         <th rowspan="2" style="min-width: 100px;">ឈ្មោះម្តាយ</th>
+                        <th rowspan="2" style="min-width: 90px;">មុខរបរម្តាយ</th>
+                        <th rowspan="2" style="min-width: 110px;">អាណាព្យាបាល</th>
                         <th colspan="4">អាសយដ្ឋានបច្ចុប្បន្ន</th>
                     </tr>
                     <tr>
@@ -4992,7 +5481,7 @@
             const studentRows = students.map((s, idx) => `<tr>
                 <td class="num-col">${idx + 1}</td>
                 <td style="font-family:monospace;text-align:center;">${esc(studentVisibleId(s)||"")}</td>
-                <td style="font-weight:700;">${esc(s.studentName||"")}</td>
+                <td style="font-weight:700;">${esc(studentFullName(s))}</td>
                 <td class="center-col">${esc(s.gender||"")}</td>
                 <td class="center-col">${esc(formatDate(s.dob)||"")}</td>
                 <td class="center-col">${esc(s.contact||"")}</td>
@@ -5050,61 +5539,75 @@
         const rows = students || printableRows();
         if (!rows.length) { showToast("មិនមានទិន្នន័យសម្រាប់បោះពុម្ពកាត","warning"); return; }
         const academicYear = studentCardAcademicYear();
-        const issuedDate = new Date().toLocaleDateString("km-KH");
+        const issuedDate = formatDate(appSettings.issueDate) || new Date().toLocaleDateString("km-KH");
+        const principalName = appSettings.principalName || "................................";
         const logoSrc = studentCardLogoSrc();
         const cards = rows.map((s, index) => {
             const photoSrc = safePhotoSrc(s.photo);
             const visibleId = studentVisibleId(s) || `ID-${String(index + 1).padStart(4, "0")}`;
             const birthPlace = addressText(s, "pob") || "................................";
             const currentAddress = addressText(s, "current") || "................................";
+            const teacherName = appSettings.classTeachers?.[String(s.className || "").trim()] || "................................";
             return `<article class="certificate-student-card">
                 <div class="card-watermark"><img src="${esc(logoSrc)}" alt=""></div>
-                <header class="card-heading">
+                <header class="reference-card-header">
                     <div class="card-logo"><img src="${esc(logoSrc)}" alt="ក្រសួងអប់រំ យុវជន និងកីឡា"></div>
+                    <div class="card-school-heading">
+                        <div>ក្រសួងអប់រំ យុវជន និងកីឡា</div>
+                        <div>មន្ទីរអប់រំ យុវជន និងកីឡាខេត្តតាកែវ</div>
+                        <div>វិទ្យាល័យសុខអានព្រៃមេលង</div>
+                    </div>
                     <div class="card-kingdom">
                         <div>ព្រះរាជាណាចក្រកម្ពុជា</div>
                         <div>ជាតិ សាសនា ព្រះមហាក្សត្រ</div>
-                        <div class="kingdom-line"></div>
+                        <div class="kingdom-line">◆ ◆ ◆</div>
                     </div>
                 </header>
-                <div class="card-ministry">
-                    <div>ក្រសួងអប់រំ យុវជន និងកីឡា</div>
-                    <div>មន្ទីរអប់រំ យុវជន និងកីឡាខេត្តតាកែវ</div>
-                    <div>វិទ្យាល័យសុខអានព្រៃមេលង</div>
+                <div class="reference-card-title">
+                    ប័ណ្ណសម្គាល់ខ្លួនសិស្ស ឆ្នាំសិក្សា ${esc(academicYear)}
                 </div>
-                <div class="card-title">ប័ណ្ណសម្គាល់ខ្លួនសិស្ស</div>
-                <div class="card-year">ឆ្នាំសិក្សា ${esc(academicYear)}</div>
-                <section class="card-fields">
-                    <div class="field label">គោត្តនាម និងនាម</div>
-                    <div class="field value student-name-value">${esc(s.studentName || "")}</div>
-                    <div class="field label">ភេទ</div>
-                    <div class="field value center">${esc(s.gender || "")}</div>
-                    <div class="field label">ថ្ងៃខែឆ្នាំកំណើត</div>
-                    <div class="field value">${esc(formatDate(s.dob) || "")}</div>
-                    <div class="field label">ថ្នាក់ទី</div>
-                    <div class="field value center">${esc(s.className || "")}</div>
-                    <div class="field label">ទីកន្លែងកំណើត</div>
-                    <div class="field value wide">${esc(birthPlace)}</div>
-                    <div class="field label">លេខទំនាក់ទំនង</div>
-                    <div class="field value">${esc(s.contact || "")}</div>
-                    <div class="field label">ឪពុក/ម្តាយ</div>
-                    <div class="field value wide">${esc([s.fatherName, s.motherName].filter(Boolean).join(" / ") || "")}</div>
+                <section class="reference-card-info">
+                    <div class="reference-info-row reference-info-four">
+                        <span>គោត្តនាម និងនាម</span><strong>${esc(studentFullName(s) || "-")}</strong>
+                        <span>ភេទ</span><strong>${esc(s.gender || "-")}</strong>
+                    </div>
+                    <div class="reference-info-row reference-info-four">
+                        <span>ថ្ងៃខែឆ្នាំកំណើត</span><strong>${esc(formatDate(s.dob) || "-")}</strong>
+                        <span>ថ្នាក់</span><strong>${esc(s.className || "-")}</strong>
+                    </div>
+                    <div class="reference-info-row reference-info-full">
+                        <span>ទីកន្លែងកំណើត</span><strong>${esc(birthPlace)}</strong>
+                    </div>
+                    <div class="reference-info-row reference-info-full">
+                        <span>អាសយដ្ឋានបច្ចុប្បន្ន</span><strong>${esc(currentAddress)}</strong>
+                    </div>
+                    <div class="reference-info-row reference-info-four reference-info-contact">
+                        <span>លេខទូរសព្ទ</span><strong>${esc(s.contact || "-")}</strong>
+                        <span>សាលា</span><strong>${esc(s.fromSchool || "-")}</strong>
+                    </div>
                 </section>
-                <section class="card-lower">
-                    <div class="card-photo-box">
+                <section class="reference-card-lower">
+                    <div class="reference-photo-box">
                         <div class="card-id-code">${esc(visibleId)}</div>
                         <div class="card-photo-slot">
-                            ${photoSrc ? `<img src="${esc(photoSrc)}" alt="រូបថត">` : `<span>រូបថត</span>`}
+                            ${photoSrc ? `<img src="${esc(photoSrc)}" alt="រូបថត">` : `<span>រូបថត<br>3×4</span>`}
                         </div>
                     </div>
-                    <div class="card-signature">
-                        <div class="signature-row"><span>ថ្ងៃចេញប័ណ្ណ</span><strong>${esc(issuedDate)}</strong></div>
-                        <div class="signature-row"><span>អាសយដ្ឋាន</span><strong>${esc(currentAddress)}</strong></div>
-                        <div class="signature-lines">
-                            <span>ថ្ងៃ........ខែ........ឆ្នាំ............</span>
-                            <span>ថ្ងៃ........ខែ........ឆ្នាំ២០២.......</span>
+                    <div class="reference-family-signatures">
+                        <div class="reference-family-row">
+                            <span>ឪពុក</span><strong>${esc(s.fatherName || "-")}</strong>
+                            <span>មុខរបរ</span><strong>${esc(s.fatherOccupation || "-")}</strong>
                         </div>
-                        <div class="principal-title">នាយកវិទ្យាល័យ</div>
+                        <div class="reference-family-row">
+                            <span>ម្តាយ</span><strong>${esc(s.motherName || "-")}</strong>
+                            <span>មុខរបរ</span><strong>${esc(s.motherOccupation || "-")}</strong>
+                        </div>
+                        <div class="reference-guardian-row"><span>អាណាព្យាបាល</span><strong>${esc(s.guardianName || "-")}</strong></div>
+                        <div class="reference-date-line">ថ្ងៃ ${esc(issuedDate)}</div>
+                        <div class="reference-approval-grid">
+                            <div><strong>${esc(teacherName)}</strong><span>គ្រូបន្ទុកថ្នាក់ ${esc(s.className || "")}</span></div>
+                            <div><strong>${esc(principalName)}</strong><span>នាយកសាលា</span></div>
+                        </div>
                     </div>
                 </section>
             </article>`;
@@ -5112,84 +5615,61 @@
         printWindow("កាតសិស្ស",`
             <style>
                 @page { size: A4 landscape; margin: 4mm; }
-                body { background:#fff; color:#0f172a; }
-                .cards-grid { display:grid; grid-template-columns:repeat(3, 94mm); gap:3mm; justify-content:center; align-items:start; }
+                body { background:#fff; color:#111; }
+                .cards-grid { display:grid; grid-template-columns:repeat(3, 75mm); gap:2mm; justify-content:center; align-items:start; }
                 .certificate-student-card {
                     --card-muol:"Khmer OS Muol Light","KhmerOSMuolLight","KhmerOSMoulLight","Moul","Khmer OS",serif;
                     --card-body:"Kantumruy","Khmer OS",Arial,sans-serif;
                     position:relative;
-                    width:94mm;
-                    height:118mm;
+                    width:75mm;
+                    height:100mm;
+                    box-sizing:border-box;
                     overflow:hidden;
                     break-inside:avoid;
                     page-break-inside:avoid;
-                    border:1.15px solid #2368f7;
-                    box-shadow:inset 0 0 0 .45mm rgba(35,104,247,.12);
-                    background:linear-gradient(180deg, #fff 0%, #fff 73%, #f8fbff 100%);
-                    padding:3.4mm 3.8mm 3.2mm;
-                    font-family:var(--card-muol);
-                    font-weight:400;
-                    letter-spacing:0;
+                    border:.55mm solid #112df5;
+                    background:#fff;
+                    padding:2mm;
+                    font-family:var(--card-body);
                     print-color-adjust:exact;
                     -webkit-print-color-adjust:exact;
                 }
-                .certificate-student-card * { position:relative; z-index:1; }
-                .card-watermark { position:absolute; inset:19mm 10mm auto; z-index:0; display:grid; place-items:center; opacity:.095; }
-                .card-watermark img { width:70mm; height:76mm; object-fit:contain; display:block; }
-                .card-heading { display:grid; grid-template-columns:20mm 1fr; min-height:17mm; align-items:start; column-gap:2mm; }
-                .card-logo { display:flex; justify-content:center; align-items:flex-start; padding-top:.4mm; }
-                .card-logo img { width:14mm; height:17mm; object-fit:contain; display:block; filter:drop-shadow(0 1px 0 rgba(255,255,255,.65)); }
-                .card-kingdom { text-align:right; color:#123344; font-size:9.2px; line-height:1.55; font-family:var(--card-muol); font-weight:400; }
-                .kingdom-line { width:32mm; height:1.5mm; margin:.8mm 0 0 auto; border-top:1px solid #48647a; border-bottom:1px solid #48647a; opacity:.65; }
-                .card-ministry { width:62mm; margin-top:-3mm; color:#153847; font-size:8.9px; line-height:1.72; font-family:var(--card-muol); font-weight:400; text-shadow:0 .25px 0 #fff; }
-                .card-title { margin-top:1.2mm; text-align:center; color:#c66a00; font-size:10.2px; line-height:1.35; font-family:var(--card-muol); font-weight:400; }
-                .card-year { margin-top:.2mm; text-align:center; color:#3b82f6; font-size:10.1px; line-height:1.35; font-family:var(--card-muol); font-weight:400; }
-                .card-fields {
-                    display:grid;
-                    grid-template-columns:24mm 31mm 10mm 18mm;
-                    column-gap:1.2mm;
-                    row-gap:1.25mm;
-                    margin-top:3.5mm;
-                    padding:1.8mm 1.8mm 1.4mm;
-                    align-items:end;
-                    border-top:1px solid rgba(35,104,247,.28);
-                    border-bottom:1px solid rgba(35,104,247,.28);
-                    background:rgba(255,255,255,.56);
-                    font-size:7.7px;
-                    line-height:1.35;
-                }
-                .field.label { color:#1f2937; white-space:nowrap; font-family:var(--card-muol); font-weight:400; }
-                .field.value {
-                    min-width:0;
-                    min-height:4.1mm;
-                    display:flex;
-                    align-items:flex-end;
-                    color:#001eff;
-                    border-bottom:1px dotted rgba(55,65,81,.78);
-                    padding:0 .8mm .35mm;
-                    font-family:var(--card-muol);
-                    font-weight:400;
-                    white-space:nowrap;
-                    overflow:hidden;
-                    text-overflow:ellipsis;
-                }
-                .field.value.center { justify-content:center; text-align:center; }
-                .field.value.wide { grid-column:span 3; }
-                .student-name-value { font-size:7.9px; }
-                .card-lower { display:grid; grid-template-columns:27mm 1fr; gap:3mm; margin-top:2.5mm; align-items:start; }
-                .card-photo-box { width:26mm; height:42mm; border:1.2px solid #2368f7; background:rgba(255,255,255,.68); }
-                .card-id-code { height:7mm; display:grid; place-items:center; border-bottom:1.1px solid #2368f7; color:#111827; font-size:7.6px; line-height:1; font-family:var(--card-muol); font-weight:400; white-space:nowrap; overflow:hidden; }
-                .card-photo-slot { height:35mm; display:grid; place-items:center; overflow:hidden; color:#9ca3af; font-size:8px; font-family:var(--card-muol); font-weight:400; }
+                .certificate-student-card * { box-sizing:border-box; position:relative; z-index:1; }
+                .card-watermark { position:absolute; left:12mm; top:22mm; z-index:0; width:52mm; height:58mm; display:grid; place-items:center; opacity:.095; }
+                .card-watermark img { width:100%; height:100%; object-fit:contain; display:block; }
+                .reference-card-header { position:relative; height:27.5mm; }
+                .card-logo { position:absolute; left:12.5mm; top:.7mm; width:7mm; height:8.5mm; display:grid; place-items:center; }
+                .card-logo img { width:100%; height:100%; object-fit:contain; display:block; }
+                .card-school-heading { position:absolute; left:0; top:11.2mm; width:42mm; color:#102b37; font:400 6.7px/1.58 var(--card-muol); }
+                .card-kingdom { position:absolute; right:0; top:1mm; width:31mm; text-align:center; color:#102b37; font:400 6.6px/1.75 var(--card-muol); }
+                .kingdom-line { color:#637b85; font:700 4.2px/1 var(--card-body); letter-spacing:.8px; margin-top:.5mm; }
+                .reference-card-title { height:6mm; margin:0 -1mm; display:flex; align-items:center; justify-content:center; color:#b45a00; font:400 7.8px/1.2 var(--card-muol); white-space:nowrap; }
+                .reference-card-info { display:grid; grid-template-rows:4.4mm 4.4mm 6.4mm 6.4mm 4.5mm; gap:.55mm; height:28.3mm; align-content:start; }
+                .reference-info-row { min-width:0; align-items:center; font-size:5.7px; line-height:1.35; }
+                .reference-info-row > span { color:#263238; white-space:nowrap; }
+                .reference-info-row > strong { min-width:0; color:#071cff; font-weight:800; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+                .reference-info-four { display:grid; grid-template-columns:18mm minmax(0,1fr) 7mm 9mm; column-gap:1mm; }
+                .reference-info-full { display:grid; grid-template-columns:18mm minmax(0,1fr); column-gap:1mm; }
+                .reference-info-full > strong { white-space:normal; line-height:1.25; text-overflow:clip; display:-webkit-box; -webkit-box-orient:vertical; -webkit-line-clamp:2; }
+                .reference-info-contact { grid-template-columns:18mm minmax(0,1fr) 7mm 18mm; }
+                .reference-info-contact > strong:last-child { font-size:5.1px; }
+                .reference-card-lower { position:absolute; left:2.7mm; right:2.7mm; bottom:2mm; height:34mm; display:grid; grid-template-columns:18.5mm minmax(0,1fr); gap:1.2mm; }
+                .reference-photo-box { height:34mm; border:.35mm solid #2360ff; display:grid; grid-template-rows:5.5mm minmax(0,1fr); background:#fff; }
+                .card-id-code { display:grid; place-items:center; border-bottom:.3mm solid #2360ff; color:#111; font:800 6.2px/1 var(--card-body); }
+                .card-photo-slot { min-height:0; display:grid; place-items:center; overflow:hidden; background:#fff; color:#222; text-align:center; font:700 7px/1.5 var(--card-body); }
                 .card-photo-slot img { width:100%; height:100%; object-fit:cover; display:block; }
-                .card-signature { min-width:0; padding-top:.6mm; font-size:7.1px; line-height:1.55; color:#111827; font-family:var(--card-muol); font-weight:400; }
-                .signature-row { display:grid; grid-template-columns:17mm 1fr; gap:1.2mm; margin-bottom:1.2mm; align-items:end; }
-                .signature-row strong { min-width:0; color:#001eff; border-bottom:1px dotted #374151; padding:0 .6mm .35mm; font-weight:400; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
-                .signature-lines { display:grid; gap:1.7mm; margin-top:2.1mm; color:#111827; }
-                .signature-lines span { border-bottom:1px dotted #374151; text-align:right; white-space:nowrap; padding-bottom:.3mm; }
-                .principal-title { margin-top:3.2mm; text-align:center; color:#0f3b46; font-size:9px; line-height:1.45; font-family:var(--card-muol); font-weight:400; }
+                .reference-family-signatures { min-width:0; display:grid; grid-template-rows:4.5mm 4.5mm 4.8mm 4.2mm minmax(0,1fr); align-content:start; font-size:5.3px; }
+                .reference-family-row { display:grid; grid-template-columns:7mm minmax(0,1fr) 9mm 13mm; gap:.6mm; align-items:center; }
+                .reference-family-row strong, .reference-guardian-row strong { min-width:0; color:#071cff; font-weight:800; overflow:visible; white-space:nowrap; font-size:5px; }
+                .reference-guardian-row { display:grid; grid-template-columns:14mm minmax(0,1fr); gap:.8mm; align-items:center; }
+                .reference-date-line { text-align:center; padding-top:.7mm; border-bottom:.25mm dotted #3a4650; color:#263238; font-size:5.2px; }
+                .reference-approval-grid { display:grid; grid-template-columns:1fr 1fr; gap:2mm; padding-top:.8mm; text-align:center; }
+                .reference-approval-grid div { min-width:0; }
+                .reference-approval-grid strong { display:block; height:4mm; color:#071cff; font-size:5.3px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+                .reference-approval-grid span { display:block; color:#15252b; font:400 5.6px/1.2 var(--card-muol); }
                 @media print {
                     body { background:#fff; }
-                    .cards-grid { gap:3mm; }
+                    .cards-grid { gap:2mm; }
                 }
             </style>
             <div class="cards-grid">${cards}</div>`);
@@ -5199,6 +5679,8 @@
     const importAliases = {
         studentCode:["អត្តលេខ","លេខសម្គាល់សិស្ស","លេខសិស្ស","studentCode","student id","id"],
         studentName:["គោត្តនាម-នាម","ឈ្មោះសិស្ស","ឈ្មោះពេញ","ឈ្មោះ","studentName","student name","name","full name"],
+        studentSurname:["គោត្តនាម","នាមត្រកូល","studentSurname","surname","family name","last name"],
+        studentGivenName:["នាមខ្លួន","នាម","studentGivenName","given name","first name"],
         gender:["ភេទ","gender","sex"],
         dob:["ថ្ងៃកំណើត","ថ្ងៃខែឆ្នាំកំណើត","dob","date of birth","birthdate"],
         pobVillage:["ភូមិ","ភូមិ (កំណើត)","ភូមិកំណើត","ទីកន្លែងកំណើត - ភូមិ","pobVillage"],
@@ -5206,7 +5688,9 @@
         pobDistrict:["ស្រុក/ខណ្ឌ","ស្រុក/ខណ្ឌ (កំណើត)","ស្រុកខណ្ឌកំណើត","ទីកន្លែងកំណើត - ស្រុក/ខណ្ឌ","pobDistrict"],
         pobProvince:["ខេត្ត/ក្រុង","ខេត្ត/ក្រុង (កំណើត)","ខេត្តរាជធានីកំណើត","ទីកន្លែងកំណើត - ខេត្ត/ក្រុង","pobProvince"],
         fatherName:["ឈ្មោះឳពុក","ឈ្មោះឪពុក","fatherName","father"],
+        fatherOccupation:["មុខរបរឪពុក","មុខរបរឳពុក","fatherOccupation","father occupation"],
         motherName:["ឈ្មោះម្តាយ","ឈ្មោះម្ដាយ","motherName","mother"],
+        motherOccupation:["មុខរបរម្តាយ","មុខរបរម្ដាយ","motherOccupation","mother occupation"],
         guardianName:["ឈ្មោះអាណាព្យាបាល","អាណាព្យាបាល","guardian","parent"],
         currentVillage:["ភូមិ (បច្ចុប្បន្ន)","ភូមិបច្ចុប្បន្ន","អាសយដ្ឋានបច្ចុប្បន្ន - ភូមិ","currentVillage"],
         currentCommune:["ឃុំ/សង្កាត់ (បច្ចុប្បន្ន)","ឃុំសង្កាត់បច្ចុប្បន្ន","អាសយដ្ឋានបច្ចុប្បន្ន - ឃុំ/សង្កាត់","currentCommune"],
@@ -5257,10 +5741,17 @@
     function normImportRow(row) {
         const r = f => String(readImportVal(row,f)??"").trim();
         const guardian = r("guardianName"), addr = r("address");
+        const legacyName = r("studentName");
+        const identity = normalizeStudentIdentity({
+            studentName:legacyName,
+            studentSurname:r("studentSurname"),
+            studentGivenName:r("studentGivenName")
+        });
         return {
-            studentCode:r("studentCode"), studentName:r("studentName"),
+            studentCode:r("studentCode"), ...identity,
             gender:normGender(r("gender")), dob:normDate(readImportVal(row,"dob")),
-            fatherName:r("fatherName")||guardian, motherName:r("motherName"),
+            fatherName:r("fatherName"), fatherOccupation:r("fatherOccupation"),
+            motherName:r("motherName"), motherOccupation:r("motherOccupation"), guardianName:guardian,
             pobProvince:r("pobProvince"),pobDistrict:r("pobDistrict"),pobCommune:r("pobCommune"),pobVillage:r("pobVillage"),
             currentProvince:r("currentProvince"),currentDistrict:r("currentDistrict"),currentCommune:r("currentCommune"),currentVillage:r("currentVillage")||addr,
             fromSchool:r("fromSchool"),className:r("className"),contact:r("contact")
@@ -5348,17 +5839,19 @@
         els.importFileBtn.innerHTML=v?'<span class="spinner"></span><span>Import...</span>':'<ion-icon name="cloud-upload-outline"></ion-icon><span>Import</span>';
     }
     function assignCodes(students,start=1){
+        const prefix=appSettings.studentCodePrefix||DEFAULT_STUDENT_CODE_PREFIX;
+        const digits=appSettings.studentCodeDigits||4;
         let n=Math.max(1,start);const used=new Set(students.map(s=>s.studentCode).filter(Boolean));
         return students.map(s=>{
             if(s.studentCode) return s;let code="";
-            do{code=`${STUDENT_CODE_PREFIX}-${String(n).padStart(4,"0")}`;n++;}while(used.has(code));
+            do{code=`${prefix}-${String(n).padStart(digits,"0")}`;n++;}while(used.has(code));
             used.add(code);return {...s,studentCode:code};
         });
     }
     async function importStudentObjects(rawStudents,label="Import"){
         const accepted=[],skipped=[];
         rawStudents.forEach(raw=>{
-            const s={...raw,studentName:String(raw.studentName||"").trim(),gender:normGender(raw.gender),dob:normDate(raw.dob),contact:String(raw.contact||"").trim()};
+            const s={...normalizeStudentIdentity(raw),gender:normGender(raw.gender),dob:normDate(raw.dob),contact:String(raw.contact||"").trim()};
             if(!s.studentName){skipped.push({reason:"missing",student:s});return;}
             const dup=findDuplicate(s,"",[...allStudents,...accepted.map((i,idx)=>({id:`new-${idx}`,...i}))]);
             if(dup){skipped.push({reason:dup.type,student:s});return;}
@@ -5442,6 +5935,7 @@
     }
 
     function init(){
+        updateStudentCodeHint();
         // Address
         resetAddressGroup(pobGroup);resetAddressGroup(currentGroup);
         setupAddressListeners(pobGroup,()=>{if(els.sameAddress.checked)syncCurrentFromBirth();});
@@ -5455,6 +5949,14 @@
         els.registrationForm.addEventListener("submit",handleFormSubmit);
         els.clearBtn.addEventListener("click",resetForm);
         els.openCameraBtn?.addEventListener("click",openCameraModal);
+        if (window.desktopCamera && els.phoneCameraBtn) {
+            els.phoneCameraBtn.hidden = false;
+            window.desktopCamera.onPhoto(handlePhoneCameraPhoto);
+        }
+        els.phoneCameraBtn?.addEventListener("click",openPhoneCameraModal);
+        els.copyPhoneCameraUrlBtn?.addEventListener("click",copyPhoneCameraUrl);
+        els.closePhoneCameraBtn?.addEventListener("click",closePhoneCameraModal);
+        els.phoneCameraModal?.addEventListener("click",e=>{if(e.target===els.phoneCameraModal)closePhoneCameraModal();});
         els.choosePhotoBtn?.addEventListener("click",()=>els.photoUploadInput?.click());
         els.photoUploadInput?.addEventListener("change",handlePhotoUpload);
         els.cancelCamBtn?.addEventListener("click",closeCameraModal);
@@ -5492,6 +5994,12 @@
         els.loadSheetBtn.addEventListener("click",()=>loadStudentsFromCloudStorage({ silent:false, keepLocalWhenCloudEmpty:true }));
         els.backupNowBtn.addEventListener("click",backupAllStudents);
 
+        // App settings modal
+        els.appSettingsBtn.addEventListener("click",openAppSettings);
+        els.saveAppSettingsBtn.addEventListener("click",saveAppSettings);
+        els.cancelAppSettingsBtn.addEventListener("click",closeAppSettings);
+        els.appSettingsModal.addEventListener("click",e=>{if(e.target===els.appSettingsModal)closeAppSettings();});
+
         // Sheet modal
         els.sheetSettingsBtn.addEventListener("click",openSheetModal);
         els.cancelSheetUrlBtn.addEventListener("click",closeSheetModal);
@@ -5501,12 +6009,14 @@
         els.clearSheetUrlBtn.addEventListener("click",()=>{
             clearCloudSettings(els.storageProviderSelect.value);
             els.sheetUrlInput.value="";
+            els.sheetAccessKeyInput.value="";
             els.supabaseUrlInput.value="";
             els.supabaseKeyInput.value="";
             closeSheetModal();showToast("បានសម្អាត Storage");
         });
         els.sheetModal.addEventListener("click",e=>{if(e.target===els.sheetModal)closeSheetModal();});
         els.sheetUrlInput.addEventListener("keydown",e=>{if(e.key==="Enter")saveSheetUrl();});
+        els.sheetAccessKeyInput.addEventListener("keydown",e=>{if(e.key==="Enter")saveSheetUrl();});
         els.supabaseUrlInput.addEventListener("keydown",e=>{if(e.key==="Enter")saveSheetUrl();});
         els.supabaseKeyInput.addEventListener("keydown",e=>{if(e.key==="Enter")saveSheetUrl();});
 
@@ -5543,6 +6053,7 @@
         els.mobileActionsOverlay?.addEventListener("click", closeMobileActions);
 
         const mobileMenuActions = {
+            "m-app-settings-btn": els.appSettingsBtn,
             "m-sheet-settings-btn": els.sheetSettingsBtn,
             "m-load-sheet-btn": els.loadSheetBtn,
             "m-backup-now-btn": els.backupNowBtn,
@@ -5578,6 +6089,8 @@
                 if(els.deleteModal.classList.contains("is-open")){closeDeleteModal();return;}
                 if(els.deleteAllModal.classList.contains("is-open")){closeDeleteAllModal();return;}
                 if(els.sheetModal.classList.contains("is-open")){closeSheetModal();return;}
+                if(els.appSettingsModal.classList.contains("is-open")){closeAppSettings();return;}
+                if(els.phoneCameraModal?.classList.contains("is-open")){closePhoneCameraModal();return;}
                 if(els.mobileActionsSheet?.classList.contains("is-open")){closeMobileActions();return;}
                 if(els.editingId.value){resetForm();return;}
             }
@@ -5590,6 +6103,10 @@
         rememberSheetUrlFromQuery();
         setCloudControlsLoading(false);
         setStatus(hasCloudStorageConfig() ? currentStorageName() : "ឡូកាល់ (Offline)", "connected");
+        restartSharedDataRefresh();
+        document.addEventListener("visibilitychange",()=>{
+            if (document.visibilityState === "visible") refreshSharedDataInBackground();
+        });
         const logs = loadHistoryFromLocalStorage();
         renderHistory(logs);
         refreshStudents({ reset: true }).then(() => {
@@ -5598,6 +6115,14 @@
     }
 
     document.addEventListener("DOMContentLoaded", init);
+
+    if ("serviceWorker" in navigator && location.protocol !== "file:") {
+        window.addEventListener("load", () => {
+            navigator.serviceWorker.register("./service-worker.js").catch(error => {
+                console.debug("Service worker registration skipped:", error);
+            });
+        });
+    }
 </script>
 </body>
 </html>
