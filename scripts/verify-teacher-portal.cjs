@@ -21,12 +21,14 @@ class FakeSheet {
   }
   setFrozenRows() {}
   hideSheet() {}
+  setColumnWidth() {}
 }
 
 const cache = new Map();
 const properties = new Map();
 const sheets = {};
 let uuid = 0;
+let zippedFiles = [];
 const context = vm.createContext({
   console, Date, Set, Map,
   SpreadsheetApp: { getActiveSpreadsheet: () => ({
@@ -35,7 +37,11 @@ const context = vm.createContext({
   }) },
   Utilities: {
     getUuid: () => `${(++uuid).toString(16).padStart(8, '0')}-1234-4234-9234-abcdefabcdef`,
+    formatDate: date => String(date.getFullYear()),
     computeDigest: (_algorithm, input) => [...crypto.createHash('sha256').update(input).digest()].map(x => x > 127 ? x - 256 : x),
+    newBlob: (content, _mime, name) => ({content, name}),
+    zip: blobs => { zippedFiles = blobs; return {getBytes: () => [...Buffer.from('mock-xlsx')]}; },
+    base64Encode: bytes => Buffer.from(bytes).toString('base64'),
     DigestAlgorithm: {SHA_256: 'SHA_256'}, Charset: {UTF_8: 'UTF_8'}
   },
   CacheService: {getScriptCache: () => ({get: key => cache.get(key) || null, put: (key, value) => cache.set(key, value), remove: key => cache.delete(key)})},
@@ -90,7 +96,7 @@ assert.throws(() => call('teacherPortalSaveAttendance', teacher.token, '7A', '20
 assert.throws(() => call('teacherPortalSaveScores', teacher.token, '8A', 'Math', 'Monthly', '2026-09-29', 100, []), /សិទ្ធិ/);
 assert.throws(() => call('teacherPortalUpdateStudent', teacher.token, '7A', 'id-b', {contact:'1'}, '2026-09-29T00:00:00.000Z'), /សិស្ស/);
 assert.throws(() => call('teacherPortalUpdateStudent', teacher.token, '7A', 'id-a', {contact:'1'}, 'stale'), /ផ្លាស់ប្តូរ/);
-assert.throws(() => call('teacherPortalLogin', '7A', 'wrong'), /PIN/);
+assert.throws(() => call('teacherPortalLogin', '7A', 'wrong'), /លេខកូដ/);
 assert.throws(() => call('portalDate_', '2026-02-30'), /កាលបរិច្ឆេទ/);
 call('teacherPortalSaveAttendance', teacher.token, '7A', '2026-09-29', 'ព្រឹក', [{studentId:'id-a',status:'អវត្តមាន',reason:'ឈឺ'}]);
 assert.equal(call('teacherPortalAttendance', teacher.token, '7A', '2026-09-29', 'ព្រឹក')[0].reason, 'ឈឺ');
@@ -112,10 +118,29 @@ assert.equal(call('teacherPortalAdminOverview', admin.token).length, 2);
 assert.throws(() => call('teacherPortalAdminOverview', teacher.token), /រដ្ឋបាល/);
 assert.throws(() => call('teacherPortalIssueClassPin', teacher.token, '8A', 'x'), /រដ្ឋបាល/);
 const rotated = call('teacherPortalIssueClassPin', admin.token, '7A', 'គ្រូថ្មី');
-assert.equal(rotated.pin.length, 12);
+assert.match(rotated.pin, /^0[1-9]\d{8}$/);
 assert.throws(() => call('teacherPortalRoster', teacher.token, '7A'), /សិទ្ធិ/);
 assert.throws(() => call('teacherPortalRoster', rememberedForRotation.token, '7A'), /សិទ្ធិ/);
 assert.equal(call('teacherPortalLogin', '7A', rotated.pin).teacherName, 'គ្រូថ្មី');
+assert.equal(call('portalPhoneCode_', '+855 12 345 678'), '012345678');
+assert.equal(call('portalPhoneCode_', '០១២ ៣៤៥ ៦៧៨'), '012345678');
+assert.throws(() => call('portalPhoneCode_', '01234'), /៩ ឬ ១០/);
+const currentTeacher = call('teacherPortalLogin', '7A', rotated.pin);
+assert.throws(() => call('teacherPortalIssueAllClassCodes', currentTeacher.token, {}), /រដ្ឋបាល/);
+const phoneIssued = call('teacherPortalIssueClassPin', admin.token, '7A', 'គ្រូទូរសព្ទ', '+855 12 345 678');
+assert.equal(phoneIssued.pin, '012345678');
+assert.equal(call('teacherPortalLogin', '7A', '+85512345678').teacherName, 'គ្រូទូរសព្ទ');
+assert.throws(() => call('teacherPortalIssueClassPin', admin.token, '8A', 'គ្រូ B', '012345678'), /ថ្នាក់ផ្សេង/);
+assert.throws(() => call('teacherPortalIssueAllClassCodes', admin.token, {'7A':{phoneNumber:'012345678'},'8A':{phoneNumber:'012345678'}}), /ជាន់គ្នា/);
+const bulk = call('teacherPortalIssueAllClassCodes', admin.token, {'7A':{teacherName:'គ្រូ A',phoneNumber:'012345678'},'8A':{teacherName:'គ្រូ B'}});
+assert.equal(bulk.codes.length, 2);
+assert.equal(bulk.codes[0].code, '012345678');
+assert.match(bulk.codes[1].code, /^0[1-9]\d{8}$/);
+assert.equal(bulk.filename.endsWith('.xlsx'), true);
+assert.equal(zippedFiles.length, 6);
+assert.match(zippedFiles.find(file => file.name === 'xl/worksheets/sheet1.xml').content, /012345678/);
+assert.equal(call('teacherPortalLogin', '8A', bulk.codes[1].code).teacherName, 'គ្រូ B');
+assert.throws(() => call('teacherPortalLogin', '7A', rotated.pin), /លេខកូដ/);
 const accessBackup = sheets['_Portal Access'];
 delete sheets['_Portal Access'];
 assert.throws(() => call('assertAuthorized_', {parameter:{key:'admin-secret'}}, null), /credential is unavailable/);
@@ -139,4 +164,4 @@ assert.deepEqual(Object.values(templateLengths), [29,29,29,29,29,29]);
 const inlineScripts = [...appHtml.matchAll(/<script(?:\s[^>]*)?>([\s\S]*?)<\/script>/g)]
   .map(match => match[1]).filter(source => source.trim());
 inlineScripts.forEach((source, index) => new vm.Script(source, {filename:`index-inline-${index}.js`}));
-console.log('Teacher portal access, conflict, photo preservation and PIN tests passed');
+console.log('Teacher portal access, conflict, photo preservation and phone-code XLSX tests passed');

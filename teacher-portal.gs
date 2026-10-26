@@ -72,6 +72,23 @@ function portalRandomPin_() {
   return bytes.slice(0, 12).map(function(pair) { return String(parseInt(pair, 16) % 10); }).join("");
 }
 
+function portalPhoneCode_(value) {
+  const raw = String(value || "").trim().replace(/[០-៩]/g, function(digit) { return String("០១២៣៤៥៦៧៨៩".indexOf(digit)); });
+  if (!raw) return "";
+  if (!/^\+?[\d\s().-]+$/.test(raw)) throw new Error("លេខទូរសព្ទត្រូវមានតែលេខ និងសញ្ញាបំបែកធម្មតា");
+  let digits = raw.replace(/\D/g, "");
+  if (digits.indexOf("855") === 0) digits = "0" + digits.slice(3);
+  if (!/^0[1-9]\d{7,8}$/.test(digits)) throw new Error("លេខទូរសព្ទត្រូវមាន ៩ ឬ ១០ ខ្ទង់ (ឧ. 0123456789)");
+  return digits;
+}
+
+function portalRandomPhoneCode_() {
+  // Numeric, phone-length credentials for classes without a supplied phone.
+  const entropy = portalHashPin_(Utilities.getUuid(), Utilities.getUuid()).match(/.{2}/g);
+  return "0" + String(1 + parseInt(entropy[0], 16) % 9) + entropy.slice(1, 9)
+    .map(function(pair) { return String(parseInt(pair, 16) % 10); }).join("");
+}
+
 function portalClasses_() {
   const sheet = getStudentsSheet_();
   const count = Math.max(0, sheet.getLastRow() - 1);
@@ -96,7 +113,7 @@ function portalRememberKey_(token) {
 function teacherPortalLogin(className, pin, remember) {
   const cls = String(className || "").trim();
   const supplied = String(pin || "").trim();
-  if (!supplied || supplied.length > 80) throw new Error("សូមបញ្ចូលលេខ PIN");
+  if (!supplied || supplied.length > 80) throw new Error("សូមបញ្ចូលលេខកូដ");
   const scope = cls === "__admin__" ? PORTAL_ADMIN_SCOPE : "class";
   if (scope === "class" && !portalClasses_().some(function(item) { return item.className === cls; })) {
     throw new Error("មិនមានថ្នាក់នេះទេ");
@@ -104,11 +121,15 @@ function teacherPortalLogin(className, pin, remember) {
   const cache = CacheService.getScriptCache();
   const throttleKey = "portal-fails:" + portalHashPin_("scope", scope + ":" + cls).slice(0, 35);
   const failures = Number(cache.get(throttleKey) || 0);
-  if (failures >= 20) throw new Error("សាក PIN ច្រើនដងពេក។ សូមរង់ចាំ ១៥ នាទី");
+  if (failures >= 20) throw new Error("សាកលេខកូដច្រើនដងពេក។ សូមរង់ចាំ ១៥ នាទី");
   const credential = portalAccessRow_(scope, scope === PORTAL_ADMIN_SCOPE ? "" : cls);
-  if (!portalPinMatches_(credential, supplied)) {
+  let normalized = supplied;
+  if (scope === "class" && /^[+\d\s().-]+$/.test(supplied) && /^\+?855|^0/.test(supplied)) {
+    try { normalized = portalPhoneCode_(supplied); } catch (err) { normalized = supplied; }
+  }
+  if (!portalPinMatches_(credential, normalized)) {
     cache.put(throttleKey, String(failures + 1), 900);
-    throw new Error("លេខ PIN មិនត្រឹមត្រូវ ឬថ្នាក់មិនទាន់បើកប្រើ");
+    throw new Error("លេខកូដមិនត្រឹមត្រូវ ឬថ្នាក់មិនទាន់បើកប្រើ");
   }
   cache.remove(throttleKey);
   const token = Utilities.getUuid() + Utilities.getUuid();
@@ -163,19 +184,23 @@ function portalAssertClass_(session, className) {
 function teacherPortalAdminOverview(token) {
   portalSession_(token, true);
   const access = portalAccessRows_();
+  const teachers = readAppSettings_().classTeachers || {};
   return portalClasses_().map(function(item) {
     const row = access.find(function(entry) { return entry.scope === "class" && entry.className === item.className; });
-    return { className:item.className, count:item.count, teacherName:row ? row.teacherName : "", enabled:!!row && row.enabled };
+    return { className:item.className, count:item.count, teacherName:row && row.teacherName || String(teachers[item.className] || ""), enabled:!!row && row.enabled };
   });
 }
 
-function teacherPortalIssueClassPin(token, className, teacherName) {
+function teacherPortalIssueClassPin(token, className, teacherName, phoneNumber) {
   portalSession_(token, true);
   return withWriteLock_(function() {
     const cls = portalAssertClass_({ scope:PORTAL_ADMIN_SCOPE }, className);
     const sheet = portalSheet_(PORTAL_ACCESS_SHEET, PORTAL_ACCESS_HEADERS, true);
     const previous = portalAccessRow_("class", cls);
-    const pin = portalRandomPin_();
+    const pin = portalPhoneCode_(phoneNumber) || portalRandomPhoneCode_();
+    if (portalAccessRows_().some(function(row) { return row.scope === "class" && row.className !== cls && portalPinMatches_(row, pin); })) {
+      throw new Error("លេខនេះត្រូវបានប្រើសម្រាប់ថ្នាក់ផ្សេងរួចហើយ");
+    }
     const salt = Utilities.getUuid();
     const name = String(teacherName || "").trim().slice(0, 100);
     const row = ["class", cls, salt, portalHashPin_(salt, pin), name, true, new Date().toISOString()];
@@ -184,6 +209,73 @@ function teacherPortalIssueClassPin(token, className, teacherName) {
     sheet.getRange(rowNumber, 1, 1, row.length).setValues([row]);
     return { className:cls, teacherName:name, pin:pin };
   });
+}
+
+function teacherPortalIssueAllClassCodes(token, assignments) {
+  portalSession_(token, true);
+  const provided = assignments && typeof assignments === "object" && !Array.isArray(assignments) ? assignments : {};
+  return withWriteLock_(function() {
+    const classes = portalClasses_();
+    if (!classes.length) throw new Error("មិនមានថ្នាក់សម្រាប់បង្កើតលេខកូដ");
+    if (classes.length > 300) throw new Error("ថ្នាក់ច្រើនពេកសម្រាប់បង្កើតម្តង");
+    const known = {};
+    classes.forEach(function(item) { known[item.className] = true; });
+    Object.keys(provided).forEach(function(cls) { if (!known[cls]) throw new Error("មិនមានថ្នាក់ " + cls); });
+    const sheet = portalSheet_(PORTAL_ACCESS_SHEET, PORTAL_ACCESS_HEADERS, true);
+    const access = portalAccessRows_();
+    const teacherSettings = readAppSettings_().classTeachers || {};
+    const now = new Date().toISOString();
+    const used = {};
+    const issued = classes.map(function(item) {
+      const input = provided[item.className] || {};
+      const prior = access.find(function(row) { return row.scope === "class" && row.className === item.className; });
+      const teacherName = String(input.teacherName || prior && prior.teacherName || teacherSettings[item.className] || "").trim().slice(0, 100);
+      let code = portalPhoneCode_(input.phoneNumber);
+      if (!code) {
+        let tries = 0;
+        do { code = portalRandomPhoneCode_(); tries++; } while (used[code] && tries < 20);
+      }
+      if (used[code]) throw new Error("លេខទូរសព្ទ/លេខកូដជាន់គ្នាសម្រាប់ថ្នាក់ " + item.className);
+      used[code] = true;
+      const salt = Utilities.getUuid();
+      return { className:item.className, teacherName:teacherName, code:code,
+        rowNumber:prior ? prior.rowNumber : null,
+        row:["class", item.className, salt, portalHashPin_(salt, code), teacherName, true, now] };
+    });
+    // Generate the file before changing credentials, so export failures do not rotate logins.
+    const xlsxBase64 = portalCodesXlsx_(issued);
+    let nextRow = sheet.getLastRow() + 1;
+    issued.forEach(function(item) {
+      const rowNumber = item.rowNumber || nextRow++;
+      ensureRows_(sheet, rowNumber);
+      sheet.getRange(rowNumber, 1, 1, PORTAL_ACCESS_HEADERS.length).setValues([item.row]);
+    });
+    return { filename:"teacher-portal-codes-" + now.slice(0, 10) + ".xlsx", xlsxBase64:xlsxBase64,
+      codes:issued.map(function(item) { return { className:item.className, teacherName:item.teacherName, code:item.code }; }) };
+  });
+}
+
+function portalCodesXlsx_(items) {
+  const escape = function(value) { return String(value == null ? "" : value).replace(/&/g, "&amp;").replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&apos;"); };
+  const cell = function(ref, value, style) { return '<c r="' + ref + '" s="' + style + '" t="inlineStr"><is><t>' + escape(value) + '</t></is></c>'; };
+  const rows = ['<row r="1" ht="30" customHeight="1">' + cell("A1", "លេខកូដចូល Teacher Portal", 1) + '</row>',
+    '<row r="2">' + cell("A2", "ឯកសារសម្ងាត់ — ផ្ដល់លេខកូដទៅគ្រូតាមថ្នាក់ប៉ុណ្ណោះ", 2) + '</row>',
+    '<row r="4" ht="26" customHeight="1">' + cell("A4", "ថ្នាក់", 3) + cell("B4", "ឈ្មោះគ្រូបន្ទុកថ្នាក់", 3) + cell("C4", "លេខកូដ", 3) + '</row>'];
+  items.forEach(function(item, index) { const n = index + 5;
+    rows.push('<row r="' + n + '" ht="23" customHeight="1">' + cell("A" + n, item.className, 0) +
+      cell("B" + n, item.teacherName, 0) + cell("C" + n, item.code, 4) + '</row>'); });
+  const last = items.length + 4;
+  const files = {
+    "[Content_Types].xml":'<?xml version="1.0" encoding="UTF-8"?><Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Override PartName="/xl/workbook.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml"/><Override PartName="/xl/worksheets/sheet1.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/><Override PartName="/xl/styles.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.styles+xml"/></Types>',
+    "_rels/.rels":'<?xml version="1.0" encoding="UTF-8"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="xl/workbook.xml"/></Relationships>',
+    "xl/workbook.xml":'<?xml version="1.0" encoding="UTF-8"?><workbook xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"><sheets><sheet name="Teacher Codes" sheetId="1" r:id="rId1"/></sheets></workbook>',
+    "xl/_rels/workbook.xml.rels":'<?xml version="1.0" encoding="UTF-8"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet" Target="worksheets/sheet1.xml"/><Relationship Id="rId2" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles" Target="styles.xml"/></Relationships>',
+    "xl/styles.xml":'<?xml version="1.0" encoding="UTF-8"?><styleSheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"><fonts count="3"><font><sz val="11"/><name val="Arial"/></font><font><b/><sz val="15"/><color rgb="FF17365D"/><name val="Arial"/></font><font><b/><sz val="11"/><color rgb="FFFFFFFF"/><name val="Arial"/></font></fonts><fills count="4"><fill><patternFill patternType="none"/></fill><fill><patternFill patternType="gray125"/></fill><fill><patternFill patternType="solid"><fgColor rgb="FFF0F6FB"/><bgColor indexed="64"/></patternFill></fill><fill><patternFill patternType="solid"><fgColor rgb="FF17365D"/><bgColor indexed="64"/></patternFill></fill></fills><borders count="1"><border><left/><right/><top/><bottom/><diagonal/></border></borders><cellStyleXfs count="1"><xf numFmtId="0" fontId="0" fillId="0" borderId="0"/></cellStyleXfs><cellXfs count="5"><xf numFmtId="0" fontId="0" fillId="0" borderId="0" xfId="0"/><xf numFmtId="0" fontId="1" fillId="0" borderId="0" xfId="0"/><xf numFmtId="0" fontId="0" fillId="2" borderId="0" xfId="0"/><xf numFmtId="0" fontId="2" fillId="3" borderId="0" xfId="0"/><xf numFmtId="49" fontId="0" fillId="2" borderId="0" xfId="0" applyNumberFormat="1"/></cellXfs></styleSheet>',
+    "xl/worksheets/sheet1.xml":'<?xml version="1.0" encoding="UTF-8"?><worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"><sheetViews><sheetView showGridLines="0" workbookViewId="0"><pane ySplit="4" topLeftCell="A5" activePane="bottomLeft" state="frozen"/></sheetView></sheetViews><sheetFormatPr defaultRowHeight="21"/><cols><col min="1" max="1" width="16" customWidth="1"/><col min="2" max="2" width="38" customWidth="1"/><col min="3" max="3" width="22" customWidth="1"/></cols><sheetData>' + rows.join("") + '</sheetData><autoFilter ref="A4:C' + last + '"/></worksheet>'
+  };
+  const blobs = Object.keys(files).map(function(path) { return Utilities.newBlob(files[path], "application/xml", path); });
+  return Utilities.base64Encode(Utilities.zip(blobs, "teacher-codes.xlsx").getBytes());
 }
 
 function teacherPortalDisableClassPin(token, className) {
