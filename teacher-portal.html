@@ -4,6 +4,9 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>ផ្ទាំងគ្រូបន្ទុកថ្នាក់</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Battambang:wght@400;700&family=Moul&display=swap" rel="stylesheet">
   <style>
     :root{font-family:'Khmer OS Siemreap',Siemreap,'Noto Sans Khmer',sans-serif;color:#17273d;background:#f2f5fa;font-size:15px}
     *{box-sizing:border-box}body{margin:0;min-height:100vh;background:radial-gradient(circle at 85% 0,#e0ebfa 0,transparent 28%),#f2f5fa}
@@ -88,43 +91,89 @@
     @media(max-width:760px){.header-inner{padding:11px 16px}.brand h1{font-size:15px}.brand-logo-wrap{width:43px;height:43px;border-radius:13px}main{padding:0 14px;margin:20px auto 40px}.card{padding:19px;border-radius:17px}.login-hero{padding:28px;min-height:280px}.login-hero h2{font-size:25px;margin:15px 0 10px}.login-hero:before{right:27px;top:24px}.login-hero:after{width:280px;height:280px}.portal-hero{padding:23px}.portal-hero h2{font-size:23px}.portal-stats{margin-top:13px}.section-heading{align-items:stretch!important}.tabs{margin-bottom:13px}.tabs button{font-size:12px;padding:9px 8px}.student-card{min-height:132px}.portrait{width:76px;height:100px}}
     @media(max-width:390px){.header-actions button{padding:8px 10px;font-size:12px}.student-card{padding:10px;gap:9px}.student-card-body strong{font-size:14px}}
     .portal-launch{max-width:680px;margin:7vh auto;padding:36px;text-align:center}.portal-launch h2{font-size:25px}.portal-launch p{line-height:1.9}.portal-launch a{display:inline-block;margin-top:12px;padding:12px 20px;border-radius:11px;background:#125876;color:#fff;text-decoration:none;font-weight:700}.portal-launch a:focus-visible{outline:3px solid #32aaaf;outline-offset:3px}
-    /* Keep the Apps Script page and local preview on the same ambient design. */
-    body{isolation:isolate}
-    .portal-ambient{position:fixed;inset:-56px;z-index:0;pointer-events:none;background-image:linear-gradient(rgba(31,106,155,.032) 1px,transparent 1px),linear-gradient(90deg,rgba(31,106,155,.032) 1px,transparent 1px);background-size:56px 56px;mask-image:linear-gradient(to bottom,transparent,#000 18%,#000 78%,transparent);animation:ambient-grid-drift 32s linear infinite}
-    .portal-ambient:before,.portal-ambient:after{content:'';position:absolute;display:block;aspect-ratio:1;border-radius:50%;pointer-events:none}
-    .portal-ambient:before{width:min(38vw,500px);right:-8vw;top:7vh;background:radial-gradient(circle at 30% 25%,rgba(255,255,255,.9),rgba(119,213,225,.3) 38%,rgba(33,129,180,.08) 68%,transparent 76%);animation:ambient-orb-one 22s ease-in-out infinite alternate}
-    .portal-ambient:after{width:min(26vw,350px);left:-7vw;bottom:-8vh;background:radial-gradient(circle at 35% 30%,rgba(255,255,255,.8),rgba(145,194,234,.27) 40%,rgba(42,107,168,.08) 68%,transparent 76%);animation:ambient-orb-two 27s ease-in-out infinite alternate}
-    @keyframes ambient-grid-drift{to{transform:translate3d(56px,56px,0)}}
-    @keyframes ambient-orb-one{to{transform:translate3d(-36px,28px,0) scale(1.08)}}
-    @keyframes ambient-orb-two{to{transform:translate3d(28px,-34px,0) scale(.92)}}
-    main{position:relative;z-index:1}
-    @media(max-width:560px){.portal-ambient{background-image:linear-gradient(rgba(31,106,155,.02) 1px,transparent 1px),linear-gradient(90deg,rgba(31,106,155,.02) 1px,transparent 1px)}.portal-ambient:before{width:230px;right:-130px}.portal-ambient:after{width:180px;left:-110px}}
-    @media(prefers-reduced-motion:reduce){.portal-ambient,.portal-ambient:before,.portal-ambient:after{animation:none!important}}
-    /* Shared institutional depth language with the administration app. */
-    @media screen{
-      .site-header{background:linear-gradient(120deg,rgba(255,255,255,.98),rgba(235,248,250,.96));box-shadow:0 12px 28px rgba(14,62,94,.11),inset 0 1px 0 #fff}
-      .brand-logo-wrap{box-shadow:0 11px 19px rgba(8,76,94,.22),inset 0 1px 0 #ffffff78}
-      .card{background:linear-gradient(145deg,#fff,#f8fcff);border-color:#d7e5ed;box-shadow:0 18px 35px rgba(18,63,99,.1),0 4px 10px rgba(18,63,99,.04),inset 0 1px 0 #fff}
-      .login-hero,.portal-hero{background:radial-gradient(circle at 88% 5%,rgba(136,231,222,.3),transparent 34%),linear-gradient(125deg,#092d50,#15527c 60%,#147d83);box-shadow:0 26px 48px rgba(9,54,87,.23),inset 0 1px 0 #ffffff49}
-      .login-hero:before{box-shadow:20px 24px 30px #051e343d,inset 0 1px 0 #ffffff69}
-      .stat{box-shadow:inset 0 1px 0 #ffffff42,0 8px 18px #082a4622}
-      .tabs{background:linear-gradient(165deg,#e8f2f6,#f8fcff);box-shadow:inset 0 2px 5px #12436312,0 8px 20px #12365d0d}
-      .tabs button.active{background:linear-gradient(150deg,#fff,#ebf8f6);box-shadow:0 8px 16px #12365d26,inset 0 1px 0 #fff}
-      .student-card,.student{background:linear-gradient(145deg,#fff,#f4fafe);box-shadow:0 8px 18px #12365d0c,inset 0 1px 0 #fff}
-      .student-card:hover{border-color:#8acbc9;box-shadow:0 20px 35px #12365d21}
-      .portrait{box-shadow:inset 0 1px 0 #ffffffa6,0 8px 17px #12365d1b}
-      .table-wrap{box-shadow:inset 0 1px 0 #fff,0 8px 20px #12365d0c}
-      th{background:linear-gradient(180deg,#edf6f7,#e4f0f7)}
-      button:not(.secondary):not(.danger){box-shadow:0 9px 17px rgba(18,85,143,.2),inset 0 1px 0 #ffffff42}
-      button:active:not(:disabled){transform:translateY(0);box-shadow:inset 0 2px 5px #082a4633}
+    /* =========================
+       OFFICIAL SCHOOL THEME (v2.2.0)
+       Matches the administration app: navy header with a gold rule,
+       white ruled surfaces, Moul headings and no animated decoration.
+       ========================= */
+    :root{
+      --ink:#172235;--ink-soft:#56657a;--navy:#0f2e5a;--navy-2:#143a6e;--navy-soft:#eaf0f8;
+      --gold:#b8902f;--gold-soft:#fbf5e6;--line:#d6dce5;--canvas:#f1f3f6;--panel:#fff;
+      --font-body:'Battambang','Khmer OS Siemreap',Siemreap,'Noto Sans Khmer',sans-serif;
+      --font-title:'Moul','Khmer OS Muol Light','Battambang',serif;
+      font-family:var(--font-body);color:var(--ink);background:var(--canvas)
     }
-    @media screen and (max-width:760px){.site-header{backdrop-filter:none}.card{box-shadow:0 10px 22px rgba(18,63,99,.09),inset 0 1px 0 #fff}.student-card:hover,button:hover{transform:none}}
-    @media(prefers-reduced-motion:reduce){.student-card,button{transition:none!important}.student-card:hover,button:hover{transform:none!important}}
-    @media print{.portal-ambient{display:none!important}}
+    body{background:var(--canvas);color:var(--ink);font-family:var(--font-body);letter-spacing:0}
+    .site-header{position:sticky;top:0;z-index:10;background:var(--navy);border-bottom:3px solid var(--gold);box-shadow:none;backdrop-filter:none}
+    .header-inner{max-width:1220px;padding:10px 22px}
+    .brand{gap:12px}
+    .brand-logo-wrap{width:48px;height:48px;border:2px solid var(--gold);border-radius:50%;background:#fff;color:var(--navy);box-shadow:none;font-family:var(--font-title);font-size:20px;font-weight:400}
+    .brand-logo-wrap:after{display:none}
+    .brand h1{color:#fff;font-family:var(--font-title);font-weight:400;font-size:17px;line-height:1.7}
+    .brand small{color:#c9d6e8}
+    .header-actions button.secondary{background:transparent;color:#fff;border:1px solid rgba(255,255,255,.4)}
+    main{max-width:1220px;margin:24px auto 48px;padding:0 22px}
+    h2{color:var(--navy);font-family:var(--font-title);font-weight:400;line-height:1.8}
+    .card{background:var(--panel);border:1px solid var(--line);border-radius:10px;box-shadow:0 1px 2px rgba(16,34,60,.06);padding:22px;margin-bottom:18px}
+    .card>h2,.section-heading h2{padding-left:12px;border-left:4px solid var(--gold);font-size:18px}
+    .eyebrow{color:var(--navy-2);letter-spacing:.02em}.eyebrow:before{background:var(--gold);box-shadow:none;border-radius:2px}
+    .muted,.subtle{color:var(--ink-soft)}
+    label{color:var(--ink-soft);font-size:13px;letter-spacing:0}
+    input,select,textarea{min-height:44px;border:1px solid #c4cdd9;border-radius:6px;background:#fff;color:var(--ink)}
+    input:focus,select:focus,textarea:focus{border-color:var(--navy-2);box-shadow:0 0 0 3px rgba(20,58,110,.16)}
+    button{min-height:44px;border:1px solid var(--navy-2);border-radius:6px;background:var(--navy-2);color:#fff;box-shadow:none;transition:background .14s,border-color .14s,color .14s}
+    button:hover{filter:none;transform:none;box-shadow:none;background:var(--navy)}
+    button.secondary{border:1px solid var(--navy-2);background:#fff;color:var(--navy-2)}
+    button.secondary:hover{background:var(--navy-soft)}
+    button.danger{border-color:#a3282f;background:#a3282f}
+    button:focus-visible,.tabs button:focus-visible,a:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+    .login-layout{gap:18px;min-height:420px;align-items:stretch}
+    .login-hero{padding:40px;border-radius:10px;border-bottom:4px solid var(--gold);background:var(--navy);box-shadow:none;isolation:auto}
+    .login-hero:before,.login-hero:after,.portal-hero:after{display:none}
+    .login-hero h2{color:#fff;font-size:26px;line-height:1.9;letter-spacing:0;max-width:520px}
+    .login-hero p{color:#d2dcea;line-height:1.9}.login-hero .eyebrow{color:#e3c77d}
+    .login-features span{border:1px solid rgba(255,255,255,.35);border-radius:4px;background:transparent;color:#fff;backdrop-filter:none}
+    #login-card{padding:34px;background:#fff;box-shadow:0 1px 2px rgba(16,34,60,.06);border-top:4px solid var(--navy-2)}
+    #login-card h2{color:var(--navy);font-size:22px}
+    .remember-option{border:1px solid var(--line);border-radius:6px;background:#f7f8fa}
+    .remember-option:has(input:checked){border-color:var(--navy-2);background:var(--navy-soft)}
+    .remember-option input{accent-color:var(--navy-2)}.remember-option strong{color:var(--navy)}
+    .portal-hero{padding:24px 26px;border-radius:10px;border-bottom:4px solid var(--gold);background:var(--navy);box-shadow:none}
+    .portal-hero h2{color:#fff;font-size:22px;border:0;padding:0}.portal-hero .eyebrow{color:#e3c77d}.portal-hero .muted{color:#d2dcea}
+    .portal-hero button{border-color:#fff;background:#fff;color:var(--navy)}
+    .stat{border:1px solid rgba(255,255,255,.3);border-radius:6px;background:rgba(255,255,255,.08);box-shadow:none}.stat strong{color:#e3c77d}
+    .tabs{position:sticky;top:76px;z-index:5;gap:0;padding:0;border:1px solid var(--line);border-radius:8px;background:#fff;box-shadow:0 1px 2px rgba(16,34,60,.06);overflow:auto}
+    .tabs button{flex:1;min-height:46px;border:0;border-right:1px solid var(--line);border-radius:0;background:transparent;color:var(--ink-soft);box-shadow:none}
+    .tabs button:last-child{border-right:0}
+    .tabs button:hover{background:var(--navy-soft);color:var(--navy)}
+    .tabs button.active{background:var(--navy-2);color:#fff;box-shadow:inset 0 -3px 0 var(--gold)}
+    .tabs button.active:after{display:none}
+    .student-card,.student{border:1px solid var(--line);border-radius:8px;background:#fff;box-shadow:none}
+    .student-card:hover{border-color:var(--navy-2);box-shadow:none;transform:none}
+    .portrait{border-radius:6px;background:var(--navy-soft);color:var(--navy-2);box-shadow:none}
+    .code-tag{border-radius:4px;background:var(--navy-soft);color:var(--navy-2)}
+    .table-wrap{border:1px solid var(--line);border-radius:8px;box-shadow:none}
+    th{background:var(--navy-2);color:#fff;border-bottom-color:#0b2447}
+    tbody tr:nth-child(even) td{background:#f7f8fa}
+    .notice{border:1px solid #b7dcc4;border-radius:6px;background:#eef8f1;color:#1d6a3a;box-shadow:none}
+    .notice.error{border-color:#efc2c5;background:#fdf0f1;color:#9a2530}
+    #loading{border:0;border-left:4px solid var(--gold);border-radius:6px;background:var(--navy);box-shadow:0 8px 24px rgba(16,34,60,.25)}
+    .portal-launch{border-top:4px solid var(--navy-2)}
+    .portal-launch h2{border:0;padding:0}
+    .portal-launch a{border-radius:6px;background:var(--navy-2)}
+    .portal-launch a:focus-visible{outline:2px solid var(--gold)}
+    @media(max-width:760px){
+      .header-inner{padding:9px 14px}.brand h1{font-size:14px}.brand-logo-wrap{width:40px;height:40px;font-size:17px}
+      main{padding:0 12px;margin:14px auto 36px}.card{padding:16px}
+      .login-hero{padding:24px;min-height:0}.login-hero h2{font-size:20px}
+      #login-card{padding:22px}.portal-hero{padding:18px}.portal-hero h2{font-size:19px}
+      .tabs{top:64px}.tabs button{flex:auto;padding:8px 10px;font-size:12px}
+    }
+    @media(prefers-reduced-motion:reduce){button,.student-card,.tabs button{transition:none!important}}
+    @media print{body{background:#fff}.site-header,.tabs,#loading{display:none!important}}
   </style>
 </head>
 <body>
-<div class="portal-ambient" aria-hidden="true"></div>
 <header class="site-header"><div class="header-inner"><div class="brand"><div class="brand-logo-wrap" aria-hidden="true">ស</div><div><h1>ផ្ទាំងគ្រូបន្ទុកថ្នាក់</h1><small>វិទ្យាល័យសុខអានព្រៃមេលង</small></div></div><div class="header-actions"><button id="logout" class="secondary hidden" type="button">ចាកចេញ</button></div></div></header>
 <main>
   <div id="notice" class="notice hidden" role="status" aria-live="polite"></div>

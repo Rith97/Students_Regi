@@ -12,7 +12,22 @@ assert.ok(sidebar && report && mobileMenu && settings, 'Navigation, reports and 
 
 assert.equal((sidebar.match(/data-sidebar-view="(?:form|list|classes|report)"/g) || []).length, 4);
 assert.equal((sidebar.match(/<details class="action-group advanced-actions"/g) || []).length, 1);
-assert.equal((mobileMenu.match(/<details class="mobile-action-group(?: mobile-danger-group)?"/g) || []).length, 2);
+// Sidebar groups, in order: students, documents, data, administration, then collapsed maintenance.
+assert.deepEqual([...sidebar.matchAll(/class="action-group[^"]*"[^>]*?(?:data-group-label="([^"]+)"|aria-label="([^"]+)")/g)].map(match => match[1] || match[2]),
+    ['សិស្ស', 'ឯកសារ', 'ទិន្នន័យ', 'រដ្ឋបាល', 'ថែទាំប្រព័ន្ធ']);
+assert.deepEqual([...sidebar.matchAll(/data-sidebar-view="(\w+)"/g)].map(match => match[1]), ['list', 'form', 'classes', 'report'],
+    'Student work comes first, reports after');
+const dataGroup = sidebar.slice(sidebar.indexOf('data-group-label="ទិន្នន័យ"'), sidebar.indexOf('data-group-label="រដ្ឋបាល"'));
+for (const id of ['load-sheet-btn', 'backup-now-btn', 'import-file-btn', 'download-template-btn']) {
+    assert.match(dataGroup, new RegExp(`id="${id}"`), `${id} is a visible data action`);
+}
+const maintenance = sidebar.slice(sidebar.indexOf('<details class="action-group advanced-actions"'));
+for (const id of ['recover-photos-btn', 'migrate-photos-btn', 'delete-all-btn']) {
+    assert.match(maintenance, new RegExp(`id="${id}"`), `${id} stays under maintenance`);
+}
+assert.equal((mobileMenu.match(/<details class="mobile-action-group(?: mobile-danger-group)?"/g) || []).length, 3,
+    'Phone menu groups: data, maintenance, danger');
+assert.match(mobileMenu, /class="sheet-menu-item" href="[^"]*action=teacherportal"/, 'Teacher portal is reachable from the phone menu');
 assert.match(mobileMenu, /id="mobile-actions-close-btn"[^>]*aria-label="បិទម៉ឺនុយសកម្មភាព"/);
 assert.match(mobileMenu, /<details class="mobile-action-group mobile-danger-group">[\s\S]*?id="m-delete-all-btn"/);
 assert.doesNotMatch(mobileMenu, /id="m-(?:print|download-photos|download-csv)/,

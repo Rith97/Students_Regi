@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ប្រព័ន្ធចុះឈ្មោះសិស្ស</title>
     <meta name="description" content="គ្រប់គ្រងបញ្ជីសិស្ស ស្វែងរក Import Print និងទាញយក Excel">
-    <meta name="theme-color" content="#082f54">
+    <meta name="theme-color" content="#0f2e5a">
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
@@ -15,7 +15,7 @@
     <link rel="apple-touch-icon" href="./assets/school-emblem.png">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Siemreap&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Battambang:wght@400;700&family=Moul&family=Siemreap&display=swap" rel="stylesheet">
 <script async type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
 <script async nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
 <script async src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
@@ -3388,435 +3388,301 @@
             .class-report-tools .btn { flex: 1 1 auto; }
         }
         /* ========================
-           MODERN UI REFRESH
+           OFFICIAL SCHOOL THEME (v2.2.0)
+           Flat navy-and-white administration style: solid surfaces, thin borders,
+           a gold accent rule and Moul headings. No animated or decorative layers.
         ======================== */
         :root {
-            --bg: #edf3f8;
-            --surface: #fff;
-            --surface-2: #f6f9fd;
-            --border: #d9e4ef;
-            --border-strong: #afc4d8;
-            --primary: #12569a;
-            --primary-dark: #0b396a;
-            --primary-mid: #247ac1;
-            --primary-soft: #e6f3fc;
-            --primary-glow: rgba(15, 94, 157, .18);
-            --text: #122942;
-            --text-2: #425c74;
-            --muted: #647b91;
-            --radius: 14px;
-            --radius-lg: 20px;
-            --shadow-sm: 0 2px 8px rgba(22, 57, 91, .06), 0 12px 28px rgba(22, 57, 91, .04);
-            --shadow: 0 14px 34px rgba(22, 57, 91, .12);
-            --shadow-lg: 0 22px 54px rgba(22, 57, 91, .18);
+            --primary: #143a6e;
+            --primary-dark: #0c2650;
+            --primary-mid: #24589a;
+            --primary-soft: #eaf0f8;
+            --primary-glow: rgba(20, 58, 110, .16);
+            --official-navy: #0f2e5a;
+            --official-gold: #b8902f;
+            --official-gold-soft: #fbf5e6;
+            --bg: #f1f3f6;
+            --surface: #ffffff;
+            --surface-2: #f7f8fa;
+            --surface-3: #eceff4;
+            --border: #d6dce5;
+            --border-strong: #b5c0cf;
+            --text: #172235;
+            --text-2: #3b4a60;
+            --muted: #627086;
+            --radius: 8px;
+            --radius-sm: 6px;
+            --radius-lg: 10px;
+            --shadow-sm: 0 1px 2px rgba(16, 34, 60, .06);
+            --shadow: 0 2px 8px rgba(16, 34, 60, .08);
+            --shadow-lg: 0 12px 32px rgba(16, 34, 60, .16);
+            --font-body: "Battambang", "Khmer OS Siemreap", "Siemreap", sans-serif;
+            --font-title: "Moul", "Khmer OS Muol Light", "Battambang", serif;
         }
-
         html[data-theme="dark"] {
-            --bg: #0d1929;
-            --surface: #17283b;
-            --surface-2: #20344a;
-            --border: #314a63;
-            --border-strong: #54718e;
-            --primary: #7db7eb;
-            --primary-dark: #a4d1f5;
-            --primary-mid: #a4d1f5;
-            --primary-soft: #213f5d;
-            --primary-glow: rgba(61, 154, 219, .25);
-            --text: #ecf5fc;
-            --text-2: #c7d8e6;
-            --muted: #a3bbcf;
-            --shadow-sm: 0 3px 16px rgba(0, 0, 0, .16);
-            --shadow: 0 14px 34px rgba(0, 0, 0, .24);
-            --shadow-lg: 0 22px 54px rgba(0, 0, 0, .34);
+            --primary: #8fb4ea;
+            --primary-dark: #b3cdf2;
+            --primary-mid: #a9c6f0;
+            --primary-soft: #1d3150;
+            --primary-glow: rgba(143, 180, 234, .22);
+            --official-gold: #d4b05a;
+            --official-gold-soft: #3a3020;
+            --bg: #0f1724;
+            --surface: #172131;
+            --surface-2: #1c2839;
+            --surface-3: #233146;
+            --border: #2d3c52;
+            --border-strong: #46597a;
+            --text: #e9eef6;
+            --text-2: #c3cedd;
+            --muted: #97a6bb;
+            --shadow-sm: 0 1px 2px rgba(0, 0, 0, .3);
+            --shadow: 0 2px 8px rgba(0, 0, 0, .32);
+            --shadow-lg: 0 12px 32px rgba(0, 0, 0, .45);
         }
 
-        body {
-            background: radial-gradient(ellipse at 90% -8%, rgba(65, 167, 220, .22), transparent 35rem),
-                        radial-gradient(ellipse at 5% 52%, rgba(37, 122, 193, .13), transparent 38rem),
-                        linear-gradient(155deg, #f8fbfe 0%, #edf3f8 54%, #e4f0f4 100%);
-            isolation: isolate;
-        }
+        body { background: var(--bg); font-family: var(--font-body); }
+        html[data-theme="dark"] body { background: var(--bg); }
+        .app { position: relative; max-width: 1680px; padding-bottom: 48px; }
 
-        /* Ambient layers are composited behind the UI; only transforms animate. */
-        .ambient-grid {
-            position: fixed;
-            inset: -56px;
-            z-index: 0;
-            pointer-events: none;
-            opacity: .32;
-            background-image: linear-gradient(rgba(31, 106, 155, .09) 1px, transparent 1px),
-                              linear-gradient(90deg, rgba(31, 106, 155, .09) 1px, transparent 1px);
-            background-size: 56px 56px;
-            mask-image: linear-gradient(to bottom, transparent, #000 18%, #000 78%, transparent);
-            animation: ambient-grid-drift 32s linear infinite;
-        }
-        @keyframes ambient-grid-drift {
-            to { transform: translate3d(56px, 56px, 0); }
-        }
-
-        /* Decorative depth stays behind the interface and never intercepts clicks. */
-        body::before, body::after {
-            content: "";
-            position: fixed;
-            z-index: 0;
-            pointer-events: none;
-            border-radius: 50%;
-        }
-        body::before {
-            width: min(37vw, 530px);
-            aspect-ratio: 1;
-            right: -11vw;
-            top: 11vh;
-            background: radial-gradient(circle at 32% 25%, rgba(255,255,255,.94) 0%, rgba(164,224,246,.56) 27%, rgba(43,133,194,.16) 61%, transparent 75%);
-            box-shadow: inset 24px 20px 60px rgba(255,255,255,.5), -30px 35px 90px rgba(33,99,148,.08);
-            animation: ambient-orb-one 22s ease-in-out infinite alternate;
-        }
-        body::after {
-            width: min(24vw, 340px);
-            aspect-ratio: 1;
-            left: -10vw;
-            bottom: -10vh;
-            background: radial-gradient(circle at 35% 28%, rgba(255,255,255,.84) 0%, rgba(130,214,211,.35) 38%, rgba(17,113,151,.11) 68%, transparent 76%);
-            animation: ambient-orb-two 27s ease-in-out infinite alternate;
-        }
-        @keyframes ambient-orb-one {
-            to { transform: translate3d(-36px, 28px, 0) scale(1.08); }
-        }
-        @keyframes ambient-orb-two {
-            to { transform: translate3d(28px, -34px, 0) scale(.92); }
-        }
-
-        html[data-theme="dark"] body {
-            background: radial-gradient(ellipse at 94% 6%, rgba(26, 107, 160, .22), transparent 34rem),
-                        linear-gradient(155deg, #101d2d, #0c1828 62%, #14293a);
-        }
-        html[data-theme="dark"] body::before { opacity: .23; }
-        html[data-theme="dark"] body::after { opacity: .16; }
-        html[data-theme="dark"] .ambient-grid { opacity: .2; }
-
-        .app { position: relative; z-index: 1; max-width: 1680px; padding-bottom: 56px; }
-
+        /* Header: solid navy band with a gold rule, like a ministry letterhead. */
         .topbar {
-            margin-bottom: 22px;
-            padding: 12px 22px;
+            margin-bottom: 20px;
+            padding: 10px 22px;
             border: 0;
-            border-bottom: 3px solid #e0b656;
-            border-radius: 0 0 18px 18px;
-            background: linear-gradient(112deg, #082f54 0%, #124d80 59%, #176f91 100%);
-            box-shadow: 0 10px 28px rgba(8, 49, 86, .2);
+            border-bottom: 3px solid var(--official-gold);
+            border-radius: 0;
+            background: #0f2e5a;
+            box-shadow: 0 1px 0 rgba(255, 255, 255, .08) inset;
         }
+        .brand-mark { width: 50px; height: 50px; padding: 2px; border: 2px solid var(--official-gold); border-radius: 50%; background: #fff; box-shadow: none; }
+        .brand-mark img { border-radius: 50%; }
+        .topbar .brand-kicker { color: #e3c77d; font-size: .7rem; letter-spacing: .02em; }
+        .topbar .brand-title { color: #fff; font-family: var(--font-title); font-weight: 400; font-size: 1.05rem; line-height: 1.7; }
+        .topbar .brand-sub { color: #c9d6e8; font-size: .78rem; }
+        .topbar .status-pill { border: 1px solid rgba(255, 255, 255, .22); background: rgba(255, 255, 255, .08); color: #e8eef7; box-shadow: none; }
+        .topbar .theme-btn { border: 1px solid rgba(255, 255, 255, .22); border-radius: 8px; background: transparent; color: #fff; box-shadow: none; }
+        .actions-toggle-btn { border-radius: 8px; border-color: rgba(255, 255, 255, .28); background: transparent; }
 
-        .brand-mark { width: 48px; height: 48px; padding: 2px; border-radius: 14px; box-shadow: 0 8px 18px rgba(1, 25, 52, .22); }
-        .topbar .brand-title { color: #fff; font-size: 1.1rem; }
-        .topbar .brand-sub { color: #d4e9f8; }
+        /* Headings */
+        .panel-title, .report-view-header h1, .modal-title {
+            color: var(--primary-dark);
+            font-family: var(--font-title);
+            font-weight: 400;
+            line-height: 1.8;
+        }
+        .panel-title { font-size: 1rem; }
+        .report-view-header h1 { font-size: 1.2rem; }
+        .modal-title { font-size: 1.05rem; }
+        html[data-theme="dark"] .panel-title,
+        html[data-theme="dark"] .report-view-header h1,
+        html[data-theme="dark"] .modal-title { color: var(--text); }
 
-        .admin-overview {
-            min-height: 150px;
-            padding: clamp(22px, 3vw, 36px);
-            border: 1px solid rgba(255,255,255,.36);
-            border-left: 5px solid #dfb457;
-            background: radial-gradient(circle at 83% 6%, rgba(108,211,224,.36), transparent 26%),
-                        linear-gradient(116deg, #093a66 0%, #145a88 59%, #167e91 100%);
-            box-shadow: 0 20px 48px rgba(14, 78, 121, .19), inset 0 1px 0 rgba(255,255,255,.28);
-        }
-        .admin-overview::before {
-            content: "";
-            position: absolute;
-            z-index: -1;
-            right: clamp(20px, 6vw, 100px);
-            top: -63px;
-            width: 245px;
-            height: 245px;
-            border-radius: 50%;
-            background: radial-gradient(circle at 31% 26%, rgba(255,255,255,.64), rgba(152,235,239,.4) 24%, rgba(29,124,167,.38) 58%, rgba(9,54,108,.19) 73%);
-            box-shadow: inset -20px -22px 38px rgba(4,53,98,.25), 20px 24px 38px rgba(3,41,81,.28);
-        }
-        .admin-overview::after {
-            z-index: -1;
-            right: 34px;
-            bottom: -120px;
-            width: 295px;
-            height: 295px;
-            border: 1px solid rgba(255,255,255,.2);
-            box-shadow: 0 0 0 18px rgba(255,255,255,.045), 0 0 0 39px rgba(255,255,255,.03);
-        }
-        .admin-eyebrow { color: #fce3a7; }
-        .admin-overview h1 { color: #fff; font-size: clamp(1.36rem, 2vw, 1.83rem); }
-        .admin-overview p { color: #e2f2f9; font-size: .94rem; }
-
-        .metric, .panel, .admin-overview, .history-panel {
+        /* Surfaces: white sheets with hairline borders, no lift on hover. */
+        .metric, .panel, .report-view, .class-browser-panel, .history-panel {
+            border: 1px solid var(--border);
             border-radius: var(--radius-lg);
+            background: var(--surface);
             box-shadow: var(--shadow-sm);
         }
-        .admin-overview { box-shadow: 0 20px 48px rgba(14, 78, 121, .19), inset 0 1px 0 rgba(255,255,255,.28); }
+        .metric:hover, .panel:hover { box-shadow: var(--shadow-sm); transform: none; }
+        .panel-header, .list-panel > .panel-header, .history-panel > .panel-header {
+            padding: 16px 20px 12px;
+            border-bottom: 1px solid var(--border);
+            background: var(--surface);
+        }
+        .panel-header .panel-title { padding-left: 12px; border-left: 4px solid var(--official-gold); }
+        .panel-sub { color: var(--muted); font-size: .8rem; }
+
+        /* Metrics: plain figures with a coloured top rule. */
         .metric {
+            position: relative;
             min-width: 0;
-            padding: 18px 20px;
-            border-color: var(--border);
-            background: var(--surface);
-            box-shadow: 0 11px 25px rgba(23, 66, 99, .08), inset 0 1px 0 rgba(255,255,255,.9);
+            padding: 16px 18px;
+            border-top: 3px solid var(--primary);
+            overflow: hidden;
         }
-        .metric:hover, .panel:hover { box-shadow: var(--shadow); }
-        .metric-value { color: var(--text); font-size: 1.8rem; }
-        .metric-icon { width: 48px; height: 48px; border-radius: 15px; }
-        .metric-label, .metric-sub { color: var(--muted); }
+        .metric-male { border-top-color: #2f5fb3; }
+        .metric-female { border-top-color: #9b3d8f; }
+        .metric-sync { border-top-color: var(--official-gold); }
+        .metric-icon { width: 42px; height: 42px; border-radius: 50%; box-shadow: none; }
+        .metric-value { color: var(--primary-dark); font-size: 1.65rem; font-weight: 700; }
+        .metric-label { color: var(--text-2); font-weight: 700; }
+        .metric-sub { color: var(--muted); }
+        html[data-theme="dark"] .metric-value { color: var(--text); }
 
-        .panel, .report-view, .class-browser-panel, .history-panel {
-            border-color: var(--border);
-            background: var(--surface);
-            box-shadow: var(--shadow-sm);
+        /* Controls */
+        .btn { border-radius: var(--radius-sm); box-shadow: none; transition: background 140ms ease, border-color 140ms ease, color 140ms ease; }
+        .btn:hover:not(:disabled), .btn:active:not(:disabled) { transform: none; box-shadow: none; }
+        .btn-primary, .form-save-bar .btn-primary { border: 1px solid var(--primary); background: var(--primary); color: #fff; box-shadow: none; }
+        .btn-primary:hover:not(:disabled) { background: var(--primary-dark); border-color: var(--primary-dark); }
+        .btn-secondary { border: 1px solid var(--primary); background: var(--surface); color: var(--primary); }
+        .btn-secondary:hover:not(:disabled) { background: var(--primary-soft); }
+        .btn-ghost { border: 1px solid var(--border); background: var(--surface); color: var(--text-2); }
+        .btn-ghost:hover:not(:disabled) { border-color: var(--border-strong); background: var(--surface-2); color: var(--text); }
+        html[data-theme="dark"] .btn-primary { color: #0f1724; }
+        .search-wrap input, .toolbar select, input, select, textarea { border-radius: var(--radius-sm); }
+        .search-wrap input:focus, input:focus, select:focus, textarea:focus { border-color: var(--primary); box-shadow: 0 0 0 3px var(--primary-glow); }
+        :is(input, select, textarea, button, a, summary):focus-visible { outline: 2px solid var(--official-gold); outline-offset: 2px; }
+        .toolbar, .form-save-bar, .pager { background: var(--surface-2); }
+
+        /* Tables follow the printed roster: navy header row, ruled body. */
+        .table-wrap, .class-report-table-wrap, .roster-preview { border: 1px solid var(--border); border-radius: 0 0 var(--radius-lg) var(--radius-lg); background: var(--surface); }
+        .table-wrap thead th, .class-report-table-wrap th,
+        .class-report-table-wrap > table th {
+            border-color: #0b2447;
+            background: #143a6e;
+            color: #fff;
+            font-weight: 700;
         }
-
-        .panel-header { padding: 20px 22px 15px; }
-        .panel-title { color: var(--text); font-size: 1.16rem; }
-        .list-panel > .panel-header, .history-panel > .panel-header { background: linear-gradient(180deg, var(--surface), var(--surface-2)); }
-        .toolbar { padding: 14px 18px; background: var(--surface-2); }
-        .search-wrap input, .toolbar select, input, select, textarea { border-radius: 11px; }
-        :is(input, select, textarea, button, a, summary):focus-visible { outline: 3px solid #70c7e5; outline-offset: 2px; }
-        .search-wrap input:focus, input:focus, select:focus, textarea:focus { box-shadow: 0 0 0 4px var(--primary-glow); }
-
-        .btn { border-radius: 11px; transition: transform 160ms ease, box-shadow 160ms ease, background 160ms ease; }
-        .btn:hover:not(:disabled) { transform: translateY(-1px); }
-        .btn-primary { box-shadow: 0 7px 16px var(--primary-glow); }
-        .form-save-bar { padding: 14px 18px; }
-        .table-wrap { border-radius: 0 0 var(--radius-lg) var(--radius-lg); }
-        tbody tr { transition: background 140ms ease; }
+        html[data-theme="dark"] .table-wrap thead th,
+        html[data-theme="dark"] .class-report-table-wrap > table th { background: #22385a; border-color: #2d3c52; }
+        .table-wrap tbody tr:nth-child(even) { background: var(--surface-2); }
+        tbody tr { transition: background 120ms ease; }
         tbody tr:hover { background: var(--primary-soft) !important; }
         .pager { border-radius: 0 0 var(--radius-lg) var(--radius-lg); }
 
+        /* Registration form */
+        .form-panel > .panel-header { background: var(--surface); }
+        .form-panel > .panel-header { border-bottom: 3px solid var(--official-gold); }
+        .form-panel > .panel-header .panel-title { padding-left: 0; border-left: 0; color: var(--primary-dark); }
+        .form-panel > .panel-header .panel-sub { color: var(--muted); }
+        html[data-theme="dark"] .form-panel > .panel-header { background: var(--surface); }
+        html[data-theme="dark"] .form-panel > .panel-header .panel-title { color: var(--text); }
+        .form-panel .form-section, .settings-section { border: 1px solid var(--border); border-radius: var(--radius); background: var(--surface); box-shadow: none; }
+        .form-panel .section-icon, .modal-icon-primary { border-radius: 50%; background: var(--primary); color: #fff; box-shadow: none; }
+        .form-panel .section-title { color: var(--primary-dark); font-weight: 700; }
+        html[data-theme="dark"] .form-panel .section-title { color: var(--text); }
+
+        /* Lists, class tiles and history */
+        .student-card, .class-student-item, .class-tile, .history-item {
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            background: var(--surface);
+            box-shadow: none;
+            transition: border-color 140ms ease, background 140ms ease;
+        }
+        .student-card:hover, .class-student-item:hover, .class-tile:hover, .history-item:hover { border-color: var(--primary); transform: none; box-shadow: none; }
+        .class-tile ion-icon { padding: 8px; box-sizing: content-box; border-radius: 50%; background: var(--primary-soft); color: var(--primary); }
+
+        /* Reports: two action cards, then the class roster workspace. */
+        .report-view { padding: 20px 22px; }
+        .report-view-header { padding-bottom: 14px; border-bottom: 1px solid var(--border); }
+        .report-export-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; margin: 0 0 22px; }
+        .report-export-grid .report-export-section { margin: 0; padding: 16px; border: 1px solid var(--border); border-top: 3px solid var(--primary); border-radius: var(--radius); background: var(--surface); box-shadow: none; }
+        .report-export-section h2, .report-section-heading h2 { display: flex; align-items: center; gap: 8px; color: var(--primary-dark); font-size: 1rem; font-weight: 700; }
+        .report-export-section h2 ion-icon, .report-section-heading h2 ion-icon { width: 19px; height: 19px; color: var(--official-gold); }
+        html[data-theme="dark"] .report-export-section h2, html[data-theme="dark"] .report-section-heading h2 { color: var(--text); }
+        .report-section-heading { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px; margin: 0 0 14px; padding-top: 18px; border-top: 1px solid var(--border); }
+        .report-section-heading .report-mode-tabs { margin: 0; }
+        .report-mode-tabs, .settings-tabs { padding: 3px; border: 1px solid var(--border); border-radius: var(--radius); background: var(--surface-2); box-shadow: none; }
+        .report-mode-tabs button[aria-pressed="true"], .settings-tabs button[aria-selected="true"] { border-radius: var(--radius-sm); background: var(--primary); color: #fff; box-shadow: none; }
+        html[data-theme="dark"] .report-mode-tabs button[aria-pressed="true"],
+        html[data-theme="dark"] .settings-tabs button[aria-selected="true"] { color: #0f1724; }
+        .class-report-tools { padding: 12px; border: 1px solid var(--border); border-radius: var(--radius); background: var(--surface-2); }
+        .class-report-summary span { border: 1px solid var(--border); border-radius: 4px; background: var(--primary-soft); box-shadow: none; }
+        .settings-storage-link, .storage-provider-advanced { border: 1px solid var(--border); border-radius: var(--radius); background: var(--surface); box-shadow: none; }
+
+        /* Dialogs and the phone action sheet */
+        .modal { background: rgba(10, 24, 46, .55); }
+        .modal-dialog, .mobile-actions-sheet { border: 1px solid var(--border-strong); border-radius: var(--radius-lg); box-shadow: var(--shadow-lg); }
+        .modal-footer { background: var(--surface-2); }
+        a.sheet-menu-item { color: inherit; text-decoration: none; }
+        .mobile-tab-btn svg { flex: 0 0 auto; width: 20px; height: 20px; }
+        .web-phone-camera-card { box-shadow: var(--shadow); }
+
+        /* Desktop navigation: white rail with grouped sections and a navy active item. */
         @media (min-width: 861px) {
             .app > .topbar-actions {
-                border-right-color: rgba(210,233,245,.13);
-                background: radial-gradient(circle at -30% -8%, rgba(90,180,217,.31), transparent 66%),
-                            linear-gradient(180deg, #0b3b66, #092c52 62%, #082441);
-                box-shadow: 8px 0 26px rgba(8, 43, 75, .17);
+                padding: 8px 10px 18px;
+                border-top: 0;
+                border-right: 1px solid var(--border);
+                background: var(--surface);
+                box-shadow: none;
+            }
+            .app > .topbar-actions .action-group {
+                padding: 28px 0 10px;
+                border-bottom: 1px solid var(--border);
             }
             .app > .topbar-actions .action-group::before,
-            .app > .topbar-actions .advanced-label { color: #b3d5e8; }
-            .app > .topbar-actions [data-sidebar-view][aria-current="page"] {
-                border-color: rgba(177,225,243,.25);
-                border-left: 3px solid #e5ba60;
-                background: linear-gradient(90deg, rgba(84,171,212,.28), rgba(255,255,255,.08));
-                box-shadow: inset 0 1px 0 rgba(255,255,255,.1);
+            .app > .topbar-actions .advanced-label {
+                color: var(--muted);
+                font-size: .72rem;
+                font-weight: 700;
+                letter-spacing: .02em;
             }
-            .app > .topbar-actions .action-group .btn { min-height: 42px; }
+            .app > .topbar-actions .action-group::before { top: 9px; left: 10px; }
+            .app > .topbar-actions .btn-ghost,
+            .app > .topbar-actions .advanced-actions summary {
+                border: 1px solid transparent;
+                border-radius: var(--radius-sm);
+                background: transparent;
+                color: var(--text-2);
+                font-weight: 600;
+            }
+            .app > .topbar-actions .action-group .btn { min-height: 40px; }
+            .app > .topbar-actions .btn-ghost ion-icon,
+            .app > .topbar-actions .advanced-actions summary ion-icon { color: var(--primary); }
+            .app > .topbar-actions .action-group .btn:hover,
+            .app > .topbar-actions .btn-ghost:hover,
+            .app > .topbar-actions .advanced-actions summary:hover,
+            .app > .topbar-actions .advanced-actions summary:focus-visible {
+                border-color: transparent;
+                background: var(--primary-soft);
+                color: var(--primary-dark);
+            }
+            .app > .topbar-actions [data-sidebar-view][aria-current="page"],
+            .app > .topbar-actions [data-sidebar-view][aria-current="page"]:hover {
+                border: 1px solid var(--primary);
+                border-left: 4px solid var(--official-gold);
+                background: var(--primary);
+                color: #fff;
+                box-shadow: none;
+            }
+            .app > .topbar-actions [data-sidebar-view][aria-current="page"] ion-icon { color: #fff; }
+            html[data-theme="dark"] .app > .topbar-actions [data-sidebar-view][aria-current="page"],
+            html[data-theme="dark"] .app > .topbar-actions [data-sidebar-view][aria-current="page"] ion-icon { color: #0f1724; }
+            .app > .topbar-actions .advanced-danger-zone { border-top: 1px solid var(--border); }
+            .app > .topbar-actions .advanced-danger-note { color: var(--red); }
+            .app > .topbar-actions .btn-danger { border: 1px solid var(--red); background: var(--red-soft); color: var(--red); }
+            .app > .topbar-actions .btn-danger:hover { background: var(--red); color: #fff; }
         }
-
-        html[data-theme="dark"] .metric,
-        html[data-theme="dark"] .panel,
-        html[data-theme="dark"] .report-view,
-        html[data-theme="dark"] .history-panel { box-shadow: var(--shadow-sm); }
-        html[data-theme="dark"] .form-panel > .panel-header { background: linear-gradient(135deg, #103859, #155b78); }
-        html[data-theme="dark"] .admin-overview {
-            border-color: rgba(255,255,255,.14);
-            border-left-color: #dfb457;
-            background: radial-gradient(circle at 83% 6%, rgba(108,211,224,.19), transparent 26%),
-                        linear-gradient(116deg, #0a2c4c 0%, #104468 59%, #145c71 100%);
-        }
-        html[data-theme="dark"] .admin-overview h1 { color: #fff; }
-        html[data-theme="dark"] .admin-overview p { color: #dceef7; }
-        html[data-theme="dark"] .metric-value { color: var(--text); }
 
         @media (max-width: 860px) {
             .app { padding-left: 12px; padding-right: 12px; }
-            .topbar { margin-left: -12px; margin-right: -12px; border-radius: 0 0 16px 16px; padding-inline: 14px; }
-            .admin-overview { min-height: 134px; padding: 19px 21px; }
-            .admin-overview::before { right: -45px; top: -28px; width: 180px; height: 180px; opacity: .55; }
-            .admin-overview::after { display: none; }
+            .topbar { margin-left: -12px; margin-right: -12px; padding-inline: 14px; }
             .metrics { gap: 10px; }
-            .metric { padding: 14px; }
+            .metric { padding: 12px 14px; }
+            .report-export-grid { grid-template-columns: minmax(0, 1fr); gap: 10px; }
+            .report-view { padding: 14px 12px; }
             .mobile-tabs {
                 grid-template-columns: repeat(4, minmax(0, 1fr));
-                gap: 5px;
-                border-color: var(--border);
+                gap: 4px;
+                border: 1px solid var(--border);
                 background: var(--surface);
-                backdrop-filter: none;
-                -webkit-backdrop-filter: none;
+                box-shadow: var(--shadow);
             }
-            .mobile-tab-btn {
-                flex-direction: column;
-                gap: 1px;
-                min-height: 52px;
-                height: auto;
-                padding: 4px 2px;
-                color: var(--text-2);
-                font-size: .74rem;
-                line-height: 1.25;
-                white-space: normal;
-            }
-            .mobile-tab-btn.active { background: var(--primary-soft); color: var(--primary); box-shadow: inset 0 0 0 1px var(--border); }
-            .panel { margin: 0 0 14px; border-radius: 16px; }
+            .mobile-tab-btn { flex-direction: column; gap: 1px; min-height: 52px; height: auto; padding: 4px 2px; color: var(--text-2); font-size: .74rem; line-height: 1.25; white-space: normal; }
+            .mobile-tab-btn.active { background: var(--primary-soft); color: var(--primary-dark); box-shadow: inset 0 -3px 0 var(--official-gold); }
+            .panel { margin: 0 0 14px; }
         }
-
-        @media (max-width: 860px) {
-            html[data-theme="dark"] .mobile-tabs { background: var(--surface); }
-        }
-
         @media (max-width: 560px) {
-            .ambient-grid { opacity: .18; }
-            body::before {
-                display: block;
-                width: 190px;
-                right: -105px;
-                top: 95px;
-                opacity: .48;
-                box-shadow: none;
-            }
-            body::after { display: none; }
-            .topbar { margin-bottom: 14px; }
-            .admin-overview h1 { max-width: 26ch; font-size: 1.27rem; }
-            .admin-overview p { font-size: .83rem; }
             .metrics { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-            .metric { min-height: 92px; }
-            .metric-icon { width: 40px; height: 40px; }
-            .metric-value { font-size: 1.45rem; }
+            .metric { min-height: 88px; }
+            .metric-icon { width: 36px; height: 36px; }
+            .metric-value { font-size: 1.4rem; }
         }
-
         @media (max-width: 420px) {
             .topbar { gap: 4px; padding-inline: 8px; }
             .topbar .brand { gap: 6px; }
-            .topbar .brand-title { font-size: .76rem; }
+            .topbar .brand-title { font-size: .74rem; }
             .topbar .brand-mark { width: 34px; height: 34px; }
             .topbar .status-pill { width: 30px; min-width: 30px; max-width: 30px; height: 30px; }
             .topbar .theme-btn, .topbar .mobile-menu-btn { width: 34px; height: 34px; }
             .metric { gap: 8px; padding: 10px; }
-            .metric-icon { width: 34px; height: 34px; }
             .metric-sync .metric-value { font-size: 1.06rem; white-space: nowrap; }
         }
-
-        /* One screen-only visual language across dashboard, forms, lists and dialogs.
-           These surface effects do not alter print layouts or student data. */
-        @media screen {
-            :root {
-                --depth-edge: rgba(255,255,255,.9);
-                --depth-shadow: 0 18px 35px rgba(18,63,99,.11), 0 4px 10px rgba(18,63,99,.05);
-                --depth-hover: 0 25px 48px rgba(18,63,99,.16), 0 7px 14px rgba(18,63,99,.07);
-            }
-            html[data-theme="dark"] {
-                --depth-edge: rgba(226,244,255,.12);
-                --depth-shadow: 0 18px 35px rgba(0,0,0,.22), 0 4px 10px rgba(0,0,0,.12);
-                --depth-hover: 0 25px 48px rgba(0,0,0,.3), 0 7px 14px rgba(0,0,0,.14);
-            }
-            .topbar {
-                border-bottom-color: #cda451;
-                background: radial-gradient(circle at 96% -80%, rgba(107,221,215,.35), transparent 38%),
-                            linear-gradient(116deg,#092d4f 3%,#154e79 62%,#116b7c);
-                box-shadow: 0 20px 38px rgba(9,45,79,.22), inset 0 1px 0 rgba(255,255,255,.2);
-            }
-            .brand-mark { border: 1px solid rgba(255,255,255,.6); }
-            .admin-overview {
-                border-left-color: #f0c66a;
-                background: radial-gradient(circle at 82% 5%, rgba(136,231,222,.38), transparent 32%),
-                            linear-gradient(118deg,#092d50,#15527c 61%,#147d83);
-                box-shadow: 0 24px 48px rgba(11,65,103,.23), inset 0 1px 0 rgba(255,255,255,.3);
-            }
-            .metric, .panel, .report-view, .class-browser-panel, .history-panel {
-                border: 1px solid var(--border);
-                box-shadow: var(--depth-shadow), inset 0 1px 0 var(--depth-edge);
-            }
-            .metric {
-                position: relative;
-                overflow: hidden;
-                background: linear-gradient(145deg,var(--surface),var(--surface-2));
-                transition: box-shadow .2s ease, border-color .2s ease, transform .2s ease;
-            }
-            .metric::after {
-                content: "";
-                position: absolute;
-                right: -32px;
-                top: -46px;
-                width: 115px;
-                height: 115px;
-                border: 1px solid var(--border);
-                border-radius: 50%;
-                pointer-events: none;
-                opacity: .65;
-            }
-            .metric:hover { transform: translateY(-3px); border-color: var(--border-strong); box-shadow: var(--depth-hover); }
-            .metric-icon { box-shadow: inset 0 1px 0 rgba(255,255,255,.72), 0 8px 14px rgba(15,78,124,.11); }
-            .panel-header, .list-panel > .panel-header, .history-panel > .panel-header {
-                background: linear-gradient(165deg,var(--surface),var(--surface-2));
-            }
-            .form-panel > .panel-header {
-                background: radial-gradient(circle at 92% 0, rgba(126,223,213,.3),transparent 32%),
-                            linear-gradient(125deg,#113b63,#176b88);
-            }
-            .form-panel .form-section, .settings-section {
-                border-radius: 14px;
-                background: linear-gradient(145deg,var(--surface),var(--surface-2));
-            }
-            .form-panel .section-icon, .modal-icon-primary {
-                box-shadow: inset 0 1px 0 rgba(255,255,255,.55), 0 7px 14px rgba(13,92,144,.13);
-            }
-            .toolbar, .form-save-bar, .pager {
-                background: linear-gradient(175deg,var(--surface-2),var(--surface));
-            }
-            .toolbar-filters-pane, .report-export-section, .class-report-tools {
-                border-color: var(--border);
-            }
-            .table-wrap, .class-report-table-wrap, .roster-preview {
-                border: 1px solid var(--border);
-                background: var(--surface);
-            }
-            .table-wrap thead th, .class-report-table-wrap th {
-                background: linear-gradient(180deg,var(--surface-2),var(--primary-soft));
-                color: var(--text);
-            }
-            .table-wrap tbody tr:nth-child(even) { background: var(--surface-2); }
-            .student-card, .class-student-item, .class-tile, .history-item {
-                border-color: var(--border);
-                background: linear-gradient(145deg,var(--surface),var(--surface-2));
-                box-shadow: 0 7px 17px rgba(18,63,99,.06), inset 0 1px 0 var(--depth-edge);
-                transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease;
-            }
-            .student-card:hover, .class-student-item:hover, .class-tile:hover, .history-item:hover {
-                border-color: var(--border-strong);
-                box-shadow: var(--depth-shadow);
-            }
-            .class-tile:hover { transform: translateY(-3px); }
-            .class-tile ion-icon { padding: 8px; box-sizing: content-box; border-radius: 12px; background: var(--primary-soft); }
-            .report-view-header { padding-bottom: 16px; border-bottom: 1px solid var(--border); }
-            .report-export-section { background: linear-gradient(145deg,var(--surface-2),var(--surface)); box-shadow: inset 0 1px 0 var(--depth-edge); }
-            .report-mode-tabs, .settings-tabs { box-shadow: inset 0 2px 5px rgba(18,63,99,.08); }
-            .report-mode-tabs button[aria-pressed="true"], .settings-tabs button[aria-selected="true"] {
-                background: linear-gradient(135deg,#12558f,#147f90);
-                box-shadow: 0 8px 17px rgba(18,85,143,.2), inset 0 1px 0 rgba(255,255,255,.23);
-            }
-            .class-report-summary span { border: 1px solid var(--border); box-shadow: inset 0 1px 0 var(--depth-edge); }
-            .settings-storage-link, .storage-provider-advanced {
-                background: linear-gradient(145deg,var(--surface),var(--surface-2));
-                box-shadow: 0 8px 18px rgba(18,63,99,.07), inset 0 1px 0 var(--depth-edge);
-            }
-            .modal { background: rgba(5,28,49,.62); }
-            .modal-dialog, .mobile-actions-sheet {
-                border: 1px solid var(--border-strong);
-                box-shadow: 0 30px 75px rgba(3,24,44,.3), inset 0 1px 0 var(--depth-edge);
-            }
-            .modal-footer { background: linear-gradient(180deg,var(--surface),var(--surface-2)); }
-            .btn-primary, .form-save-bar .btn-primary {
-                background: linear-gradient(145deg,#1766a4,#0d507f);
-                box-shadow: 0 9px 18px rgba(16,85,145,.23), inset 0 1px 0 rgba(255,255,255,.26);
-            }
-            .btn-secondary { box-shadow: inset 0 1px 0 var(--depth-edge), 0 5px 12px rgba(18,63,99,.08); }
-            .btn:hover:not(:disabled) { transform: translateY(-2px); }
-            .btn:active:not(:disabled), .class-tile:active { transform: translateY(0); box-shadow: inset 0 2px 5px rgba(8,48,80,.18); }
-            .web-phone-camera-card { box-shadow: var(--depth-hover); }
-        }
-        @media screen and (min-width: 861px) {
-            .app > .topbar-actions { box-shadow: 10px 0 35px rgba(8,43,75,.21), inset -1px 0 0 rgba(255,255,255,.14); }
-            .app > .topbar-actions [data-sidebar-view][aria-current="page"] {
-                box-shadow: inset 0 1px 0 rgba(255,255,255,.2), 0 9px 18px rgba(3,25,48,.18);
-            }
-        }
-        @media screen and (max-width: 860px) {
-            .metric:hover, .class-tile:hover, .btn:hover:not(:disabled) { transform: none; }
-            .mobile-tabs {
-                border: 1px solid var(--border-strong);
-                box-shadow: 0 12px 30px rgba(8,49,83,.17), inset 0 1px 0 var(--depth-edge);
-                background: linear-gradient(170deg,var(--surface),var(--surface-2));
-            }
-            .mobile-tab-btn.active { box-shadow: inset 0 1px 0 var(--depth-edge), 0 5px 11px rgba(18,85,143,.14); }
-            .student-card, .class-tile, .class-student-item { box-shadow: 0 5px 12px rgba(18,63,99,.07), inset 0 1px 0 var(--depth-edge); }
+        @media (max-width: 860px) {
             .table-detail-toggle { display: none !important; }
         }
 
@@ -3831,12 +3697,11 @@
         /* Phone roster follows the supplied compact administration layout. */
         @media screen and (max-width: 600px) {
             body { background:#f5f7fb; }
-            .ambient-grid, body::before, body::after { display:none !important; }
             .app { padding:0 16px calc(90px + env(safe-area-inset-bottom)); }
             .topbar {
                 position:relative; z-index:1; display:flex; align-items:flex-start; min-height:124px; height:124px;
-                margin:0 -16px; padding:15px 16px; gap:8px; border:0; border-bottom:2px solid #d7a824;
-                border-radius:0; background:#102849; box-shadow:none;
+                margin:0 -16px; padding:15px 16px; gap:8px; border:0; border-bottom:3px solid var(--official-gold);
+                border-radius:0; background:#0f2e5a; box-shadow:none;
             }
             .topbar .brand { min-width:0; align-items:center; gap:10px; }
             .topbar .brand-mark {
@@ -3997,20 +3862,16 @@
 
         @media (prefers-reduced-motion: reduce) {
             html { scroll-behavior: auto; }
-            .ambient-grid, body::before, body::after { animation: none !important; }
             .btn, tbody tr, .metric, .student-card, .class-student-item, .class-tile, .history-item, .modal, .modal-dialog { transition: none !important; animation: none !important; }
             .btn:hover:not(:disabled), .metric:hover, .class-tile:hover { transform: none; }
         }
 
         @media print {
             body { background: #fff !important; }
-            .ambient-grid { display: none !important; }
-            body::before, body::after { display: none !important; }
         }
     </style>
 </head>
 <body class="sidebar-open">
-<div class="ambient-grid" aria-hidden="true"></div>
 <main class="app">
 
     <!-- ======================== TOPBAR ======================== -->
@@ -4043,55 +3904,59 @@
     </header>
 
     <nav class="topbar-actions" id="app-actions" aria-label="មុខងារកម្មវិធី">
-            <div class="action-group" data-group-label="ការងារប្រចាំថ្ងៃ" aria-label="ការងារប្រចាំថ្ងៃ">
-                <button class="btn btn-ghost" type="button" data-sidebar-view="form"><ion-icon name="person-add-outline" aria-hidden="true"></ion-icon><span>បញ្ចូលសិស្សថ្មី</span></button>
-                <button class="btn btn-ghost" type="button" data-sidebar-view="list" aria-current="page"><ion-icon name="search-outline" aria-hidden="true"></ion-icon><span>បញ្ជី និងស្វែងរក</span></button>
+            <div class="action-group" data-group-label="សិស្ស" aria-label="សិស្ស">
+                <button class="btn btn-ghost" type="button" data-sidebar-view="list" aria-current="page"><ion-icon name="list-outline" aria-hidden="true"></ion-icon><span>បញ្ជីសិស្ស</span></button>
+                <button class="btn btn-ghost" type="button" data-sidebar-view="form"><ion-icon name="person-add-outline" aria-hidden="true"></ion-icon><span>ចុះឈ្មោះសិស្សថ្មី</span></button>
                 <button class="btn btn-ghost" type="button" data-sidebar-view="classes"><ion-icon name="school-outline" aria-hidden="true"></ion-icon><span>សិស្សតាមថ្នាក់</span></button>
-                <button class="btn btn-ghost" type="button" data-sidebar-view="report"><ion-icon name="bar-chart-outline" aria-hidden="true"></ion-icon><span>របាយការណ៍ និងបញ្ជីបោះពុម្ព</span></button>
             </div>
 
-            <!-- Sync group -->
-            <div class="action-group" data-group-label="ការកំណត់ និងគ្រូ" aria-label="ការកំណត់ និងគ្រូ">
-                <button id="app-settings-btn" class="btn btn-ghost" type="button" title="ការកំណត់សាលា និងឃ្លាំងទិន្នន័យ">
-                    <ion-icon name="settings-outline" aria-hidden="true"></ion-icon>
-                    <span>ការកំណត់</span>
-                </button>
-                <a class="btn btn-ghost" href="https://script.google.com/macros/s/AKfycbyc_1v8DBczUTac1CprLsj2Ae5uKt8In-XGpB6lXXmCZj7Mm-4OL1DPSJjNXsD-G2GK/exec?action=teacherportal" target="_blank" rel="noopener noreferrer" title="ផ្ទាំងគ្រូបន្ទុកថ្នាក់">
-                    <ion-icon name="school-outline" aria-hidden="true"></ion-icon>
-                    <span>ផ្ទាំងគ្រូ</span>
-                </a>
+            <div class="action-group" data-group-label="ឯកសារ" aria-label="ឯកសារ">
+                <button class="btn btn-ghost" type="button" data-sidebar-view="report"><ion-icon name="document-text-outline" aria-hidden="true"></ion-icon><span>របាយការណ៍ និងបោះពុម្ព</span></button>
             </div>
 
-            <details class="action-group advanced-actions" aria-label="ឧបករណ៍បន្ថែម">
-                <summary><ion-icon name="options-outline" aria-hidden="true"></ion-icon> ឧបករណ៍បន្ថែម</summary>
-                <p class="advanced-label">សមកាលកម្ម និងស្ដារ</p>
-                <button id="load-sheet-btn" class="btn btn-ghost" type="button" title="Load from Cloud Storage">
-                    <ion-icon name="cloud-download-outline" aria-hidden="true"></ion-icon>
-                    <span>ទាញទិន្នន័យ</span>
+            <div class="action-group" data-group-label="ទិន្នន័យ" aria-label="ទិន្នន័យ">
+                <button id="load-sheet-btn" class="btn btn-ghost" type="button" title="ទាញទិន្នន័យចុងក្រោយពី Google Sheet">
+                    <ion-icon name="refresh-outline" aria-hidden="true"></ion-icon>
+                    <span>ទាញទិន្នន័យថ្មី</span>
                 </button>
-                <button id="backup-now-btn" class="btn btn-ghost" type="button" title="Backup to Cloud Storage">
+                <button id="backup-now-btn" class="btn btn-ghost" type="button" title="បម្រុងទុកទិន្នន័យទៅ Google Sheet">
                     <ion-icon name="cloud-done-outline" aria-hidden="true"></ion-icon>
                     <span>បម្រុងទុក</span>
                 </button>
-                <button id="recover-photos-btn" class="btn btn-ghost" type="button" title="Restore missing photos from this device and class sheets">
-                    <ion-icon name="images-outline" aria-hidden="true"></ion-icon>
-                    <span>ស្ដាររូបថត</span>
-                </button>
-                <button id="migrate-photos-btn" class="btn btn-ghost" type="button" title="Move embedded Sheet photos to private Google Drive storage">
-                    <ion-icon name="folder-open-outline" aria-hidden="true"></ion-icon>
-                    <span>ផ្ទេររូបទៅ Drive</span>
-                </button>
-                <p class="advanced-label">នាំចូលឯកសារ</p>
-                <button id="download-template-btn" class="btn btn-ghost" type="button" title="Download Excel Template">
-                    <ion-icon name="document-text-outline" aria-hidden="true"></ion-icon>
-                    <span>គំរូ</span>
-                </button>
-                <button id="import-file-btn" class="btn btn-secondary" type="button" title="Import CSV/Excel">
+                <button id="import-file-btn" class="btn btn-ghost" type="button" title="នាំចូលពីឯកសារ CSV ឬ Excel">
                     <ion-icon name="cloud-upload-outline" aria-hidden="true"></ion-icon>
-                    <span>នាំចូល</span>
+                    <span>នាំចូល Excel</span>
+                </button>
+                <button id="download-template-btn" class="btn btn-ghost" type="button" title="ទាញយកគំរូ Excel សម្រាប់នាំចូល">
+                    <ion-icon name="download-outline" aria-hidden="true"></ion-icon>
+                    <span>គំរូ Excel</span>
                 </button>
                 <input id="import-file-input" class="hidden-input" type="file"
                        accept=".csv,.xlsx,.xls,text/csv,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.ms-excel">
+            </div>
+
+            <div class="action-group" data-group-label="រដ្ឋបាល" aria-label="រដ្ឋបាល">
+                <button id="app-settings-btn" class="btn btn-ghost" type="button" title="ការកំណត់សាលា កាតសិស្ស គ្រូ និងឃ្លាំងទិន្នន័យ">
+                    <ion-icon name="settings-outline" aria-hidden="true"></ion-icon>
+                    <span>ការកំណត់</span>
+                </button>
+                <a class="btn btn-ghost" href="https://script.google.com/macros/s/AKfycbyc_1v8DBczUTac1CprLsj2Ae5uKt8In-XGpB6lXXmCZj7Mm-4OL1DPSJjNXsD-G2GK/exec?action=teacherportal" target="_blank" rel="noopener noreferrer" title="បើកផ្ទាំងគ្រូបន្ទុកថ្នាក់ក្នុងផ្ទាំងថ្មី">
+                    <ion-icon name="people-outline" aria-hidden="true"></ion-icon>
+                    <span>ផ្ទាំងគ្រូបន្ទុកថ្នាក់</span>
+                </a>
+            </div>
+
+            <details class="action-group advanced-actions" aria-label="ថែទាំប្រព័ន្ធ">
+                <summary><ion-icon name="construct-outline" aria-hidden="true"></ion-icon> ថែទាំប្រព័ន្ធ</summary>
+                <p class="advanced-label">រូបថតសិស្ស</p>
+                <button id="recover-photos-btn" class="btn btn-ghost" type="button" title="ស្ដាររូបថតដែលបាត់ពីឧបករណ៍នេះ និងសន្លឹកថ្នាក់">
+                    <ion-icon name="images-outline" aria-hidden="true"></ion-icon>
+                    <span>ស្ដាររូបថត</span>
+                </button>
+                <button id="migrate-photos-btn" class="btn btn-ghost" type="button" title="ផ្ទេររូបថតក្នុង Sheet ទៅ Google Drive ឯកជន">
+                    <ion-icon name="folder-open-outline" aria-hidden="true"></ion-icon>
+                    <span>ផ្ទេររូបទៅ Drive</span>
+                </button>
                 <div class="advanced-danger-zone">
                     <p class="advanced-label">សកម្មភាពប្រុងប្រយ័ត្ន</p>
                     <p class="advanced-danger-note">ប្រើតែពេលត្រូវសម្អាតទិន្នន័យសិស្សទាំងអស់។</p>
@@ -4171,24 +4036,32 @@
             </div>
             <button id="report-back-btn" class="btn btn-ghost" type="button"><ion-icon name="arrow-back-outline" aria-hidden="true"></ion-icon> ត្រឡប់ទៅបញ្ជី</button>
         </div>
-        <div class="report-export-section" aria-labelledby="report-print-title">
-            <h2 id="report-print-title">បោះពុម្ពបញ្ជី និងកាត</h2>
-            <p>ប៊ូតុងទាំងនេះប្រើតម្រងបច្ចុប្បន្នពីផ្ទាំងបញ្ជីសិស្ស។ សម្រាប់បញ្ជីតាមថ្នាក់ សូមជ្រើសរបាយការណ៍ខាងក្រោម។</p>
-            <div class="report-export-actions">
-                <button id="print-list-btn" class="btn btn-secondary" type="button"><ion-icon name="print-outline" aria-hidden="true"></ion-icon> បញ្ជីសិស្ស A4</button>
-                <button id="print-photo-list-btn" class="btn btn-ghost" type="button"><ion-icon name="images-outline" aria-hidden="true"></ion-icon> បញ្ជីមានរូបថត</button>
-                <button id="print-card-list-btn" class="btn btn-ghost" type="button"><ion-icon name="id-card-outline" aria-hidden="true"></ion-icon> កាតសិស្ស</button>
+        <div class="report-export-grid">
+            <div class="report-export-section" aria-labelledby="report-print-title">
+                <h2 id="report-print-title"><ion-icon name="print-outline" aria-hidden="true"></ion-icon> បោះពុម្ព</h2>
+                <p>ប្រើតម្រងបច្ចុប្បន្នពីផ្ទាំងបញ្ជីសិស្ស។</p>
+                <div class="report-export-actions">
+                    <button id="print-list-btn" class="btn btn-secondary" type="button"><ion-icon name="document-outline" aria-hidden="true"></ion-icon> បញ្ជីសិស្ស A4</button>
+                    <button id="print-photo-list-btn" class="btn btn-ghost" type="button"><ion-icon name="images-outline" aria-hidden="true"></ion-icon> បញ្ជីមានរូបថត</button>
+                    <button id="print-card-list-btn" class="btn btn-ghost" type="button"><ion-icon name="id-card-outline" aria-hidden="true"></ion-icon> កាតសិស្ស</button>
+                </div>
             </div>
-            <h2>ទាញយកទិន្នន័យ</h2>
-            <div class="report-export-actions">
-                <button id="download-photos-btn" class="btn btn-ghost" type="button"><ion-icon name="images-outline" aria-hidden="true"></ion-icon> រូបថត ZIP</button>
-                <button id="download-excel-btn" class="btn btn-secondary" type="button"><ion-icon name="grid-outline" aria-hidden="true"></ion-icon> ទិន្នន័យ Excel</button>
-                <button id="download-csv-btn" class="btn btn-ghost" type="button"><ion-icon name="download-outline" aria-hidden="true"></ion-icon> ទិន្នន័យ CSV</button>
+            <div class="report-export-section" aria-labelledby="report-download-title">
+                <h2 id="report-download-title"><ion-icon name="download-outline" aria-hidden="true"></ion-icon> ទាញយកទិន្នន័យ</h2>
+                <p>ទាញយកសិស្សតាមតម្រងបច្ចុប្បន្ន ជាឯកសារ។</p>
+                <div class="report-export-actions">
+                    <button id="download-excel-btn" class="btn btn-secondary" type="button"><ion-icon name="grid-outline" aria-hidden="true"></ion-icon> ទិន្នន័យ Excel</button>
+                    <button id="download-csv-btn" class="btn btn-ghost" type="button"><ion-icon name="document-text-outline" aria-hidden="true"></ion-icon> ទិន្នន័យ CSV</button>
+                    <button id="download-photos-btn" class="btn btn-ghost" type="button"><ion-icon name="images-outline" aria-hidden="true"></ion-icon> រូបថត ZIP</button>
+                </div>
             </div>
         </div>
-        <div class="report-mode-tabs" role="group" aria-label="ប្រភេទរបាយការណ៍">
-            <button id="report-mode-class" type="button" aria-pressed="true">តាមថ្នាក់</button>
-            <button id="report-mode-grade" type="button" aria-pressed="false">តាមកម្រិតថ្នាក់</button>
+        <div class="report-section-heading">
+            <h2><ion-icon name="stats-chart-outline" aria-hidden="true"></ion-icon> បញ្ជីឈ្មោះ និងស្ថិតិ</h2>
+            <div class="report-mode-tabs" role="group" aria-label="ប្រភេទរបាយការណ៍">
+                <button id="report-mode-class" type="button" aria-pressed="true">តាមថ្នាក់</button>
+                <button id="report-mode-grade" type="button" aria-pressed="false">តាមកម្រិតថ្នាក់</button>
+            </div>
         </div>
         <div class="class-report-body">
             <div class="class-report-tools">
@@ -4741,7 +4614,7 @@
             <strong>វិទ្យាល័យសុខអានព្រៃមេលង</strong>
             <span>ប្រព័ន្ធរដ្ឋបាល និងគ្រប់គ្រងព័ត៌មានសិស្ស</span>
         </div>
-        <span class="footer-version">កំណែ 2.1.70</span>
+        <span class="footer-version">កំណែ 2.2.0</span>
     </footer>
 
 </main><!-- end .app -->
@@ -5067,33 +4940,42 @@
             <ion-icon name="settings-outline" aria-hidden="true"></ion-icon>
             <span>ការកំណត់</span>
         </button>
+        <a class="sheet-menu-item" href="https://script.google.com/macros/s/AKfycbyc_1v8DBczUTac1CprLsj2Ae5uKt8In-XGpB6lXXmCZj7Mm-4OL1DPSJjNXsD-G2GK/exec?action=teacherportal" target="_blank" rel="noopener noreferrer">
+            <ion-icon name="people-outline" aria-hidden="true"></ion-icon>
+            <span>ផ្ទាំងគ្រូ</span>
+        </a>
         <details class="mobile-action-group">
-            <summary><ion-icon name="cloud-outline" aria-hidden="true"></ion-icon> ទិន្នន័យ និងបម្រុងទុក</summary>
+            <summary><ion-icon name="cloud-outline" aria-hidden="true"></ion-icon> ទិន្នន័យ</summary>
             <div class="mobile-action-group-content">
-        <button id="m-load-sheet-btn" class="sheet-menu-item" type="button">
-            <ion-icon name="cloud-download-outline" aria-hidden="true"></ion-icon>
-            <span>ទាញទិន្នន័យ</span>
-        </button>
-        <button id="m-backup-now-btn" class="sheet-menu-item" type="button">
-            <ion-icon name="cloud-done-outline" aria-hidden="true"></ion-icon>
-            <span>បម្រុងទុក</span>
-        </button>
-        <button id="m-recover-photos-btn" class="sheet-menu-item" type="button">
-            <ion-icon name="images-outline" aria-hidden="true"></ion-icon>
-            <span>ស្ដាររូបថត</span>
-        </button>
-        <button id="m-migrate-photos-btn" class="sheet-menu-item" type="button">
-            <ion-icon name="folder-open-outline" aria-hidden="true"></ion-icon>
-            <span>ផ្ទេររូបទៅ Drive</span>
-        </button>
-        <button id="m-download-template-btn" class="sheet-menu-item" type="button">
-            <ion-icon name="document-text-outline" aria-hidden="true"></ion-icon>
-            <span>គំរូ</span>
-        </button>
-        <button id="m-import-file-btn" class="sheet-menu-item" type="button">
-            <ion-icon name="cloud-upload-outline" aria-hidden="true"></ion-icon>
-            <span>នាំចូល</span>
-        </button>
+                <button id="m-load-sheet-btn" class="sheet-menu-item" type="button">
+                    <ion-icon name="refresh-outline" aria-hidden="true"></ion-icon>
+                    <span>ទាញទិន្នន័យថ្មី</span>
+                </button>
+                <button id="m-backup-now-btn" class="sheet-menu-item" type="button">
+                    <ion-icon name="cloud-done-outline" aria-hidden="true"></ion-icon>
+                    <span>បម្រុងទុក</span>
+                </button>
+                <button id="m-import-file-btn" class="sheet-menu-item" type="button">
+                    <ion-icon name="cloud-upload-outline" aria-hidden="true"></ion-icon>
+                    <span>នាំចូល Excel</span>
+                </button>
+                <button id="m-download-template-btn" class="sheet-menu-item" type="button">
+                    <ion-icon name="download-outline" aria-hidden="true"></ion-icon>
+                    <span>គំរូ Excel</span>
+                </button>
+            </div>
+        </details>
+        <details class="mobile-action-group">
+            <summary><ion-icon name="construct-outline" aria-hidden="true"></ion-icon> ថែទាំប្រព័ន្ធ</summary>
+            <div class="mobile-action-group-content">
+                <button id="m-recover-photos-btn" class="sheet-menu-item" type="button">
+                    <ion-icon name="images-outline" aria-hidden="true"></ion-icon>
+                    <span>ស្ដាររូបថត</span>
+                </button>
+                <button id="m-migrate-photos-btn" class="sheet-menu-item" type="button">
+                    <ion-icon name="folder-open-outline" aria-hidden="true"></ion-icon>
+                    <span>ផ្ទេររូបទៅ Drive</span>
+                </button>
             </div>
         </details>
         <details class="mobile-action-group mobile-danger-group">
@@ -6689,10 +6571,10 @@
         els.backupNowBtn.disabled = loading || !configured;
         if (loading) {
             els.loadSheetBtn.innerHTML = '<span class="spinner"></span><span>កំពុងទាញ...</span>';
-            els.backupNowBtn.innerHTML = '<span class="spinner"></span><span>Sync...</span>';
+            els.backupNowBtn.innerHTML = '<span class="spinner"></span><span>កំពុងបម្រុង...</span>';
         } else {
-            els.loadSheetBtn.innerHTML = '<ion-icon name="cloud-download-outline"></ion-icon><span>ទាញទិន្នន័យ</span>';
-            els.backupNowBtn.innerHTML = '<ion-icon name="cloud-done-outline"></ion-icon><span>បម្រុងទុក</span>';
+            els.loadSheetBtn.innerHTML = '<ion-icon name="refresh-outline" aria-hidden="true"></ion-icon><span>ទាញទិន្នន័យថ្មី</span>';
+            els.backupNowBtn.innerHTML = '<ion-icon name="cloud-done-outline" aria-hidden="true"></ion-icon><span>បម្រុងទុក</span>';
         }
     }
 
@@ -9034,7 +8916,7 @@
     function setEditMode(id) {
         els.editingId.value = id || "";
         const sidebarFormLabel = document.querySelector('#app-actions [data-sidebar-view="form"] span');
-        if (sidebarFormLabel) sidebarFormLabel.textContent = id ? "កែសម្រួលសិស្ស" : "បញ្ចូលសិស្សថ្មី";
+        if (sidebarFormLabel) sidebarFormLabel.textContent = id ? "កែសម្រួលសិស្ស" : "ចុះឈ្មោះសិស្សថ្មី";
         const mobileFormLabel = els.tabFormBtn?.querySelector("span");
         if (mobileFormLabel) mobileFormLabel.textContent = id ? "កែសម្រួល" : "ចុះឈ្មោះថ្មី";
         if (id) {
@@ -10352,7 +10234,7 @@
         els.backupNowBtn.disabled = loading;
         els.backupNowBtn.innerHTML = loading
             ? '<span class="spinner"></span><span>កំពុងបម្រុង...</span>'
-            : '<ion-icon name="cloud-done-outline"></ion-icon><span>បម្រុងទុក</span>';
+            : '<ion-icon name="cloud-done-outline" aria-hidden="true"></ion-icon><span>បម្រុងទុក</span>';
     }
 
     async function backupAllStudents() {
