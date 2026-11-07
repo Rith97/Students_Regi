@@ -1,2 +1,8 @@
 dist/
 node_modules/
+release/
+script-live-review/
+.neon
+.env
+.env.*
+!.env.example

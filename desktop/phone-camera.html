@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="km">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <title>Phone Camera · Student Registration</title>
+  <style>
+    :root { color-scheme: light; font-family: system-ui,"Noto Sans Khmer",sans-serif; color:#17211d; background:#eef3f1; }
+    * { box-sizing:border-box; }
+    body { margin:0; min-height:100vh; display:grid; place-items:center; padding:18px; }
+    main { width:min(100%,480px); background:#fff; border:1px solid #d7e1dd; border-radius:18px; padding:22px; box-shadow:0 18px 50px rgba(20,45,38,.14); }
+    h1 { margin:0 0 6px; color:#0b6b57; font-size:1.55rem; }
+    p { margin:0 0 18px; color:#5f7069; line-height:1.55; }
+    .preview { aspect-ratio:3/4; width:min(100%,300px); margin:0 auto 18px; display:grid; place-items:center; overflow:hidden; border:2px dashed #b9ccc5; border-radius:14px; background:#f3f7f5; color:#72837c; text-align:center; }
+    .preview img { width:100%; height:100%; object-fit:cover; }
+    .actions { display:grid; gap:10px; }
+    label,button { min-height:52px; border:0; border-radius:12px; display:flex; align-items:center; justify-content:center; padding:0 16px; font:inherit; font-weight:750; cursor:pointer; }
+    label { color:#fff; background:#0b6b57; }
+    button { color:#0b6b57; background:#e5f1ed; }
+    button:disabled { opacity:.48; cursor:not-allowed; }
+    input { position:absolute; width:1px; height:1px; opacity:0; pointer-events:none; }
+    #status { min-height:24px; margin:14px 0 0; text-align:center; font-weight:650; color:#52645d; }
+    #status.ok { color:#08734f; }
+    #status.error { color:#b42318; }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>ប្រើទូរសព្ទជាកាមេរ៉ា</h1>
+    <p>ថតរូបសិស្ស រួចផ្ញើទៅកុំព្យូទ័រ។ ទូរសព្ទ និងកុំព្យូទ័រត្រូវភ្ជាប់ Wi‑Fi ដូចគ្នា។</p>
+    <div id="preview" class="preview">មិនទាន់ជ្រើសរូបថត</div>
+    <div class="actions">
+      <label id="capture-label" for="photo">📷 ថតរូបសិស្ស</label>
+      <input id="photo" type="file" accept="image/jpeg,image/png,image/webp" capture="environment">
+      <button id="send" type="button" disabled>ផ្ញើទៅកុំព្យូទ័រ</button>
+    </div>
+    <div id="status" role="status" aria-live="polite">រង់ចាំថតរូប…</div>
+  </main>
+  <script>
+    const input = document.getElementById("photo");
+    const preview = document.getElementById("preview");
+    const send = document.getElementById("send");
+    const captureLabel = document.getElementById("capture-label");
+    const status = document.getElementById("status");
+    let selectedFile = null;
+
+    function setStatus(text, type="") {
+      status.textContent = text;
+      status.className = type;
+    }
+
+    input.addEventListener("change", () => {
+      selectedFile = input.files && input.files[0];
+      if (!selectedFile) return;
+      const image = new Image();
+      image.alt = "រូបថតដែលបានជ្រើស";
+      image.src = URL.createObjectURL(selectedFile);
+      image.onload = () => URL.revokeObjectURL(image.src);
+      preview.replaceChildren(image);
+      send.disabled = false;
+      setStatus("រូបថតរួចរាល់សម្រាប់ផ្ញើ");
+    });
+
+    send.addEventListener("click", async () => {
+      if (!selectedFile) return;
+      send.disabled = true;
+      setStatus("កំពុងផ្ញើ…");
+      try {
+        const response = await fetch(`/upload${location.search}`, {
+          method: "POST",
+          headers: { "Content-Type": selectedFile.type || "image/jpeg" },
+          body: selectedFile
+        });
+        const payload = await response.json();
+        if (!response.ok || !payload.ok) throw new Error(payload.error || "Upload failed");
+        setStatus("បានផ្ញើរូបថតទៅកុំព្យូទ័រ ✓", "ok");
+        selectedFile = null;
+        input.value = "";
+        preview.textContent = "រួចរាល់សម្រាប់សិស្សបន្ទាប់";
+        captureLabel.textContent = "📷 ថតរូបសិស្សបន្ទាប់";
+        setTimeout(() => setStatus("រក្សា page នេះបើក ហើយថតសិស្សបន្ទាប់ដោយមិនបាច់ Scan QR ម្តងទៀត។", "ok"), 900);
+      } catch (error) {
+        setStatus("ផ្ញើមិនបាន។ សូមពិនិត្យ Wi‑Fi ហើយព្យាយាមម្ដងទៀត។", "error");
+        send.disabled = false;
+      }
+    });
+  </script>
+</body>
+</html>
