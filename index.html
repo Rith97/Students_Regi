@@ -999,28 +999,6 @@
             justify-items: start;
         }
 
-        /* Class group row */
-        .class-group-row td {
-            padding: 8px 14px;
-            background: linear-gradient(90deg, var(--primary-soft), transparent);
-            border-top: 2px solid var(--border);
-            font-weight: 700;
-            font-size: .82rem;
-            color: var(--primary-dark);
-        }
-
-        .class-count {
-            display: inline-flex;
-            align-items: center;
-            height: 20px;
-            padding: 0 8px;
-            border-radius: 999px;
-            background: var(--primary-glow);
-            font-size: .75rem;
-            color: var(--primary-dark);
-            margin-left: 8px;
-        }
-
         /* Row actions */
         .row-actions {
             display: flex;
@@ -2794,12 +2772,6 @@
         .row-actions { opacity: .7; }
         tbody tr:hover .row-actions { opacity: 1; }
 
-        .class-group-row td {
-            border-top-color: #b9cae0;
-            background: linear-gradient(90deg, #e5eefb, #f8fbff);
-            color: #173f78;
-        }
-
         .pager {
             padding: 11px 16px;
             border-top-color: #d7e1ed;
@@ -3828,6 +3800,159 @@
             html[data-theme="dark"] .mobile-card-identity .student-name, html[data-theme="dark"] .mobile-card-identity .student-index { color:#f0f5fb; }
         }
 
+        /* ========================
+           STUDENT LIST (v2.2.1)
+           Clean ruled register: white rows, round avatars, data gaps shown as a
+           small pill instead of tinting the whole row, quiet row actions.
+        ======================== */
+        .list-panel .toolbar { gap: 10px; padding: 14px 18px; border-bottom: 1px solid var(--border); }
+        .list-panel .search-wrap input { height: 42px; background: var(--surface); }
+        .list-panel .toolbar select { height: 42px; background-color: var(--surface); }
+
+        #students-table { border-collapse: separate; border-spacing: 0; }
+        #students-table thead th {
+            padding: 11px 12px;
+            border: 0;
+            border-right: 1px solid rgba(255, 255, 255, .14);
+            font-size: .8rem;
+            white-space: nowrap;
+        }
+        #students-table thead th:last-child { border-right: 0; }
+        #students-table tbody td {
+            padding: 9px 12px;
+            border: 0;
+            border-bottom: 1px solid var(--border);
+            font-size: .86rem;
+            color: var(--text-2);
+            vertical-align: middle;
+        }
+        #students-table tbody tr,
+        #students-table tbody tr:nth-child(even),
+        #students-table tbody tr.student-data-complete,
+        #students-table tbody tr.student-data-partial,
+        #students-table tbody tr.student-data-empty { background: var(--surface) !important; }
+        #students-table tbody tr:hover,
+        #students-table tbody tr.student-data-complete:hover,
+        #students-table tbody tr.student-data-partial:hover,
+        #students-table tbody tr.student-data-empty:hover { background: var(--primary-soft) !important; }
+        #students-table tbody tr.student-data-empty > td:first-child { box-shadow: inset 3px 0 0 var(--red); }
+
+        #students-table .col-num { width: 48px; color: var(--muted); font-size: .78rem; text-align: center; }
+        #students-table .col-center { text-align: center; }
+        #students-table .col-date, #students-table .col-phone { white-space: nowrap; font-variant-numeric: tabular-nums; }
+        #students-table .col-school { max-width: 190px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        #students-table .col-code { white-space: nowrap; font: 600 .8rem/1.4 ui-monospace, "Cascadia Mono", Consolas, monospace; color: var(--text-2); }
+        .code-chip { display: inline-block; padding: 2px 7px; border: 1px solid var(--border); border-radius: 4px; background: var(--surface-2); letter-spacing: .02em; }
+        .class-chip { display: inline-block; min-width: 38px; padding: 2px 8px; border-radius: 4px; background: var(--primary-soft); color: var(--primary-dark); font-weight: 700; font-size: .8rem; }
+        html[data-theme="dark"] .class-chip { color: var(--text); }
+
+        .table-student-name { display: flex; align-items: center; gap: 11px; min-width: 0; }
+        .table-avatar {
+            position: relative;
+            display: grid;
+            place-items: center;
+            flex: 0 0 38px;
+            width: 38px;
+            height: 38px;
+            overflow: hidden;
+            border-radius: 50%;
+            font-weight: 700;
+            font-size: 1rem;
+            line-height: 1;
+        }
+        .table-avatar.is-male { background: #e6edfa; color: #1f4f9c; }
+        .table-avatar.is-female { background: #f4e8f3; color: #8a2f7e; }
+        html[data-theme="dark"] .table-avatar.is-male { background: #1f3657; color: #b9cff2; }
+        html[data-theme="dark"] .table-avatar.is-female { background: #3d2440; color: #efc4ea; }
+        .table-avatar .student-photo-thumbnail {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            border: 0;
+            border-radius: 50%;
+            object-fit: cover;
+            object-position: center 30%;
+        }
+        .table-student-text { display: grid; gap: 2px; min-width: 0; justify-items: start; }
+        .table-student-text .student-name-button { width: auto; }
+        .table-student-text .student-name { color: var(--text); font-size: .92rem; font-weight: 700; }
+        .student-name-edit-icon { opacity: 0; transition: opacity 120ms ease; }
+        .student-name-button:hover .student-name-edit-icon,
+        .student-name-button:focus-visible .student-name-edit-icon { opacity: .8; }
+        .table-student-meta { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; min-height: 0; }
+        .table-student-meta:empty { display: none; }
+        .table-student-meta .student-latin-name { display: inline; font-size: .72rem; letter-spacing: .04em; text-transform: uppercase; }
+        .table-student-meta .data-status-badge {
+            gap: 3px;
+            height: 18px;
+            min-height: 18px;
+            padding: 0 6px;
+            border: 0;
+            border-radius: 4px;
+            font-size: .68rem;
+            font-weight: 700;
+            line-height: 18px;
+        }
+        .table-student-meta .data-status-badge ion-icon { width: 11px; height: 11px; }
+        .table-student-meta .data-status-badge.status-partial { background: var(--official-gold-soft); color: #8a5a00; }
+        .table-student-meta .data-status-badge.status-empty { background: var(--red-soft); color: var(--red); }
+        html[data-theme="dark"] .table-student-meta .data-status-badge.status-partial { color: #f0cf87; }
+
+        #students-table .badge { height: 22px; padding: 0 9px; border: 0; border-radius: 4px; font-size: .74rem; font-weight: 700; }
+        #students-table .badge-blue { background: #e6edfa; color: #1f4f9c; }
+        #students-table .badge-violet { background: #f4e8f3; color: #8a2f7e; }
+        html[data-theme="dark"] #students-table .badge-blue { background: #1f3657; color: #b9cff2; }
+        html[data-theme="dark"] #students-table .badge-violet { background: #3d2440; color: #efc4ea; }
+
+
+        #students-table .row-actions { justify-content: center; gap: 2px; opacity: .55; }
+        #students-table tbody tr:hover .row-actions,
+        #students-table tbody tr:focus-within .row-actions { opacity: 1; }
+        #students-table .row-actions .btn-icon {
+            width: 30px;
+            height: 30px;
+            min-height: 30px;
+            padding: 0;
+            border: 0;
+            border-radius: 6px;
+            background: transparent;
+            color: var(--text-2);
+        }
+        #students-table .row-actions .btn-icon ion-icon { width: 17px; height: 17px; }
+        #students-table .row-actions .btn-icon:hover { background: var(--surface); color: var(--primary); box-shadow: 0 0 0 1px var(--border); }
+        #students-table .row-actions .btn-icon-danger:hover { color: var(--red); box-shadow: 0 0 0 1px var(--red-soft); }
+
+        /* Phone cards: same register language, softer separation between students. */
+        @media screen and (max-width: 600px) {
+            .cards-list { gap: 8px; }
+            .student-card, .student-card.student-data-partial, .student-card.student-data-empty {
+                border: 1px solid var(--border);
+                border-radius: 10px;
+                background: var(--surface);
+            }
+            .student-card.student-data-empty { box-shadow: inset 3px 0 0 var(--red); }
+            .student-card.is-expanded { border-color: var(--primary); }
+            .mobile-card-header { min-height: 76px; padding: 11px 13px; }
+            .mobile-card-avatar.is-male { background: #e6edfa; color: #1f4f9c; }
+            .mobile-card-avatar.is-female { background: #f4e8f3; color: #8a2f7e; }
+            .mobile-card-identity .student-index { color: var(--muted); font-weight: 600; }
+            .mobile-card-identity .student-name { color: var(--text); }
+            .mobile-card-identity .badge { border-radius: 4px; }
+            .mobile-card-identity .student-latin-name { text-transform: uppercase; }
+            .mobile-card-identity .student-meta { font-variant-numeric: tabular-nums; }
+            .mobile-card-toggle .data-status-badge { border-radius: 4px; background: var(--official-gold-soft); color: #8a5a00; }
+            .mobile-card-details { background: var(--surface-2); }
+            .mobile-quick-actions button { border-color: var(--border); border-radius: 8px; background: var(--surface); color: var(--primary-dark); }
+            .mobile-quick-actions .delete-btn { border-color: #f1c9cc; background: var(--surface); color: var(--red); }
+            .mobile-quick-filters button { border-radius: 6px; }
+            .mobile-quick-filters button[aria-pressed="true"] { border-color: var(--primary); background: var(--primary); }
+            .search-wrap input { border-radius: 8px; }
+            html[data-theme="dark"] .mobile-card-avatar.is-male { background: #1f3657; color: #b9cff2; }
+            html[data-theme="dark"] .mobile-card-avatar.is-female { background: #3d2440; color: #efc4ea; }
+            html[data-theme="dark"] .student-card, html[data-theme="dark"] .mobile-quick-actions button { background: var(--surface); border-color: var(--border); }
+        }
+
         /* Keep the full 23-field record available, but start with the nine fields
            staff use to identify a student. Printed reports use a separate layout. */
         @media screen and (min-width: 861px) {
@@ -3915,11 +4040,11 @@
             </div>
 
             <div class="action-group" data-group-label="ទិន្នន័យ" aria-label="ទិន្នន័យ">
-                <button id="load-sheet-btn" class="btn btn-ghost" type="button" title="ទាញទិន្នន័យចុងក្រោយពី Google Sheet">
+                <button id="load-sheet-btn" class="btn btn-ghost" type="button" title="ទាញទិន្នន័យចុងក្រោយពី Neon Database">
                     <ion-icon name="refresh-outline" aria-hidden="true"></ion-icon>
                     <span>ទាញទិន្នន័យថ្មី</span>
                 </button>
-                <button id="backup-now-btn" class="btn btn-ghost" type="button" title="បម្រុងទុកទិន្នន័យទៅ Google Sheet">
+                <button id="backup-now-btn" class="btn btn-ghost" type="button" title="បម្រុងទុកទិន្នន័យទៅ Neon Database">
                     <ion-icon name="cloud-done-outline" aria-hidden="true"></ion-icon>
                     <span>បម្រុងទុក</span>
                 </button>
@@ -3940,7 +4065,7 @@
                     <ion-icon name="settings-outline" aria-hidden="true"></ion-icon>
                     <span>ការកំណត់</span>
                 </button>
-                <a class="btn btn-ghost" href="https://script.google.com/macros/s/AKfycbyc_1v8DBczUTac1CprLsj2Ae5uKt8In-XGpB6lXXmCZj7Mm-4OL1DPSJjNXsD-G2GK/exec?action=teacherportal" target="_blank" rel="noopener noreferrer" title="បើកផ្ទាំងគ្រូបន្ទុកថ្នាក់ក្នុងផ្ទាំងថ្មី">
+                <a class="btn btn-ghost" href="./teacher-portal.html" target="_blank" rel="noopener noreferrer" title="បើកផ្ទាំងគ្រូបន្ទុកថ្នាក់ក្នុងផ្ទាំងថ្មី">
                     <ion-icon name="people-outline" aria-hidden="true"></ion-icon>
                     <span>ផ្ទាំងគ្រូបន្ទុកថ្នាក់</span>
                 </a>
@@ -3953,9 +4078,9 @@
                     <ion-icon name="images-outline" aria-hidden="true"></ion-icon>
                     <span>ស្ដាររូបថត</span>
                 </button>
-                <button id="migrate-photos-btn" class="btn btn-ghost" type="button" title="ផ្ទេររូបថតក្នុង Sheet ទៅ Google Drive ឯកជន">
+                <button id="migrate-photos-btn" class="btn btn-ghost" type="button" title="ផ្ទេររូបថតចាស់ទៅ Storage ឯកជន">
                     <ion-icon name="folder-open-outline" aria-hidden="true"></ion-icon>
-                    <span>ផ្ទេររូបទៅ Drive</span>
+                    <span>ផ្ទេររូបទៅ Storage</span>
                 </button>
                 <div class="advanced-danger-zone">
                     <p class="advanced-label">សកម្មភាពប្រុងប្រយ័ត្ន</p>
@@ -4614,7 +4739,7 @@
             <strong>វិទ្យាល័យសុខអានព្រៃមេលង</strong>
             <span>ប្រព័ន្ធរដ្ឋបាល និងគ្រប់គ្រងព័ត៌មានសិស្ស</span>
         </div>
-        <span class="footer-version">កំណែ 2.2.0</span>
+        <span class="footer-version">កំណែ 2.3.0</span>
     </footer>
 
 </main><!-- end .app -->
@@ -4780,7 +4905,7 @@
             </div>
             <button id="sheet-settings-btn" class="settings-storage-link" type="button" aria-label="បើកការកំណត់ឃ្លាំងទិន្នន័យ">
                 <ion-icon name="cloud-outline" aria-hidden="true"></ion-icon>
-                <span><strong>ឃ្លាំងទិន្នន័យ</strong><small id="settings-storage-status">Google Sheet</small></span>
+                <span><strong>ឃ្លាំងទិន្នន័យ</strong><small id="settings-storage-status">Neon Database</small></span>
                 <ion-icon name="chevron-forward-outline" aria-hidden="true"></ion-icon>
             </button>
             <div id="settings-tabs" class="settings-tabs" role="tablist" aria-label="ប្រភេទការកំណត់">
@@ -4829,7 +4954,7 @@
             </section>
             <section id="teacher-settings-section" class="settings-section settings-panel teacher-settings-panel" role="tabpanel" aria-labelledby="settings-teachers-tab" hidden>
                 <h3>គ្រូបន្ទុកតាមថ្នាក់ <span id="teacher-settings-count" class="settings-count"></span></h3>
-                <p class="settings-help">ថ្នាក់យកពីបញ្ជីសិស្សបច្ចុប្បន្ន។ ការកំណត់នេះនឹង Sync ទៅ Google Sheet ប្រសិនបើបានភ្ជាប់។</p>
+                <p class="settings-help">ថ្នាក់យកពីបញ្ជីសិស្សបច្ចុប្បន្ន។ ការកំណត់នេះនឹង Sync ទៅ Neon Database ប្រសិនបើបានភ្ជាប់។</p>
                 <input id="teacher-settings-search" type="search" placeholder="ស្វែងរកថ្នាក់ ឬឈ្មោះគ្រូ" aria-label="ស្វែងរកថ្នាក់ ឬឈ្មោះគ្រូ">
                 <div id="teacher-settings-list" class="teacher-settings-list"></div>
                 <p id="teacher-settings-no-results" class="settings-help settings-no-results" hidden>រកមិនឃើញថ្នាក់ ឬឈ្មោះគ្រូនេះទេ។</p>
@@ -4852,14 +4977,14 @@
                 <ion-icon name="grid-outline"></ion-icon>
             </div>
             <h2 id="sheet-title" class="modal-title" tabindex="-1">ភ្ជាប់ឃ្លាំងទិន្នន័យ</h2>
-            <p class="modal-desc">Google Sheet ផ្លូវការបានកំណត់រួច។ បញ្ចូលលេខសម្ងាត់រដ្ឋបាលសម្រាប់ឧបករណ៍នេះ រួចចុច «តេស្តភ្ជាប់»។</p>
+            <p class="modal-desc">Neon Database ផ្លូវការបានកំណត់រួច។ បញ្ចូលលេខសម្ងាត់រដ្ឋបាលសម្រាប់ឧបករណ៍នេះ រួចចុច «តេស្តភ្ជាប់»។</p>
             <details id="alternate-storage-settings" class="storage-provider-advanced">
                 <summary>ជម្រើសកម្រិតខ្ពស់៖ ប្តូរឃ្លាំងទិន្នន័យ</summary>
                 <p class="settings-help">ការប្តូរឃ្លាំងមិនផ្ទេរទិន្នន័យសិស្សដោយស្វ័យប្រវត្តិទេ។ ប្រើតែពេលរដ្ឋបាលបានរៀបចំឃ្លាំងថ្មី។</p>
                 <div class="field">
                     <label for="storage-provider-select">ប្រភេទឃ្លាំងទិន្នន័យ</label>
                     <select id="storage-provider-select">
-                        <option value="google-sheet">Google Sheet</option>
+                        <option value="google-sheet">Neon Database</option>
                         <option value="supabase">Supabase</option>
                     </select>
                 </div>
@@ -4876,7 +5001,7 @@
             </details>
             <div id="google-sheet-settings-fields" class="storage-fields is-hidden">
                 <div class="field">
-                    <label for="sheet-url-input">Apps Script Web App URL (កំណត់រួច)</label>
+                    <label for="sheet-url-input">Neon API URL (កំណត់រួច)</label>
                     <input id="sheet-url-input" type="url" readonly aria-describedby="sheet-url-help">
                     <small id="sheet-url-help" class="field-help">App ប្រើ Link ផ្លូវការនេះស្វ័យប្រវត្តិសម្រាប់អ្នកប្រើទាំងអស់។</small>
                 </div>
@@ -4940,7 +5065,7 @@
             <ion-icon name="settings-outline" aria-hidden="true"></ion-icon>
             <span>ការកំណត់</span>
         </button>
-        <a class="sheet-menu-item" href="https://script.google.com/macros/s/AKfycbyc_1v8DBczUTac1CprLsj2Ae5uKt8In-XGpB6lXXmCZj7Mm-4OL1DPSJjNXsD-G2GK/exec?action=teacherportal" target="_blank" rel="noopener noreferrer">
+        <a class="sheet-menu-item" href="./teacher-portal.html" target="_blank" rel="noopener noreferrer">
             <ion-icon name="people-outline" aria-hidden="true"></ion-icon>
             <span>ផ្ទាំងគ្រូ</span>
         </a>
@@ -4974,7 +5099,7 @@
                 </button>
                 <button id="m-migrate-photos-btn" class="sheet-menu-item" type="button">
                     <ion-icon name="folder-open-outline" aria-hidden="true"></ion-icon>
-                    <span>ផ្ទេររូបទៅ Drive</span>
+                    <span>ផ្ទេររូបទៅ Storage</span>
                 </button>
             </div>
         </details>
@@ -5034,7 +5159,8 @@
     const DEFAULT_SUPABASE_ANON_KEY = "";
     const SUPABASE_URL_STORAGE_KEY = "studentRegistrationSupabaseUrl";
     const SUPABASE_ANON_KEY_STORAGE_KEY = "studentRegistrationSupabaseAnonKey";
-    const DEFAULT_GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyc_1v8DBczUTac1CprLsj2Ae5uKt8In-XGpB6lXXmCZj7Mm-4OL1DPSJjNXsD-G2GK/exec";
+    // Neon Function (main branch) that serves the same protocol as the former Apps Script web app.
+    const DEFAULT_GOOGLE_SCRIPT_URL = "https://br-morning-glade-aoy0pbd4-studentsapi.compute.c-2.ap-southeast-1.aws.neon.tech/";
     const GOOGLE_SCRIPT_STORAGE_KEY  = "studentRegistrationGoogleScriptUrl";
     const GOOGLE_SHEET_ACCESS_KEY_STORAGE_KEY = "studentRegistrationGoogleSheetAccessKey";
     const GOOGLE_DATA_REVISION_STORAGE_KEY = "studentRegistrationGoogleDataRevision";
@@ -5155,7 +5281,7 @@
             if (snapshotSaved) return;
             try {
                 localStorage.setItem(LOCAL_STUDENTS_KEY, JSON.stringify(withoutCloudPhotos()));
-                showToast("ឧបករណ៍ជិតពេញ៖ រូបថតមួយចំនួនមិនបានរក្សាក្នុងឧបករណ៍។ សូមពិនិត្យ Sheet មុនបិទ App", "warning");
+                showToast("ឧបករណ៍ជិតពេញ៖ រូបថតមួយចំនួនមិនបានរក្សាក្នុងឧបករណ៍។ សូមពិនិត្យ Database មុនបិទ App", "warning");
             } catch (fallbackError) {
                 console.error("Local text-only save failed:", fallbackError);
                 showToast("រក្សាទុកក្នុង Local Storage បរាជ័យ", "error");
@@ -6396,7 +6522,7 @@
             await syncAppSettingsToGoogleSheet();
         } catch (error) {
             console.error("Settings sync error:", error);
-            showToast("បានរក្សាទុកក្នុងកុំព្យូទ័រ ប៉ុន្តែ sync ទៅ Google Sheet មិនបាន", "warning");
+            showToast("បានរក្សាទុកក្នុងកុំព្យូទ័រ ប៉ុន្តែ sync ទៅ Neon Database មិនបាន", "warning");
         } finally {
             els.saveAppSettingsBtn.disabled = false;
         }
@@ -6428,7 +6554,7 @@
     }
 
     function currentStorageName() {
-        return getCloudProvider() === SUPABASE_PROVIDER ? "Supabase" : "Google Sheet";
+        return getCloudProvider() === SUPABASE_PROVIDER ? "Supabase" : "Neon Database";
     }
 
     function hasCloudStorageConfig() {
@@ -6623,7 +6749,7 @@
         }
         localStorage.setItem(CLOUD_PROVIDER_STORAGE_KEY, GOOGLE_SHEET_PROVIDER);
         setCloudControlsLoading(false);
-        setStatus("Google Sheet · មិនទាន់ផ្ទៀងផ្ទាត់");
+        setStatus("Neon Database · មិនទាន់ផ្ទៀងផ្ទាត់");
         restartSharedDataRefresh();
     }
 
@@ -6666,7 +6792,7 @@
         else localStorage.removeItem(GOOGLE_SHEET_ACCESS_KEY_STORAGE_KEY);
         closeSheetModal();
         setCloudControlsLoading(false);
-        showToast("បានរក្សាទុក Google Sheet · កំពុងផ្ទៀងផ្ទាត់ការភ្ជាប់");
+        showToast("បានរក្សាទុក Neon Database · កំពុងផ្ទៀងផ្ទាត់ការភ្ជាប់");
         restartSharedDataRefresh();
         loadStudentsFromCloudStorage({ silent:false, keepLocalWhenCloudEmpty:false });
     }
@@ -6699,7 +6825,7 @@
         return new Promise((resolve) => {
             const callback = `studentStorageTest_${Date.now()}_${Math.random().toString(36).slice(2)}`;
             const script = document.createElement("script");
-            const timer = setTimeout(() => cleanup({ ok:false, message:"Google Sheet timeout" }), 20000);
+            const timer = setTimeout(() => cleanup({ ok:false, message:"Neon Database timeout" }), 20000);
             function cleanup(result) {
                 clearTimeout(timer);
                 delete window[callback];
@@ -6708,8 +6834,8 @@
             }
             window[callback] = (payload) => {
                 cleanup(payload && payload.ok !== false
-                    ? { ok:true, message:"Google Sheet ភ្ជាប់បានត្រឹមត្រូវ" }
-                    : { ok:false, message:(payload && payload.error) || "Google Sheet មិនត្រឹមត្រូវ" });
+                    ? { ok:true, message:"Neon Database ភ្ជាប់បានត្រឹមត្រូវ" }
+                    : { ok:false, message:(payload && payload.error) || "Neon Database មិនត្រឹមត្រូវ" });
             };
             try {
                 const u = new URL(url);
@@ -6717,10 +6843,10 @@
                 u.searchParams.set("callback", callback);
                 if (accessKey) u.searchParams.set("key", accessKey);
                 script.src = u.toString();
-                script.onerror = () => cleanup({ ok:false, message:"មិនអាចភ្ជាប់ Google Sheet URL" });
+                script.onerror = () => cleanup({ ok:false, message:"មិនអាចភ្ជាប់ Neon API URL" });
                 document.head.append(script);
             } catch(e) {
-                cleanup({ ok:false, message:"Google Sheet URL មិនត្រឹមត្រូវ" });
+                cleanup({ ok:false, message:"Neon API URL មិនត្រឹមត្រូវ" });
             }
         });
     }
@@ -6889,7 +7015,7 @@
             const key = encodeURIComponent(String(studentId || student.studentCode || student.id || "").trim());
             if (key) await supabaseFetch(`students?or=(id.eq.${key},student_code.eq.${key})`, { method:"DELETE", headers:{ "Prefer":"return=minimal" } });
         } else if (action === "moveclass") {
-            throw new Error("ការប្ដូរថ្នាក់ដោយផ្ទាល់ត្រូវការ Google Sheet");
+            throw new Error("ការប្ដូរថ្នាក់ដោយផ្ទាល់ត្រូវការ Neon Database");
         }
         if (["upsert","upsertmany","delete","backup","replace"].includes(action)) {
             localStorage.setItem(BACKUP_TIME_STORAGE_KEY, new Date().toISOString());
@@ -6930,7 +7056,7 @@
             if (statuses.every(status => status?.ok === true && status.found === false)) return true;
             if (attempt < 2) await new Promise(resolve => setTimeout(resolve, 800));
         }
-        throw new Error("Sheet មិនទាន់បញ្ជាក់ថាសិស្សត្រូវបានលុប។ សំណើនៅរង់ចាំ Sync");
+        throw new Error("Database មិនទាន់បញ្ជាក់ថាសិស្សត្រូវបានលុប។ សំណើនៅរង់ចាំ Sync");
     }
 
     async function syncGoogleSheet(action, student={}, studentId="", students=null) {
@@ -6943,7 +7069,7 @@
             && (String(student.studentLatinName || "").trim()
                 || (Array.isArray(students) && students.some(row => String(row.studentLatinName || "").trim())))
             && !await googleLatinNameReady()) {
-            throw new Error("Google Sheet Script មិនទាន់គាំទ្រឈ្មោះឡាតាំង។ សូម Update Script មុន Sync។");
+            throw new Error("Neon API មិនទាន់គាំទ្រឈ្មោះឡាតាំង។ សូម Update Script មុន Sync។");
         }
         const body = { action, studentId, student: {...student, studentId}, accessKey:getGoogleSheetAccessKey(), sentAt: new Date().toISOString() };
         if (Array.isArray(students)) {
@@ -7002,7 +7128,7 @@
             }
             if (!checked?.found || String(checked.recordId || "") !== recordId
                 || String(checked.className || "").trim() !== targetClass || !checked.studentCode) {
-                throw new Error("Sheet មិនទាន់បញ្ជាក់ថ្នាក់ថ្មី។ សំណើនៅរង់ចាំ Sync");
+                throw new Error("Database មិនទាន់បញ្ជាក់ថ្នាក់ថ្មី។ សំណើនៅរង់ចាំ Sync");
             }
             const localStudent = allStudents.find(row => String(row.id) === recordId);
             if (localStudent) {
@@ -7160,7 +7286,7 @@
                 window[callback] = () => {};
                 setTimeout(() => delete window[callback], 90000);
                 cleanup({ preserveCallback:true });
-                reject(new Error("Google Sheet response timeout"));
+                reject(new Error("Neon Database response timeout"));
             }, timeoutMs);
             function cleanup({ preserveCallback=false }={}) {
                 clearTimeout(timer);
@@ -7181,7 +7307,7 @@
                 script.src = u.toString();
                 script.onerror = () => {
                     cleanup();
-                    reject(new Error("Cannot load Google Sheet"));
+                    reject(new Error("Cannot load Neon Database"));
                 };
                 document.head.append(script);
             } catch(e) {
@@ -7226,11 +7352,11 @@
                 return readGoogleSheetJsonp({}, 60000);
             }
             if (first?.ok !== true || !Array.isArray(first.students) || !Number.isFinite(Number(first.total))) {
-                throw new Error(first?.error || "Google Sheet page response is invalid");
+                throw new Error(first?.error || "Neon Database page response is invalid");
             }
             const total = Math.max(0, Math.floor(Number(first.total)));
             const serverLimit = Number(first.limit);
-            if (!Number.isInteger(serverLimit) || serverLimit < 1) throw new Error("Invalid Google Sheet page size");
+            if (!Number.isInteger(serverLimit) || serverLimit < 1) throw new Error("Invalid Neon Database page size");
             const offsets = [];
             for (let offset = serverLimit; offset < total; offset += serverLimit) offsets.push(offset);
             const pages = [first];
@@ -7243,7 +7369,7 @@
                 pages.push(...batch);
             }
             if (pages.some(page => page?.ok !== true || !Array.isArray(page.students))) {
-                throw new Error(pages.find(page => page?.ok === false)?.error || "Google Sheet page response is invalid");
+                throw new Error(pages.find(page => page?.ok === false)?.error || "Neon Database page response is invalid");
             }
             const revision = String(first.revision ?? "");
             const settingsRevision = String(first.settingsRevision ?? "");
@@ -7254,7 +7380,7 @@
                 String(current.revision ?? "") === revision &&
                 String(current.settingsRevision ?? "") === settingsRevision);
             if (pagesMatch && stillCurrent) return { ...first, students:pages.flatMap(page => page.students) };
-            if (attempt === 1) throw new Error("Google Sheet changed while loading; please try again");
+            if (attempt === 1) throw new Error("Neon Database changed while loading; please try again");
         }
     }
 
@@ -7410,17 +7536,17 @@
         if (!hasGoogleScriptUrl()) {
             setStatus("ឡូកាល់ (Offline)", "connected");
             setCloudControlsLoading(false);
-            if (!silent) showToast("សូមភ្ជាប់ Google Sheet URL ជាមុន","warning");
+            if (!silent) showToast("សូមភ្ជាប់ Neon API URL ជាមុន","warning");
             return false;
         }
         if (!background) {
             setCloudControlsLoading(true);
-            setStatus("កំពុង Load ពី Sheet...", "");
+            setStatus("កំពុង Load ពី Database...", "");
         }
         googleSheetLoadsInFlight++;
         try {
             const payload = await readGoogleSheetStudents();
-            if (payload.ok === false) throw new Error(payload.error || "Google Sheet error");
+            if (payload.ok === false) throw new Error(payload.error || "Neon Database error");
             applySharedAppSettings(payload.settings);
             const cloudRows = Array.isArray(payload.students) ? payload.students : [];
             const normalizedCloudStudents = cloudRows.map(normalizeCloudStudent).filter(s => s.id || s.studentCode || s.studentName);
@@ -7432,12 +7558,12 @@
             if (writeVersionAtStart !== localStudentWriteVersion) return false;
             rememberGoogleSheetRevisions(payload);
             if (!normalizedCloudStudents.length && keepLocalWhenCloudEmpty && allStudents.length && !queuedOperations.length) {
-                if (!background) setStatus("Sheet ទទេ - រក្សាទុក Local", "connected");
-                if (!silent) showToast("Google Sheet ទទេ។ ទិន្នន័យក្នុង browser ត្រូវបានរក្សាទុក","warning");
+                if (!background) setStatus("Database ទទេ - រក្សាទុក Local", "connected");
+                if (!silent) showToast("Neon Database ទទេ។ ទិន្នន័យក្នុង browser ត្រូវបានរក្សាទុក","warning");
                 return false;
             }
             if (background && studentCollectionSignature(cloudStudents) === studentCollectionSignature(allStudents)) {
-                setStatus(queuedOperations.length ? `រក្សា Offline · រង់ចាំ Sync ${queuedOperations.length}` : "Google Sheet", queuedOperations.length ? "error" : "connected");
+                setStatus(queuedOperations.length ? `រក្សា Offline · រង់ចាំ Sync ${queuedOperations.length}` : "Neon Database", queuedOperations.length ? "error" : "connected");
                 return true;
             }
             googlePhotoResults.clear();
@@ -7446,18 +7572,18 @@
             localStorage.setItem(BACKUP_TIME_STORAGE_KEY, new Date().toISOString());
             await refreshStudents({ reset:!background, source:"memory" });
             restoreLocalPhotosInBackground();
-            setStatus(queuedOperations.length ? `រក្សា Offline · រង់ចាំ Sync ${queuedOperations.length}` : "Google Sheet", queuedOperations.length ? "error" : "connected");
-            if (!silent) showToast(`Load ពី Google Sheet ${allStudents.length} នាក់`);
+            setStatus(queuedOperations.length ? `រក្សា Offline · រង់ចាំ Sync ${queuedOperations.length}` : "Neon Database", queuedOperations.length ? "error" : "connected");
+            if (!silent) showToast(`Load ពី Neon Database ${allStudents.length} នាក់`);
             return true;
         } catch(e) {
-            console.error("Google Sheet load error:", e);
+            console.error("Neon Database load error:", e);
             lastCloudError = readableCloudError(e);
-            if (!background) setStatus("Sheet មិនបានភ្ជាប់", "error");
+            if (!background) setStatus("Database មិនបានភ្ជាប់", "error");
             if (!silent && /unauthorized|access key/i.test(lastCloudError)) {
                 showToast("សូមបញ្ចូលលេខសម្ងាត់រដ្ឋបាលថ្មីក្នុងឃ្លាំងទិន្នន័យ", "error");
                 openSheetModal();
             } else if (!silent) {
-                showToast(`Load ពី Google Sheet មិនបាន${lastCloudError ? ": " + lastCloudError.slice(0, 90) : ""}`,"error");
+                showToast(`Load ពី Neon Database មិនបាន${lastCloudError ? ": " + lastCloudError.slice(0, 90) : ""}`,"error");
             }
             return false;
         } finally {
@@ -8395,7 +8521,7 @@
     async function preparePhotoForSheet(src) {
         const photo = safePhotoSrc(src);
         if (!photo || photo.length <= 49000) return photo;
-        if (!photo.startsWith("data:image/")) throw new Error("រូបថត URL ធំពេកសម្រាប់ Google Sheet");
+        if (!photo.startsWith("data:image/")) throw new Error("រូបថត URL ធំពេកសម្រាប់ Neon Database");
         const image = new Image();
         image.src = photo;
         await image.decode();
@@ -8412,7 +8538,7 @@
             const compressed = canvas.toDataURL("image/jpeg", quality);
             if (compressed.length <= 49000) return compressed;
         }
-        throw new Error("រូបថតធំពេកសម្រាប់ Google Sheet");
+        throw new Error("រូបថតធំពេកសម្រាប់ Neon Database");
     }
 
     function setPhotoPreview(src = "", { userSelected=false }={}) {
@@ -8459,7 +8585,7 @@
         } catch (error) {
             if (els.studentPhotoViewer.classList.contains("is-open") && els.studentPhotoViewer.dataset.studentId === id) {
                 renderStudentPhotoViewer({ ...student, photo:"" });
-                els.studentPhotoViewerPlaceholder.textContent = "ផ្ទៀងផ្ទាត់រូបថតពី Sheet មិនបាន។ សូមពិនិត្យការភ្ជាប់។";
+                els.studentPhotoViewerPlaceholder.textContent = "ផ្ទៀងផ្ទាត់រូបថតពី Database មិនបាន។ សូមពិនិត្យការភ្ជាប់។";
             }
             return;
         }
@@ -8762,7 +8888,7 @@
             smaller.getContext("2d").drawImage(canvas, 0, 0, smaller.width, smaller.height);
             photo = smaller.toDataURL("image/jpeg", 0.45);
         }
-        if (photo.length > 49000) throw new Error("រូបថតធំពេកសម្រាប់ Google Sheet");
+        if (photo.length > 49000) throw new Error("រូបថតធំពេកសម្រាប់ Neon Database");
         return photo;
     }
 
@@ -9120,11 +9246,11 @@
         if (payload.studentLatinName && serverAllocatesCode) {
             try {
                 if (!await googleLatinNameReady()) {
-                    showToast("Google Sheet Script មិនទាន់គាំទ្រឈ្មោះឡាតាំង។ សូម Update Script មុនរក្សាទុក ដើម្បីកុំឱ្យបាត់ទិន្នន័យ។", "warning");
+                    showToast("Neon API មិនទាន់គាំទ្រឈ្មោះឡាតាំង។ សូម Update Script មុនរក្សាទុក ដើម្បីកុំឱ្យបាត់ទិន្នន័យ។", "warning");
                     return;
                 }
             } catch (error) {
-                showToast("មិនអាចផ្ទៀងផ្ទាត់ការរក្សាទុកឈ្មោះឡាតាំងក្នុង Google Sheet បាន។ សូមពិនិត្យការភ្ជាប់ ហើយសាកម្តងទៀត។", "warning");
+                showToast("មិនអាចផ្ទៀងផ្ទាត់ការរក្សាទុកឈ្មោះឡាតាំងក្នុង Neon Database បាន។ សូមពិនិត្យការភ្ជាប់ ហើយសាកម្តងទៀត។", "warning");
                 return;
             }
         }
@@ -9248,7 +9374,7 @@
             closeTransferClassModal();
             await refreshStudents({ source:"memory" });
             void queuePendingCloudFlush({ notify:true });
-            showToast("បានប្ដូរថ្នាក់ក្នុង App · កំពុងផ្ទៀងផ្ទាត់ក្នុង Sheet");
+            showToast("បានប្ដូរថ្នាក់ក្នុង App · កំពុងផ្ទៀងផ្ទាត់ក្នុង Database");
         } catch (error) {
             console.error("Class transfer error:", error);
             showToast("ប្ដូរថ្នាក់មិនបាន", "error");
@@ -9285,7 +9411,7 @@
             if (cloudConfigured) void queuePendingCloudFlush({ notify:true });
             closeDeleteModal();
             showToast(cloudConfigured
-                ? "បានលាក់សិស្សក្នុង App · កំពុងបញ្ជាក់ការលុបក្នុង Sheet"
+                ? "បានលាក់សិស្សក្នុង App · កំពុងបញ្ជាក់ការលុបក្នុង Database"
                 : "បានលុបសិស្សក្នុងឧបករណ៍នេះប៉ុណ្ណោះ", cloudConfigured ? "success" : "warning");
             if (els.editingId.value === deletingId) resetForm();
             await refreshStudents({ source:"memory" });
@@ -9806,7 +9932,7 @@
                 .map(operation => [String(operation.student.id || operation.student.recordId || ""), operation.student]))
             : new Map();
         els.photoFilterStatus.textContent = missingPhotos && useSheetPhotoStatus
-            ? (missingPhotoLookup ? "កំពុងផ្ទៀងផ្ទាត់រូបថត..." : missingPhotoCodes ? "" : "មិនអាចផ្ទៀងផ្ទាត់រូបថតពី Sheet")
+            ? (missingPhotoLookup ? "កំពុងផ្ទៀងផ្ទាត់រូបថត..." : missingPhotoCodes ? "" : "មិនអាចផ្ទៀងផ្ទាត់រូបថតពី Database")
             : "";
         
         filteredStudents = allStudents.filter(s =>
@@ -9902,7 +10028,7 @@
         } catch (error) {
             missingPhotoCodes = null;
             console.debug("Cannot filter missing Sheet photos:", error);
-            showToast("មិនអាចផ្ទៀងផ្ទាត់សិស្សគ្មានរូបថតពី Sheet។ សូមសាកម្ដងទៀត", "warning");
+            showToast("មិនអាចផ្ទៀងផ្ទាត់សិស្សគ្មានរូបថតពី Database។ សូមសាកម្ដងទៀត", "warning");
         } finally {
             missingPhotoLookup = null;
             applyFilters();
@@ -10055,38 +10181,43 @@
             return;
         }
 
-        let rowNum = 0;
-        els.studentList.innerHTML = groupedByClass(visibleStudents).map(([cls, students]) => {
-            const rows = students.map(s => {
-                rowNum++;
+        // Newest registrations first; the class is shown in its own column and
+        // the class browser offers the grouped view.
+        const firstVisibleNumber = isShowAll() ? 0 : currentPageIndex * pageSize;
+        els.studentList.innerHTML = visibleStudents.map((s, index) => {
+                const rowNum = firstVisibleNumber + index + 1;
                 const status = getStudentDataStatus(s);
                 const photoSrc = safePhotoSrc(s.photo);
+                const name = studentFullName(s) || "មិនមានឈ្មោះ";
+                const initial = Array.from(name.trim())[0] || "ស";
                 return `
                     <tr class="${esc(status.rowClass)}" title="${esc(status.title)}">
-                        <td class="muted" style="font-size:.8rem; text-align:center;">${rowNum}</td>
-                        <td style="font-family: monospace; font-size:.82rem;">${esc(studentVisibleId(s)||"–")}</td>
+                        <td class="col-num">${rowNum}</td>
+                        <td class="col-code"><span class="code-chip">${esc(studentVisibleId(s)||"–")}</span></td>
                         <td>
-                            <div class="table-student-name" style="display: flex; align-items: center; gap: 8px;">
-                                    ${photoSrc ? `<img src="${esc(photoSrc)}" class="student-photo-thumbnail view-photo-img" data-id="${esc(s.id)}" alt="មើលរូបថត ${esc(studentFullName(s))}" loading="lazy" decoding="async">` : ''}
-                                <div style="display: flex; flex-direction: column; align-items: flex-start; gap: 4px;">
-                                    <button class="student-name-button edit-btn" type="button" data-id="${esc(s.id)}" title="កែព័ត៌មាន ${esc(studentFullName(s))}" aria-label="កែព័ត៌មាន ${esc(studentFullName(s))}">
-                                        <span class="student-name">${esc(studentFullName(s))}</span>
+                            <div class="table-student-name">
+                                <span class="table-avatar ${s.gender === "ស្រី" ? "is-female" : "is-male"}" aria-hidden="true">${esc(initial)}${photoSrc ? `<img src="${esc(photoSrc)}" class="student-photo-thumbnail view-photo-img" data-id="${esc(s.id)}" alt="មើលរូបថត ${esc(name)}" loading="lazy" decoding="async">` : ""}</span>
+                                <div class="table-student-text">
+                                    <button class="student-name-button edit-btn" type="button" data-id="${esc(s.id)}" title="កែព័ត៌មាន ${esc(name)}" aria-label="កែព័ត៌មាន ${esc(name)}">
+                                        <span class="student-name">${esc(name)}</span>
                                         <ion-icon class="student-name-edit-icon" name="create-outline" aria-hidden="true"></ion-icon>
                                     </button>
-                                    ${s.studentLatinName ? `<small lang="en" class="student-latin-name">${esc(s.studentLatinName)}</small>` : ""}
-                                    ${dataStatusBadge(status)}
+                                    <div class="table-student-meta">
+                                        ${s.studentLatinName ? `<small lang="en" class="student-latin-name">${esc(s.studentLatinName)}</small>` : ""}
+                                        ${status.level === "complete" ? "" : dataStatusBadge(status)}
+                                    </div>
                                 </div>
                             </div>
                         </td>
-                        <td style="text-align:center;">${genderBadge(s.gender||"")}</td>
-                        <td style="text-align:center; font-size:.82rem;">${esc(formatDate(s.dob)||"–")}</td>
-                        <td style="text-align:center;">${esc(s.className||"–")}</td>
-                        <td style="max-width:150px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap" title="${esc(s.fromSchool||"")}">${esc(s.fromSchool||"–")}</td>
+                        <td class="col-center">${genderBadge(s.gender||"")}</td>
+                        <td class="col-center col-date">${esc(formatDate(s.dob)||"–")}</td>
+                        <td class="col-center"><span class="class-chip">${esc(s.className||"–")}</span></td>
+                        <td class="col-school" title="${esc(s.fromSchool||"")}">${esc(s.fromSchool||"–")}</td>
                         <td>${esc(s.pobVillage||"–")}</td>
                         <td>${esc(s.pobCommune||"–")}</td>
                         <td>${esc(s.pobDistrict||"–")}</td>
                         <td>${esc(s.pobProvince||"–")}</td>
-                        <td>${esc(s.contact||"–")}</td>
+                        <td class="col-phone">${esc(s.contact||"–")}</td>
                         <td>${esc(s.fatherName||"–")}</td>
                         <td>${esc(s.fatherOccupation||"–")}</td>
                         <td>${esc(s.motherName||"–")}</td>
@@ -10096,38 +10227,32 @@
                         <td>${esc(s.currentCommune||"–")}</td>
                         <td>${esc(s.currentDistrict||"–")}</td>
                         <td>${esc(s.currentProvince||"–")}</td>
-                        <td style="text-align:center; font-family:monospace;">${esc(s.applicationNumber||"–")}</td>
+                        <td class="col-center col-code">${esc(s.applicationNumber||"–")}</td>
                         <td>
                             <div class="row-actions">
-                                <button class="btn btn-icon print-student-btn" type="button" title="Print" data-id="${esc(s.id)}">
-                                    <ion-icon name="print-outline"></ion-icon>
+                                <button class="btn btn-icon view-photo-btn" type="button" title="មើលរូបថត" aria-label="មើលរូបថត ${esc(name)}" data-id="${esc(s.id)}">
+                                    <ion-icon name="image-outline" aria-hidden="true"></ion-icon>
                                 </button>
-                                <button class="btn btn-icon print-student-card-btn" type="button" title="កាតសិស្ស" data-id="${esc(s.id)}">
-                                    <ion-icon name="id-card-outline"></ion-icon>
+                                <button class="btn btn-icon print-student-btn" type="button" title="បោះពុម្ពព័ត៌មាន" aria-label="បោះពុម្ពព័ត៌មាន ${esc(name)}" data-id="${esc(s.id)}">
+                                    <ion-icon name="print-outline" aria-hidden="true"></ion-icon>
                                 </button>
-                                <button class="btn btn-icon view-photo-btn" type="button" title="មើលរូបថត" data-id="${esc(s.id)}">
-                                    <ion-icon name="image-outline"></ion-icon>
+                                <button class="btn btn-icon print-student-card-btn" type="button" title="កាតសិស្ស" aria-label="កាតសិស្ស ${esc(name)}" data-id="${esc(s.id)}">
+                                    <ion-icon name="id-card-outline" aria-hidden="true"></ion-icon>
                                 </button>
-                                <button class="btn btn-icon transfer-class-btn" type="button" title="ប្ដូរថ្នាក់" aria-label="ប្ដូរថ្នាក់ ${esc(studentFullName(s))}" data-id="${esc(s.id)}">
+                                <button class="btn btn-icon transfer-class-btn" type="button" title="ប្ដូរថ្នាក់" aria-label="ប្ដូរថ្នាក់ ${esc(name)}" data-id="${esc(s.id)}">
                                     <ion-icon name="swap-horizontal-outline" aria-hidden="true"></ion-icon>
                                 </button>
-                                <button class="btn btn-icon delete-btn" type="button" title="លុប" data-id="${esc(s.id)}" style="color:var(--red)">
-                                    <ion-icon name="trash-outline"></ion-icon>
+                                <button class="btn btn-icon btn-icon-danger delete-btn" type="button" title="លុប" aria-label="លុប ${esc(name)}" data-id="${esc(s.id)}">
+                                    <ion-icon name="trash-outline" aria-hidden="true"></ion-icon>
                                 </button>
                             </div>
                         </td>
                     </tr>`;
-            }).join("");
-            return `
-                <tr class="class-group-row">
-                    <td colspan="${tableDetailsExpanded ? 23 : 9}">ថ្នាក់ ${esc(cls)}<span class="class-count">${students.length} នាក់</span></td>
-                </tr>${rows}`;
         }).join("");
 
         if (expandedMobileCardId === null || (expandedMobileCardId && !visibleStudents.some(s => s.id === expandedMobileCardId))) {
             expandedMobileCardId = visibleStudents[0]?.id || "";
         }
-        const firstVisibleNumber = isShowAll() ? 0 : currentPageIndex * pageSize;
         els.studentCards.innerHTML = visibleStudents.map((s, index) => {
             const status = getStudentDataStatus(s);
             const expanded = expandedMobileCardId === s.id;
@@ -10663,20 +10788,20 @@
 
     async function recoverMissingPhotos() {
         if (getCloudProvider() !== GOOGLE_SHEET_PROVIDER || !hasGoogleScriptUrl()) {
-            showToast("សូមភ្ជាប់ Google Sheet ជាមុន", "warning");
+            showToast("សូមភ្ជាប់ Neon Database ជាមុន", "warning");
             return;
         }
         els.recoverPhotosBtn.disabled = true;
         try {
             const before = await readGoogleSheetJsonp({ action:"photostatus" });
             if (before.ok !== true || !Number.isFinite(Number(before.missing))) {
-                throw new Error("Apps Script មិនទាន់បាន Deploy កំណែស្ដាររូបថត");
+                throw new Error("Server មិនទាន់គាំទ្រការស្ដាររូបថត");
             }
             await restoreStudentPhotos(allStudents, { allowCloudRecovery:true });
             const missingCodes = new Set(Array.isArray(before.missingCodes) ? before.missingCodes : []);
             const candidates = allStudents.filter(student => missingCodes.has(student.studentCode) && safePhotoSrc(student.photo));
             if (!before.missing) {
-                showToast("រូបថតក្នុង Sheet មានគ្រប់ហើយ");
+                showToast("រូបថតក្នុង Database មានគ្រប់ហើយ");
                 return;
             }
             // Small requests are safer for Apps Script and slow phone connections.
@@ -10686,7 +10811,7 @@
                     studentName:studentFullName(student),
                     photo:student.photo
                 }));
-                if (!await syncGoogleSheet("recoverphotos", {}, "", batch)) throw new Error("ផ្ញើរូបថតទៅ Sheet មិនបាន");
+                if (!await syncGoogleSheet("recoverphotos", {}, "", batch)) throw new Error("ផ្ញើរូបថតទៅ Database មិនបាន");
             }
             // Also search old By Class / Class tabs, even if this device has no photo cache.
             if (!await syncGoogleSheet("recoverphotos", {}, "", [])) throw new Error("ស្វែងរករូបក្នុងផ្ទាំងថ្នាក់មិនបាន");
@@ -10707,14 +10832,14 @@
 
     async function migratePhotosToDrive() {
         if (getCloudProvider() !== GOOGLE_SHEET_PROVIDER || !hasGoogleScriptUrl()) {
-            showToast("សូមភ្ជាប់ Google Sheet ជាមុន", "warning");
+            showToast("សូមភ្ជាប់ Neon Database ជាមុន", "warning");
             return;
         }
         let status;
         try {
             status = await readGoogleSheetJsonp({ action:"photostorage" }, 20000);
         } catch (error) {
-            showToast("Apps Script មិនទាន់បាន Deploy កំណែ Google Drive", "warning");
+            showToast("Server មិនទាន់គាំទ្រ Storage រូបថត", "warning");
             return;
         }
         if (status?.ok !== true || !Number.isFinite(Number(status.embedded))) {
@@ -10971,7 +11096,7 @@
         });
         if (accepted.some(student => student.studentLatinName) && getCloudProvider() === GOOGLE_SHEET_PROVIDER && hasGoogleScriptUrl()) {
             if (!await googleLatinNameReady()) {
-                throw new Error("Google Sheet Script មិនទាន់គាំទ្រឈ្មោះឡាតាំង។ សូម Update Script មុន Import។");
+                throw new Error("Neon API មិនទាន់គាំទ្រឈ្មោះឡាតាំង។ សូម Update Script មុន Import។");
             }
         }
         const withCodes=await assignCodes(accepted);
@@ -11420,7 +11545,7 @@
         [els.sheetAccessKeyInput, els.supabaseUrlInput, els.supabaseKeyInput].forEach(input => input.addEventListener("input",clearStorageTestResult));
         els.clearSheetUrlBtn.addEventListener("click",()=>{
             const provider = els.storageProviderSelect.value;
-            const item = provider === GOOGLE_SHEET_PROVIDER ? "Access Key របស់ Google Sheet" : "ការភ្ជាប់ Supabase";
+            const item = provider === GOOGLE_SHEET_PROVIDER ? "Access Key របស់ Neon Database" : "ការភ្ជាប់ Supabase";
             if (!window.confirm(`តើចង់លុប ${item} ចេញពីឧបករណ៍នេះមែនទេ? ទិន្នន័យសិស្សក្នុង Cloud មិនត្រូវបានលុបទេ។`)) return;
             clearCloudSettings(provider);
             els.sheetUrlInput.value=DEFAULT_GOOGLE_SCRIPT_URL;

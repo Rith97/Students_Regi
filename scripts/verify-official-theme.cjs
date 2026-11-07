@@ -50,7 +50,7 @@ for (const selector of ['.metric', '.class-tile', '.report-export-grid', '.repor
 assert.doesNotMatch(appTheme, /translateY\(-/, 'Official theme does not lift surfaces on hover');
 const portalStyle = read('teacher-portal.html').match(/<style(?:\s[^>]*)?>([\s\S]*?)<\/style>/i)[1];
 const portalTheme = portalStyle.slice(portalStyle.indexOf('OFFICIAL SCHOOL THEME'));
-for (const selector of ['.login-hero', '.portal-hero', '.student-card', '.tabs', '.portal-launch']) {
+for (const selector of ['.login-hero', '.portal-hero', '.student-card', '.tabs']) {
   assert.ok(portalTheme.includes(selector), `Teacher portal theme covers ${selector}`);
 }
 

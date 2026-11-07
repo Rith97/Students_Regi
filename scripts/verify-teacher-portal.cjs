@@ -148,9 +148,9 @@ sheets['_Portal Access'] = accessBackup;
 const html = fs.readFileSync('teacher-portal.html', 'utf8');
 assert.match(html, /id="remember-login" type="checkbox"/);
 assert.match(html, /result\.remembered===true&&result\.role==='class'/);
-assert.match(html, /id="deployment-gate"/);
-assert.match(html, /window\.google && window\.google\.script && window\.google\.script\.run/,
-  'static preview must direct teachers to the Apps Script portal instead of calling missing google.script.run');
+assert.doesNotMatch(html, /google\.script|script\.google\.com/, 'The portal no longer depends on Apps Script');
+assert.match(html, /const PORTAL_API = 'https:\/\/[^']+\.neon\.tech\/portal\/rpc'/, 'The portal calls the Neon API');
+assert.match(html, /body:JSON\.stringify\(\{name,args\}\)/, 'Portal calls keep the former google.script.run function names');
 vm.compileFunction(html.slice(html.indexOf('<script>') + 8, html.indexOf('</script>')));
 const appHtml = fs.readFileSync('index.html', 'utf8');
 assert.match(appHtml, /id="studentLatinName" name="studentLatinName"/);

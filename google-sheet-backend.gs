@@ -299,6 +299,23 @@ function doGet(e) {
       });
       return output_({ ok: true, action: action, count: count }, e);
     }
+    if (action === "exportportal") {
+      // Read-only, admin-only export of the portal tabs for the move to Neon.
+      // Credentials leave only as salted hashes; nothing is changed.
+      const tab = function(name, headers) {
+        const sheet = portalSheet_(name, headers, false);
+        if (!sheet || sheet.getLastRow() < 2) return [];
+        return sheet.getRange(2, 1, sheet.getLastRow() - 1, headers.length).getDisplayValues()
+          .filter(function(row) { return String(row[0] || row[1] || "").trim(); })
+          .map(function(row) { const item = {}; headers.forEach(function(key, i) { item[key] = row[i]; }); return item; });
+      };
+      return output_({ ok: true, action: action,
+        access: tab(PORTAL_ACCESS_SHEET, PORTAL_ACCESS_HEADERS),
+        attendance: tab(PORTAL_ATTENDANCE_SHEET, PORTAL_ATTENDANCE_HEADERS),
+        scores: tab(PORTAL_SCORES_SHEET, PORTAL_SCORE_HEADERS),
+        activities: tab(PORTAL_ACTIVITIES_SHEET, PORTAL_ACTIVITY_HEADERS),
+        revision: getRevision_(DATA_REVISION_PROPERTY) }, e);
+    }
     return output_({ ok: false, error: "Unknown action" }, e);
   } catch (err) {
     return output_({ ok: false, error: String((err && err.message) || err) }, e);

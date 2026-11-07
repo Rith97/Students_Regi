@@ -13,7 +13,13 @@ The production Netlify site is `https://soanpreymelong.netlify.app/`. It is conn
 
 The included manifest and service worker make the interface installable and cache the app shell for offline startup. Cloud sync still requires an internet connection.
 
-## Google Sheet sync
+## Database: Neon (since v2.3.0)
+
+The app and the teacher portal now store data in Neon (Lakebase Postgres, a private photo bucket and one API Function in Singapore). See [api/README.md](api/README.md) for the API, local development, and the one-time move of live data from the Google Sheet. The teacher portal is served next to the app as `teacher-portal.html` instead of from Apps Script.
+
+The Google Sheet section below describes the previous backend. Keep it only as a read-only backup after the move.
+
+## Google Sheet sync (previous backend)
 
 Use `google-sheet-backend.gs` as the Apps Script backend:
 

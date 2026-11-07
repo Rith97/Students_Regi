@@ -27,7 +27,7 @@ for (const id of ['recover-photos-btn', 'migrate-photos-btn', 'delete-all-btn'])
 }
 assert.equal((mobileMenu.match(/<details class="mobile-action-group(?: mobile-danger-group)?"/g) || []).length, 3,
     'Phone menu groups: data, maintenance, danger');
-assert.match(mobileMenu, /class="sheet-menu-item" href="[^"]*action=teacherportal"/, 'Teacher portal is reachable from the phone menu');
+assert.match(mobileMenu, /class="sheet-menu-item" href="\.\/teacher-portal\.html"/, 'Teacher portal is reachable from the phone menu');
 assert.match(mobileMenu, /id="mobile-actions-close-btn"[^>]*aria-label="បិទម៉ឺនុយសកម្មភាព"/);
 assert.match(mobileMenu, /<details class="mobile-action-group mobile-danger-group">[\s\S]*?id="m-delete-all-btn"/);
 assert.doesNotMatch(mobileMenu, /id="m-(?:print|download-photos|download-csv)/,

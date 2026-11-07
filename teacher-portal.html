@@ -90,7 +90,6 @@
     @media(prefers-reduced-motion:reduce){button,.student-card{transition:none!important}button:hover,.student-card:hover{transform:none}}
     @media(max-width:760px){.header-inner{padding:11px 16px}.brand h1{font-size:15px}.brand-logo-wrap{width:43px;height:43px;border-radius:13px}main{padding:0 14px;margin:20px auto 40px}.card{padding:19px;border-radius:17px}.login-hero{padding:28px;min-height:280px}.login-hero h2{font-size:25px;margin:15px 0 10px}.login-hero:before{right:27px;top:24px}.login-hero:after{width:280px;height:280px}.portal-hero{padding:23px}.portal-hero h2{font-size:23px}.portal-stats{margin-top:13px}.section-heading{align-items:stretch!important}.tabs{margin-bottom:13px}.tabs button{font-size:12px;padding:9px 8px}.student-card{min-height:132px}.portrait{width:76px;height:100px}}
     @media(max-width:390px){.header-actions button{padding:8px 10px;font-size:12px}.student-card{padding:10px;gap:9px}.student-card-body strong{font-size:14px}}
-    .portal-launch{max-width:680px;margin:7vh auto;padding:36px;text-align:center}.portal-launch h2{font-size:25px}.portal-launch p{line-height:1.9}.portal-launch a{display:inline-block;margin-top:12px;padding:12px 20px;border-radius:11px;background:#125876;color:#fff;text-decoration:none;font-weight:700}.portal-launch a:focus-visible{outline:3px solid #32aaaf;outline-offset:3px}
     /* =========================
        OFFICIAL SCHOOL THEME (v2.2.0)
        Matches the administration app: navy header with a gold rule,
@@ -158,10 +157,6 @@
     .notice{border:1px solid #b7dcc4;border-radius:6px;background:#eef8f1;color:#1d6a3a;box-shadow:none}
     .notice.error{border-color:#efc2c5;background:#fdf0f1;color:#9a2530}
     #loading{border:0;border-left:4px solid var(--gold);border-radius:6px;background:var(--navy);box-shadow:0 8px 24px rgba(16,34,60,.25)}
-    .portal-launch{border-top:4px solid var(--navy-2)}
-    .portal-launch h2{border:0;padding:0}
-    .portal-launch a{border-radius:6px;background:var(--navy-2)}
-    .portal-launch a:focus-visible{outline:2px solid var(--gold)}
     @media(max-width:760px){
       .header-inner{padding:9px 14px}.brand h1{font-size:14px}.brand-logo-wrap{width:40px;height:40px;font-size:17px}
       main{padding:0 12px;margin:14px auto 36px}.card{padding:16px}
@@ -177,12 +172,6 @@
 <header class="site-header"><div class="header-inner"><div class="brand"><div class="brand-logo-wrap" aria-hidden="true">ស</div><div><h1>ផ្ទាំងគ្រូបន្ទុកថ្នាក់</h1><small>វិទ្យាល័យសុខអានព្រៃមេលង</small></div></div><div class="header-actions"><button id="logout" class="secondary hidden" type="button">ចាកចេញ</button></div></div></header>
 <main>
   <div id="notice" class="notice hidden" role="status" aria-live="polite"></div>
-  <section id="deployment-gate" class="card portal-launch hidden" role="status">
-    <span class="eyebrow">ផ្ទាំងគ្រូបន្ទុកថ្នាក់</span>
-    <h2>សូមបើក Portal ពី Google Apps Script</h2>
-    <p class="muted">ឯកសារនេះជាទម្រង់ Portal។ ការចូលដោយលេខកូដ និងទិន្នន័យសិស្សដំណើរការតែនៅពេលបើកតាម Google Apps Script ដែលភ្ជាប់នឹងសាលា។</p>
-    <a href="https://script.google.com/macros/s/AKfycbyc_1v8DBczUTac1CprLsj2Ae5uKt8In-XGpB6lXXmCZj7Mm-4OL1DPSJjNXsD-G2GK/exec?action=teacherportal" rel="noopener noreferrer">បើក Portal ផ្លូវការ →</a>
-  </section>
   <div id="login-layout" class="login-layout">
     <div class="login-hero"><span class="eyebrow">ប្រព័ន្ធគ្រប់គ្រងថ្នាក់រៀន</span><h2>ព័ត៌មានសិស្ស វត្តមាន និងពិន្ទុ នៅកន្លែងតែមួយ</h2><p>ចូលមើលសិស្ស និងរូបថត កែព័ត៌មាន កត់អវត្តមាន និងរៀបចំសកម្មភាពថ្នាក់តាមសិទ្ធិរបស់គ្រូបន្ទុក។</p><div class="login-features" aria-label="មុខងារសំខាន់"><span>◉ បញ្ជី និងរូបថត</span><span>✓ វត្តមាន</span><span>▥ ពិន្ទុ</span></div></div>
     <section id="login-card" class="card"><span class="eyebrow">ចូលប្រើដោយសុវត្ថិភាព</span><h2>សូមស្វាគមន៍</h2><p class="muted">ជ្រើសថ្នាក់ ហើយបញ្ចូលលេខកូដ ឬលេខទូរសព្ទដែលរដ្ឋបាលបានកំណត់។</p><div class="row"><div class="field"><label for="class-login">ថ្នាក់</label><select id="class-login"><option value="">កំពុងទាញថ្នាក់...</option></select></div><div class="field"><label for="pin-login">លេខកូដ / លេខទូរសព្ទ</label><input id="pin-login" type="password" autocomplete="off" inputmode="tel" placeholder="ឧ. 0123456789"></div><label class="remember-option" for="remember-login"><input id="remember-login" type="checkbox"><span><strong>ចងចាំការចូល ៣០ ថ្ងៃ</strong><small id="remember-help">សម្រាប់គ្រូតាមថ្នាក់ លើឧបករណ៍ផ្ទាល់ខ្លួនប៉ុណ្ណោះ</small></span></label><button id="login" type="button">ចូលប្រើ Portal →</button></div></section>
@@ -207,8 +196,10 @@
   const state = {token:'',role:'',className:'',students:[],edit:null,activity:null,classes:[],lastCodeExport:null,photoCache:new Map(),photoPending:new Set()};
   let photoQueue=[],photoLoading=false,photoObserver=null;
   const fields = [['studentSurname','គោត្តនាម'],['studentGivenName','នាមខ្លួន'],['studentLatinName','ឈ្មោះជាអក្សរឡាតាំង'],['gender','ភេទ'],['dob','ថ្ងៃខែឆ្នាំកំណើត'],['contact','លេខទូរសព្ទ'],['fromSchool','សាលាមកពី'],['fatherName','ឈ្មោះឪពុក'],['fatherPhone','ទូរសព្ទឪពុក'],['fatherDob','ថ្ងៃកំណើតឪពុក'],['fatherOccupation','មុខរបរឪពុក'],['motherName','ឈ្មោះម្ដាយ'],['motherPhone','ទូរសព្ទម្ដាយ'],['motherDob','ថ្ងៃកំណើតម្ដាយ'],['motherOccupation','មុខរបរម្ដាយ'],['guardianName','អាណាព្យាបាល'],['guardianDob','ថ្ងៃកំណើតអាណាព្យាបាល'],['pobVillage','ភូមិកំណើត'],['pobCommune','ឃុំកំណើត'],['pobDistrict','ស្រុកកំណើត'],['pobProvince','ខេត្តកំណើត'],['currentVillage','ភូមិបច្ចុប្បន្ន'],['currentCommune','ឃុំបច្ចុប្បន្ន'],['currentDistrict','ស្រុកបច្ចុប្បន្ន'],['currentProvince','ខេត្តបច្ចុប្បន្ន']];
-  function rpc(name,...args){$('loading').classList.remove('hidden');return new Promise((resolve,reject)=>google.script.run.withSuccessHandler(value=>{$('loading').classList.add('hidden');resolve(value)}).withFailureHandler(error=>{$('loading').classList.add('hidden');reject(error)} )[name](...args))}
-  function rpcQuiet(name,...args){return new Promise((resolve,reject)=>google.script.run.withSuccessHandler(resolve).withFailureHandler(reject)[name](...args))}
+  // The portal is served next to the admin app and calls the Neon Function API.
+  const PORTAL_API = 'https://br-morning-glade-aoy0pbd4-studentsapi.compute.c-2.ap-southeast-1.aws.neon.tech/portal/rpc';
+  async function rpcQuiet(name,...args){let response;try{response=await fetch(PORTAL_API,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name,args}),cache:'no-store'})}catch(e){throw new Error('មិនអាចភ្ជាប់ Server បានទេ។ សូមពិនិត្យអ៊ីនធឺណិត')}const payload=await response.json().catch(()=>null);if(!payload)throw new Error('Server ឆ្លើយតបមិនត្រឹមត្រូវ');if(!payload.ok)throw new Error(payload.error||'Server error');return payload.result}
+  async function rpc(name,...args){$('loading').classList.remove('hidden');try{return await rpcQuiet(name,...args)}finally{$('loading').classList.add('hidden')}}
   function notice(message,error=false){const el=$('notice');el.textContent=message;el.classList.remove('hidden');el.classList.toggle('error',error);window.scrollTo({top:0,behavior:'smooth'})}
   function fail(error){notice(error && error.message || String(error),true)}
   function today(){return new Date(Date.now()-new Date().getTimezoneOffset()*60000).toISOString().slice(0,10)}
@@ -247,12 +238,7 @@
   function tab(name){['students','attendance','scores','activities'].forEach(id=>$(id).classList.toggle('hidden',id!==name));$('edit-card').classList.add('hidden');document.querySelectorAll('.tabs button').forEach(btn=>btn.classList.toggle('active',btn.dataset.tab===name));if(name==='activities')loadActivities()}
   $('login').onclick=login;$('pin-login').onkeydown=e=>{if(e.key==='Enter')login()};$('logout').onclick=logout;$('issue-all-codes').onclick=issueAllCodes;$('download-codes-again').onclick=()=>{if(state.lastCodeExport)downloadCodeWorkbook(state.lastCodeExport)};$('refresh').onclick=async()=>{try{if(state.role==='admin')await adminOverview();else{state.photoCache.clear();await roster()}notice('បានផ្ទុកទិន្នន័យថ្មី')}catch(e){fail(e)}};$('student-search').oninput=renderStudents;$('assign-missing-codes').onclick=assignMissingCodes;$('save-student').onclick=saveStudent;$('cancel-edit').onclick=()=>{$('edit-card').classList.add('hidden');$('students').classList.remove('hidden')};$('load-attendance').onclick=loadAttendance;$('save-attendance').onclick=saveAttendance;$('load-scores').onclick=loadScores;$('save-scores').onclick=saveScores;$('save-activity').onclick=saveActivity;$('cancel-activity').onclick=cancelActivity;document.querySelectorAll('.tabs button').forEach(btn=>btn.onclick=()=>tab(btn.dataset.tab));['attendance-date','score-date','activity-date'].forEach(id=>$(id).value=today());
   $('class-login').addEventListener('change',updateRememberOption);
-  if (window.google && window.google.script && window.google.script.run) {
-    classes().then(restoreSession).catch(fail);
-  } else {
-    $('login-layout').classList.add('hidden');
-    $('deployment-gate').classList.remove('hidden');
-  }
+  classes().then(restoreSession).catch(fail);
 </script>
 </body>
 </html>
