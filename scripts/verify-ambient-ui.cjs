@@ -5,10 +5,19 @@ const postcss = require('postcss');
 
 const root = path.join(__dirname, '..');
 const read = file => fs.readFileSync(path.join(root, file), 'utf8');
+// Apps Script release folders (script-release-<version>/TeacherPortal.html) are
+// local copies made for pasting into Apps Script and are not committed. Check
+// the newest one only when it exists on this machine.
+const releaseTemplate = fs.readdirSync(root, { withFileTypes: true })
+  .filter(entry => entry.isDirectory() && /^script-release-/.test(entry.name))
+  .map(entry => path.join(entry.name, 'TeacherPortal.html'))
+  .filter(file => fs.existsSync(path.join(root, file)))
+  .sort((a, b) => a.localeCompare(b, 'en', { numeric: true }))
+  .pop();
 const pages = [
   ['index.html', 'ambient-grid'],
   ['teacher-portal.html', 'portal-ambient'],
-  ['script-release-2.1.64/TeacherPortal.html', 'portal-ambient']
+  ...(releaseTemplate ? [[releaseTemplate, 'portal-ambient']] : [])
 ];
 
 for (const [file, layer] of pages) {
@@ -39,10 +48,12 @@ for (const selector of ['.login-hero', '.portal-hero', '.student-card', '.tabs']
   assert.ok(portalStyle.includes(selector), `Teacher portal covers ${selector}`);
 }
 
-assert.equal(read('teacher-portal.html'), read('script-release-2.1.64/TeacherPortal.html'),
-  'Local portal preview and Apps Script release template must be identical');
+if (releaseTemplate) {
+  assert.equal(read('teacher-portal.html'), read(releaseTemplate),
+    `Local portal preview and Apps Script release template (${releaseTemplate}) must be identical`);
+}
 for (const file of ['index.html', 'teacher-portal.html']) {
   const output = path.join(root, 'dist', file);
   if (fs.existsSync(output)) assert.equal(read(file), fs.readFileSync(output, 'utf8'), `${file}: built preview is current`);
 }
-console.log('Ambient UI: CSS parsed, markup checked, reduced motion and print covered, Apps Script/preview synced');
+console.log(`Ambient UI: CSS parsed, markup checked, reduced motion and print covered, ${releaseTemplate ? 'Apps Script/preview synced' : 'no local Apps Script release folder to compare'}`);

@@ -52,44 +52,50 @@ assert.match(html, /data-sidebar-view="report"/, 'Roster is reached through the 
 assert.match(html, /id="report-mode-class"/, 'Class mode remains available in Reports');
 assert.match(html, /id="class-report-select"/);
 assert.match(html, /id="download-class-roster-btn"/);
-assert.match(onePage, /width:16%/);
+const rosterColWidths = [3.8, 8.6, 16.2, 4, 9.2, 8.2];
+const expectedColgroup = '<colgroup>' + [...rosterColWidths, ...rosterColWidths].map(w => `<col style="width:${w}%">`).join('') + '</colgroup>';
+assert.ok(onePage.includes(expectedColgroup), 'Mirrored roster uses the standardized A4 column widths');
+assert.ok(Math.abs(rosterColWidths.reduce((a, b) => a + b, 0) * 2 - 100) < 0.01, 'Roster columns fill the page width');
 assert.match(html, /function fitRosterText\(root\)/);
 
 const downloadStart = html.indexOf('    function rosterDownloadName(groups, extension) {');
 const downloadEnd = html.indexOf('    // ===================== FILTERS', downloadStart);
 assert.ok(downloadStart >= 0 && downloadEnd > downloadStart, 'Roster export functions exist');
 vm.runInContext(html.slice(downloadStart, downloadEnd), context);
-const excelPage = context.classRosterExcelPage(makeGroup(65), context.sortedRosterStudents(makeGroup(65)), 0, 1);
-assert.equal(excelPage.length, 56);
-assert.equal(excelPage[6][0], 1);
-assert.equal(excelPage[6][6], 46);
-assert.equal(excelPage[25][6], 65);
-assert.equal(excelPage[26][6], '');
-assert.match(excelPage[4][0], /8B/);
-const secondExcelPage = context.classRosterExcelPage(makeGroup(91), context.sortedRosterStudents(makeGroup(91)), 1, 2);
-assert.equal(secondExcelPage[6][0], 91);
-let exportedBook;
-let exportedName;
-context.window = { XLSX:{
-    utils:{
-        book_new:() => ({ sheets:[] }),
-        aoa_to_sheet:rows => ({ rows }),
-        book_append_sheet:(book, sheet, name) => book.sheets.push({ sheet, name })
-    },
-    writeFile:(book, name) => { exportedBook = book; exportedName = name; }
-} };
-context.showToast = () => {};
-context.downloadClassRosterExcel([makeGroup(91)]);
-assert.equal(exportedBook.sheets.length, 2);
-assert.equal(exportedBook.sheets[1].sheet.rows[6][0], 91);
-assert.match(exportedName, /\.xlsx$/);
+context.addressText = () => '';
 let downloadedBlob;
-context.selectedClassReport = () => ({ selected:makeGroup(65), rows:[makeGroup(65)] });
-context.reportMode = 'class';
+let downloadedName;
 context.URL = { createObjectURL:blob => { downloadedBlob = blob; return 'blob:test'; }, revokeObjectURL:() => {} };
 context.document = { body:{ append:() => {} }, createElement:() => ({ click:() => {}, remove:() => {} }) };
 context.Blob = Blob;
 context.setTimeout = () => {};
+context.showToast = () => {};
+let workbookConfig;
+context.window = { StudentExport:{ styledWorkbook:config => { workbookConfig = config; return new Blob(['xlsx']); } } };
+const originalDownloadWorkbookFile = context.downloadWorkbookFile;
+context.downloadWorkbookFile = (blob, name) => { downloadedName = name; return originalDownloadWorkbookFile(blob, name); };
+vm.runInContext('downloadWorkbookFile = this.downloadWorkbookFile', context);
+const otherGroup = { ...makeGroup(3), key:'class:8A', name:'8A' };
+context.downloadClassRosterExcel([makeGroup(91), otherGroup]);
+assert.equal(workbookConfig.sheets.length, 2, 'One styled sheet per class');
+const [rosterSheet] = workbookConfig.sheets;
+assert.equal(rosterSheet.name, '8B');
+assert.match(rosterSheet.title, /8B/);
+assert.equal(rosterSheet.paperSize, 9, 'A4 paper');
+assert.equal(rosterSheet.fitToWidth, 1);
+assert.equal(rosterSheet.rows.length, 91, 'Every student is exported as one row');
+assert.equal(rosterSheet.columns.length, rosterSheet.rows[0].length);
+assert.ok(rosterSheet.columns.every(column => !('value' in column)), 'Column getters are not passed to the workbook');
+assert.deepEqual(Array.from(rosterSheet.rows, row => row[0]), Array.from({ length:91 }, (_, index) => index + 1));
+const expectedOrder = Array.from(context.sortedRosterStudents(makeGroup(91)), student => student.studentCode);
+assert.deepEqual(Array.from(rosterSheet.rows, row => row[1]), expectedOrder, 'Rows follow the printed roster order');
+assert.match(rosterSheet.meta, /សរុប 91 នាក់ · ប្រុស 73 · ស្រី 18/);
+assert.equal(workbookConfig.sheets[1].rows.length, 3);
+assert.equal(downloadedName, 'student-roster-all-classes-2026.xlsx');
+assert.ok(downloadedBlob);
+downloadedBlob = null;
+context.selectedClassReport = () => ({ selected:makeGroup(65), rows:[makeGroup(65)] });
+context.reportMode = 'class';
 context.downloadClassRosterHtml();
 downloadedBlob.text().then(downloadedHtml => {
     assert.match(downloadedHtml, /<html lang="km">/);
